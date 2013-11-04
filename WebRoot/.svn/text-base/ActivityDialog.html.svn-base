@@ -1,0 +1,352 @@
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>事务活动</h3>
+		</div>
+		<div class="modal-body">
+			<ul class="nav nav-tabs">
+  			<li class="temple info active">
+    			<a href="#">基本信息</a>
+  			</li>
+  			<li class="temple add">
+    			<a href="#">添加应用</a>
+  			</li>
+  			 <li class="temple extend">
+    			<a href="#">扩展属性</a>
+  			</li>
+			</ul>
+			<div id="content1" class="content">
+				<form class="form-horizontal">
+  					<div class="control-group">
+    					<label class="control-label" for="inputEmail">标识</label>
+    					<div class="controls">
+      						<input type="text" id="inputEmail" placeholder="ID">
+    					</div>
+ 					</div>
+				  	<div class="control-group">
+				   		<label class="control-label" for="inputPassword">参与者</label>
+				    	<div class="controls">
+				   	   		<input type="password" id="inputPassword">
+				    	</div>
+				  	</div>
+				  	<div class="control-group">
+				   		<label class="control-label" for="inputPassword">描述</label>
+				    	<div class="controls">
+				   	   		<textarea rows="5" class="basic_info">...
+				   	   		</textarea>
+				    	</div>
+				  	</div>
+				</form>
+			</div>
+			<div id="content2" class="hide content">
+				<form class="form-horizontal">
+  					<div class="control-group">
+    					<label class="control-label" for="inputEmail">应用类型</label>
+    					<div class="controls">
+							 <select class="app_type">
+								<option value="SendRemindMessage">发送提醒</option>
+							  	<option value="SaveBusinessFormData">存业务数据</option>
+							  	<option value="GetBusinessFormData">取业务数据</option>
+							  	<option value="EditBusinessFormData">修改业务数据</option>
+							</select>
+    					</div>
+ 					</div>
+				  	<div class="hide control-group send app">
+				   		<label class="control-label">收件人类型</label>
+				    	<div class="controls">
+							<select class="receive_type">
+							  <option value="user">用户</option>
+							  <option value="role">角色</option>
+							  <option value="ActualParameters">实参</option>
+							</select>
+				    	</div>
+				  	</div>
+				  	<div class="hide control-group send app">
+				   		<label class="control-label">收件人</label>
+				    	<div class="controls">
+							<select class="receive_id">							  
+							  <option class="temple hide"></option>
+							</select>
+				    	</div>
+				  	</div>
+				  	<div class="control-group get app">
+				  		<label class="control-label"  style="padding:0px">
+				  				<select class="span2 Module">							  
+								  <option class="hide temple"></option>
+								</select></label>
+				    	<div class="controls">
+								<select class="span2 Field">							  
+								  <option class="hide temple"></option>
+								</select>
+								<a href="#" class="btn btn-primary addActualParam" style="margin-left:20px">确定</a>
+				    	</div>
+							<!--<form class="form-inline">
+								<select class="span2 Module">							  
+								  <option class="temple">DK</option>
+								</select>
+								<select class="span2 Field">							  
+								  <option class="temple">IG</option>
+								</select>
+								<a href="#" class="btn btn-primary addActualParam">确定</a>
+							</form-->
+				  	</div>
+				  	<div class="hide control-group send app">
+				   		<label class="control-label" for="inputPassword">描述</label>
+				    	<div class="controls">
+				   	   		<textarea rows="5" class="app_info">...
+				   	   		</textarea>
+				    	</div>
+				  	</div>
+				</form>
+			<table class="table table-condensed get app">
+	              <thead>
+	                <tr class="head hide">
+	                  <th width="10%">#</th>
+	                  <th width="16%">模块ID</th>
+	                  <th width="16%">模块名</th>
+	                  <th width="16%">字段ID</th>
+	                  <th width="16%">字段名</th>
+	                  <th width="16%">实参名</th>
+	                  <th width="10%">操作</th>
+	                </tr>
+	              </thead>
+	              <tbody>
+	                <tr class="hide temple">
+	                  <td class="id">0</td>
+	                  <td class="moduleID"><span style="">Mushi</span></td>
+	                  <td class="module"><span style="">Mushi</span></td>
+	                  <td class="fieldID">3ice</td>
+	                  <td class="field">3ice</td>
+	                  <td class="actualParam"><input type="text" class="input-small" style="margin-bottom:1px;padding:2px" title="实参"></td>
+	                  <td class="oper"><button class="btn btn-danger btn-mini">删除</button></td>
+	                </tr>
+	              </tbody>
+            </table>
+			</div>
+			<div id="content3" class="content"></div>
+			<div class="btn-group">
+            	<a class="btn btn-danger pull-left" style="margin-left:10px" href="#">我要删除</a>
+	            <a class="btn btn-success pull-left disabled" href="#">我不删除</a>
+            </div>
+		</div>
+		<div class="modal-footer">
+			<a href="#" data-dismiss="modal" class="btn">取消</a>
+			<a href="#" class="btn btn-primary submit" data-loading-text="正在添加">确定</a>
+		</div>
+<script type="text/javascript">
+  	$(function(){
+  		$(".btn-danger").bind("click",function(){
+  			$(this).addClass("disabled");
+  			$(".btn-success").removeClass("disabled");
+  		});
+  		$(".btn-success").bind("click",function(){
+  			$(this).addClass("disabled");
+  			$(".btn-danger").removeClass("disabled");
+  		});
+  		$(".submit").bind("click",function(){
+  			$('#new_course_dialog').trigger("submit",["pojo"]);
+  			$('#new_course_dialog').modal('hide');
+  		});
+  		var $navs = $('.nav > li ');
+		//var $content = $('.modal-body').find("#content");
+		//$content.html(new Date()+"");
+		$navs.on('click', function(){			
+			$navs.removeClass("active");
+			$(this).addClass("active");
+			//$content.html(new Date()+"");
+			$navs.each(function(index,e){
+				if($(e).hasClass("active")){
+					$(".content").addClass("hide");
+					$("#content"+(index+1)).removeClass("hide");
+				}
+			});
+		});
+		//$("table").data("index",1);
+		$(".btn.addActualParam").bind("click",function(){
+			$("table").find("tr.head").removeClass("hide");
+			var line=$("table").find("tr.temple").clone();
+			line.removeClass("hide temple");
+			line.addClass("actual");
+			var n=$("tr:last-child:eq(1)").find("td.id").text();
+			n++;
+			line.find("td.id").text(n);
+			line.find("td.moduleID").text($("select.Module").find("option:selected").data("id"));
+			line.find("td.module").text($("select.Module").find("option:selected").val());
+			line.find("td.fieldID").text($("select.Field").find("option:selected").data("id"));
+			line.find("td.field").text($("select.Field").find("option:selected").val());
+			line.find(".btn-danger").bind("click",function(){
+				$(this).parents("tr:eq(0)").remove();
+				if($("tr:not(.temple)").length==1){
+					$("table").find("tr.head").addClass("hide");
+				}
+			});
+			line.appendTo($("table"));
+		});
+		$("select.app_type").bind("change",function(){
+			var s=$(this).val();
+			//console.log(s);
+			$(".app").addClass("hide");
+			if(s.toLocaleLowerCase().indexOf("send")>=0){
+				$(".send").removeClass("hide");
+				$.ajax({
+					url: "http://127.0.0.1:8080/HiServiceCRM/findAllUsers.action",
+	         		type: "POST",
+	         		success:function(data){
+						var parent=$("select.receive_id");
+	         			//console.log(parent);
+						for(var i=0;i<data.length;i++){
+							//alert("");
+							var opt=parent.find(".temple").clone();
+							opt.removeClass("hide temple");
+							opt.attr("value",data[i].id+":"+data[i].userName);
+							opt.html(data[i].id+":"+data[i].userName);
+							opt.appendTo(parent);
+						}
+						if($("select.receive_type").data("TypeIndex") || $("select.receive_type").data("TypeIndex") ===0){
+							var index=$("select.receive_type").data("TypeIndex");
+							$("select.receive_type").find("option:eq("+index+")")
+	  						.attr("selected",true);
+	  						//alert("");
+	  						$("select.receive_type").trigger("change");
+	  						$("select.receive_type").data("TypeIndex",null);
+						}
+	         		},
+	         	});
+			}
+			if(s.toLocaleLowerCase().indexOf("get")>=0){
+				$(".get").removeClass("hide");
+				//$(".get").find("option").addClass("hide");
+				$.ajax({
+					url: "http://127.0.0.1:8080/HiServiceCRM/findAllDynamicModuleMetaData.action",
+	         		type: "POST",
+	         		success:function(data){
+	         			//console.log(data);
+						var parent=$("select.Module");
+						for(var i=0;i<data.length;i++){
+							//alert("");
+							var opt=parent.find(".temple").clone();
+							opt.removeClass("hide temple");
+							opt.attr("value",data[i].modulelabel);
+							opt.html(data[i].moduleID+":"+data[i].modulelabel);
+							opt.appendTo(parent);
+							opt.data("id",data[i].moduleID);
+						}
+						if(parent.data("ModuleID")){
+							//alert();
+							//parent.val(parent.data("MoudleID"));
+							parent.trigger("change");
+							parent.data("ModuleID",null);
+							var arr=parent.data("arr");
+							console.log(arr);
+							parent.data("arr",null);
+							if(arr.length>0){
+								$("table").find("tr.head").removeClass("hide");
+							}
+							for(var i=0;i<arr.length;i++){
+								var line=$("table").find("tr.temple").clone();
+								line.removeClass("hide temple");
+								line.addClass("actual");
+								line.find("td.id").text((i+1)+"");
+								line.find("td.moduleID").text(arr[i].moduleID);
+								line.find("td.module").text(arr[i].module);
+								line.find("td.fieldID").text(arr[i].fieldID);
+								line.find("td.field").text(arr[i].field);
+								line.find("td.actualParam").text(arr[i].actualName);
+								line.find(".btn-danger").bind("click",function(){
+									$(this).parents("tr:eq(0)").remove();
+									if($("tr:not(.temple)").length==1){
+										$("table").find("tr.head").addClass("hide");
+									}
+								});
+								line.appendTo($("table"));
+							}
+						}
+	         		},
+	         	});
+			}
+			
+		});
+		$("select.Module").bind("change",function(){
+			var index=$(this).find("option:selected").data("id");
+			var data1={"moduleId":index};
+			$("select.Field option:not(.temple)").remove();
+			$.ajax({
+					url: "http://127.0.0.1:8080/HiServiceCRM/findFieldbyDynamicModule.action",
+	         		type: "POST",
+	         		data: {"json":JSON.stringify(data1)},
+	         		success:function(data){
+	         			//console.log(data);
+						var parent=$("select.Field");
+						for(var i=0;i<data.length;i++){
+							//alert("");
+							var opt=parent.find(".temple").clone();
+							opt.removeClass("hide temple");
+							opt.attr("value",data[i].fieldLable);
+							opt.html(data[i].fieldId+":"+data[i].fieldLable);
+							opt.appendTo(parent);
+							opt.data("id",data[i].fieldId);
+						}
+						if(parent.data("Field")){						
+							parent.val(parent.data("Field"));
+							parent.data("Field",null);
+						}
+						/*var val=$("select.receive_id").data("ReceiverId_val");
+						if(val){
+							$("select.receive_id").val(val);
+							$("select.receive_id").data("ReceiverId_val",null);
+						}*/
+	         		},
+	         	});
+			
+		});
+		$("select.receive_type").bind("change",function(){
+			var s=$(this).val();
+			//alert("");
+			console.log(s);
+			$("select.receive_id option:not(.temple)").remove();
+			if(s=="user"){
+				$.ajax({
+					url: "http://127.0.0.1:8080/HiServiceCRM/findAllUsers.action",
+	         		type: "POST",
+	         		success:function(data){
+						var parent=$("select.receive_id");
+						for(var i=0;i<data.length;i++){
+							//alert("");
+							var opt=parent.find(".temple").clone();
+							opt.removeClass("hide temple");
+							opt.attr("value",data[i].id+":"+data[i].userName);
+							opt.html(data[i].id+":"+data[i].userName);
+							opt.appendTo(parent);
+						}
+						var val=$("select.receive_id").data("IdVal");
+						if(val){
+							$("select.receive_id").val(val);
+							$("select.receive_id").data("ReceiverId_val",null);
+						}
+	         		},
+	         	});
+			}
+			else if(s=="role"){
+				$.ajax({
+					url: "http://127.0.0.1:8080/HiServiceCRM/findAllRolesList.action",
+	         		type: "POST",
+	         		success:function(data){
+						var parent=$("select.receive_id");
+						for(var i=0;i<data.length;i++){
+							//alert("");
+							var opt=parent.find(".temple").clone();
+							opt.removeClass("hide temple");
+							opt.attr("value",data[i].id+":"+data[i].name);
+							opt.html(data[i].id+":&nbsp&nbsp"+data[i].name);
+							opt.appendTo(parent);
+						}
+						var val=$("select.receive_id").data("ReceiverId_val");
+						if(val){
+							$("select.receive_id").val(val);
+							$("select.receive_id").data("ReceiverId_val",null);
+						}
+	         		},
+	         	});
+			}
+		});
+  	});
+</script>

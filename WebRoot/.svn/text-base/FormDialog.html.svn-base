@@ -1,0 +1,240 @@
+<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>表单应用</h3>
+		</div>
+		<div class="modal-body">
+			<ul class="nav nav-tabs">
+  			<li class="temple app active">
+    			<a href="#">表单应用</a>
+  			</li>
+  			<li class="temple formal">
+    			<a href="#">形参设定</a>
+  			</li>
+			</ul>
+			<div id="content1" class="content">
+				<form class="form-horizontal">
+					<div class="control-group">
+    					<label class="control-label" for="inputEmail">标识</label>
+    					<div class="controls">
+      						<input type="text" id="inputEmail" class="inputId" placeholder="ID">
+    					</div>
+ 					</div>
+				  	<div class="control-group">
+				   		<label class="control-label" for="inputPassword" placeholder="Discribe">描述</label>
+				    	<div class="controls">
+				   	   		<input type="password" id="inputPassword">
+				    	</div>
+				  	</div>
+				  	<div class="control-group form">
+				  		<label class="control-label"  style="padding:0px">
+				  				<select class="span2 Module">							  
+								  <option class="hide temple"></option>
+								</select></label>
+				    	<div class="controls">
+								<select class="span2 Field">							  
+								  <option class="hide temple"></option>
+								</select>
+								<a href="#" class="btn btn-primary addActualParam" style="margin-left:20px">确定</a>
+				    	</div>
+				  	</div>
+				  	<div class="hide control-group app">
+				   		<label class="control-label" for="inputPassword">描述</label>
+				    	<div class="controls">
+				   	   		<textarea rows="5" class="app_info">...
+				   	   		</textarea>
+				    	</div>
+				  	</div>
+				</form>
+			<table class="table table-condensed table-hover get app">
+	              <thead>
+	                <tr class="hide head">
+	                  <th width="10%">#</th>
+	                  <th width="16%">模块ID</th>
+	                  <th width="16%">模块名</th>
+	                  <th width="16%">字段ID</th>
+	                  <th width="16%">字段名</th>
+	                  <th width="16%">模式</th>
+	                </tr>
+	              </thead>
+	              <tbody>
+	                <tr class="hide temple" title="双击编辑">
+	                  <td class="id">0</td>
+	                  <td class="moduleID"><span style="">Mushi</span></td>
+	                  <td class="module"><span style="">Mushi</span></td>
+	                  <td class="fieldID">3ice</td>
+	                  <td class="field">3ice</td>
+	                  <td class="oper">INOUT</td>
+	                </tr>
+	              </tbody>
+            </table>
+			</div>
+			<div id="content2" class="hide content">
+				<form class="form-horizontal">
+					<div class="control-group">
+    					<label class="control-label" for="inputEmail">标识</label>
+    					<div class="controls">
+      						<input type="text" id="inputEmail" class="inputId" placeholder="ID">
+    					</div>
+ 					</div>
+				  	<div class="control-group">
+				   		<label class="control-label">模式</label>
+				    	<div class="controls">
+							<select class="data_type">
+							  <option value="in">IN</option>
+							  <option value="out">OUT</option>
+							  <option value="inout">INOUT</option>
+							</select>
+				    	</div>
+				  	</div>
+				  	<div class="btn-group">
+            			<a class="btn btn-primary" style="margin-left:10px" href="#">删除</a>
+	            		<a class="btn" href="#">提交</a>
+            </div>
+				</form>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<a href="#" data-dismiss="modal" class="btn cancel">取消</a>
+			<a href="#" class="btn btn-primary submit" data-loading-text="正在添加">确定</a>
+		</div>
+<script type="text/javascript">
+  	$(function(){
+  		$(".submit").bind("click",function(){
+  			if($("li.formal").hasClass("active")){
+  				$("li.app").trigger("click");
+  				return;
+  			}
+  			$('#new_course_dialog').trigger("submit",["form"]);
+  			$('#new_course_dialog').modal('hide');
+  		});
+  		$("#new_course_dialog").on("show_form",function(){
+  			$.ajax({
+					url: "http://127.0.0.1:8080/HiServiceCRM/findAllDynamicModuleMetaData.action",
+	         		type: "POST",
+	         		success:function(data){
+	         			//console.log(data);
+						var parent=$("select.Module");
+						for(var i=0;i<data.length;i++){
+							//alert("");
+							var opt=parent.find(".temple").clone();
+							opt.removeClass("hide temple");
+							opt.attr("value",data[i].modulelabel);
+							opt.html(data[i].moduleID+":"+data[i].modulelabel);
+							opt.appendTo(parent);
+							opt.data("id",data[i].moduleID);
+						}
+					},
+			});
+  		});
+  		$("tr").bind("dblclick",function(){
+  			$("li.formal").trigger("click");
+  		});
+  		$("select.Module").bind("change",function(){
+			var index=$(this).find("option:selected").data("id");
+			var data1={"moduleId":index};
+			$("select.Field option:not(.temple)").remove();
+			$.ajax({
+					url: "http://127.0.0.1:8080/HiServiceCRM/findFieldbyDynamicModule.action",
+	         		type: "POST",
+	         		data: {"json":JSON.stringify(data1)},
+	         		success:function(data){
+	         			//console.log(data);
+						var parent=$("select.Field");
+						for(var i=0;i<data.length;i++){
+							//alert("");
+							var opt=parent.find(".temple").clone();
+							opt.removeClass("hide temple");
+							opt.attr("value",data[i].fieldLable);
+							opt.html(data[i].fieldId+":"+data[i].fieldLable);
+							opt.appendTo(parent);
+							opt.data("id",data[i].fieldId);
+						}
+						if(parent.data("Field")){						
+							parent.val(parent.data("Field"));
+							parent.data("Field",null);
+						}
+						/*var val=$("select.receive_id").data("ReceiverId_val");
+						if(val){
+							$("select.receive_id").val(val);
+							$("select.receive_id").data("ReceiverId_val",null);
+						}*/
+	         		},
+	         	});
+			
+		});
+  		$("li.app").bind("click",function(){
+  			$(".btn.cancel").removeClass("disabled");
+  		});
+  		$("li.formal").bind("click",function(){
+  			$(".btn.cancel").addClass("disabled");
+  		});
+  		var $navs = $('.nav > li ');
+		//var $content = $('.modal-body').find("#content");
+		//$content.html(new Date()+"");
+		$navs.on('click', function(){			
+			$navs.removeClass("active");
+			$(this).addClass("active");
+			//$content.html(new Date()+"");
+			$navs.each(function(index,e){
+				if($(e).hasClass("active")){
+					$(".content").addClass("hide");
+					$("#content"+(index+1)).removeClass("hide");
+				}
+			});
+		});
+		$( "input.inputId" ).keypress(function(e) {
+		  if(e.which==13){
+		  	$(this).blur();
+		  }
+		});
+		//$("table").data("index",1);
+		$(".btn.addActualParam").bind("click",function(){
+			$("table").find("tr.head").removeClass("hide");
+			var line=$("table").find("tr.temple").clone();
+			line.removeClass("hide temple");
+			line.addClass("actual");
+			var n=$("tr:last-child:eq(1)").find("td.id").text();
+			n++;
+			line.find("td.id").text(n);
+			line.find("td.moduleID").text($("select.Module").find("option:selected").data("id"));
+			line.find("td.module").text($("select.Module").find("option:selected").val());
+			line.find("td.fieldID").text($("select.Field").find("option:selected").data("id"));
+			line.find("td.field").text($("select.Field").find("option:selected").val());
+			line.find(".btn-danger").bind("click",function(){
+				$(this).parents("tr:eq(0)").remove();
+				if($("tr:not(.temple)").length==1){
+					$("table").find("tr.head").addClass("hide");
+				}
+			});
+			line.appendTo($("table"));
+		});
+		$("select.Module").bind("change",function(){
+			var index=$(this).find("option:selected").data("id");
+			var data1={"moduleId":index};
+			$("select.Field option:not(.temple)").remove();
+			$.ajax({
+					url: "http://127.0.0.1:8080/HiServiceCRM/findFieldbyDynamicModule.action",
+	         		type: "POST",
+	         		data: {"json":JSON.stringify(data1)},
+	         		success:function(data){
+	         			//console.log(data);
+						var parent=$("select.Field");
+						for(var i=0;i<data.length;i++){
+							//alert("");
+							var opt=parent.find(".temple").clone();
+							opt.removeClass("hide temple");
+							opt.attr("value",data[i].fieldLable);
+							opt.html(data[i].fieldId+":"+data[i].fieldLable);
+							opt.appendTo(parent);
+							opt.data("id",data[i].fieldId);
+						}
+						if(parent.data("Field")){						
+							parent.val(parent.data("Field"));
+							parent.data("Field",null);
+						}
+	         		},
+	         	});
+			
+		});
+  	});
+</script>
