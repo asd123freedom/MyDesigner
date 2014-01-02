@@ -63,7 +63,7 @@
 	                  <td class="module"><span style="">Mushi</span></td>
 	                  <td class="fieldID">3ice</td>
 	                  <td class="field">3ice</td>
-	                  <td class="oper">INOUT</td>
+	                  <td class="model"><p class="text-info"></p></td>
 	                </tr>
 	              </tbody>
             </table>
@@ -71,30 +71,30 @@
 			<div id="content2" class="hide content">
 				<form class="form-horizontal">
 					<div class="control-group">
-    					<label class="control-label" for="inputEmail">标识</label>
+    					<label class="control-label formal_label">形参标识</label>
     					<div class="controls">
-      						<input type="text" id="inputEmail" class="inputId" placeholder="ID">
+      						<input type="text" id="inputEmail" class="formal_label" placeholder="ID">
     					</div>
  					</div>
 				  	<div class="control-group">
 				   		<label class="control-label">模式</label>
 				    	<div class="controls">
-							<select class="data_type">
-							  <option value="in">IN</option>
-							  <option value="out">OUT</option>
-							  <option value="inout">INOUT</option>
+							<select class="data_model">
+							  <option value="IN">IN</option>
+							  <option value="OUT">OUT</option>
+							  <option value="INOUT">INOUT</option>
 							</select>
 				    	</div>
 				  	</div>
 				  	<div class="btn-group">
-            			<a class="btn btn-primary" style="margin-left:10px" href="#">删除</a>
-	            		<a class="btn" href="#">提交</a>
+            			<a class="btn btn-primary form_remove" style="margin-left:10px" href="#">删除</a>
+	            		<a class="btn formal_submit" href="#">提交</a>
             </div>
 				</form>
 			</div>
 		</div>
 		<div class="modal-footer">
-			<a href="#" data-dismiss="modal" class="btn cancel">取消</a>
+			<a href="#" data-dismiss="modal" class="btn">取消</a>
 			<a href="#" class="btn btn-primary submit" data-loading-text="正在添加">确定</a>
 		</div>
 <script type="text/javascript">
@@ -167,6 +167,36 @@
   		});
   		$("li.formal").bind("click",function(){
   			$(".btn.cancel").addClass("disabled");
+  			var line=$(this).data("line");
+  			if(line){
+  				var str=line.find("td.fieldID").text()+"_"+line.find("td.field").text();
+  				$("input.formal_label").val(str);
+  			}else{
+  				$("input.formal_label").val("");
+  			}
+  		});
+  		$(".btn.formal_submit").bind("click",function(){
+  			var line=$("li.formal").data("line");
+  			line.find("td.model").find("p").remove();
+  			line.find("td.model").text($("select.data_model").val());
+  			$("li.app").trigger("click");
+  			$("li.formal").data("line",null);
+  		});
+  		$(".btn.form_remove").bind("click",function(){
+  			var line=$("li.formal").data("line");
+  			line.remove();
+  			$("li.formal").data("line",null);
+  			if($("tr:not(.temple)").length==1){
+					$("table").find("tr.head").addClass("hide");
+			}else{
+					$("table").find("tr:not(.head)").each(function(index,e){
+						$(e).find("td.id").text(index);
+					});
+			}
+			
+			$("select.Module").val("");
+			$("select.Field").val("");
+  			$("li.app").trigger("click");
   		});
   		var $navs = $('.nav > li ');
 		//var $content = $('.modal-body').find("#content");
@@ -189,6 +219,9 @@
 		});
 		//$("table").data("index",1);
 		$(".btn.addActualParam").bind("click",function(){
+			if($("select.Field").val()==""){
+				return;
+			}
 			$("table").find("tr.head").removeClass("hide");
 			var line=$("table").find("tr.temple").clone();
 			line.removeClass("hide temple");
@@ -200,13 +233,15 @@
 			line.find("td.module").text($("select.Module").find("option:selected").val());
 			line.find("td.fieldID").text($("select.Field").find("option:selected").data("id"));
 			line.find("td.field").text($("select.Field").find("option:selected").val());
-			line.find(".btn-danger").bind("click",function(){
-				$(this).parents("tr:eq(0)").remove();
-				if($("tr:not(.temple)").length==1){
-					$("table").find("tr.head").addClass("hide");
-				}
-			});
+			line.find("td.model").find("p").text("双击行以编辑");
 			line.appendTo($("table"));
+			line.find("td").hover(function(){
+				$(this).css("cursor","default")
+			});
+			line.bind("dblclick",function(){
+				$("li.formal").data("line",line);
+				$("li.formal").trigger("click");
+			});
 		});
 		$("select.Module").bind("change",function(){
 			var index=$(this).find("option:selected").data("id");

@@ -71,6 +71,9 @@ liucf
 WebRoot
 dir
 
+.git
+dir
+
 .project
 file
 8808
@@ -139,8 +142,76 @@ liucf
 
 303
 
+.gitignore
+file
+8870
+
+
+
+2013-06-19T04:33:50.869683Z
+ca62fb8c82bfc74b3cd710bdf740193b
+2013-11-27T06:52:33.698500Z
+8870
+liucf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2858
+
 src
 dir
+
+.gitattributes
+file
+8870
+
+
+
+2013-06-19T04:33:50.849674Z
+399f7a2bdcbbada16f001e033d6d04f1
+2013-11-27T06:52:33.698500Z
+8870
+liucf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+505
 
 .settings
 dir
