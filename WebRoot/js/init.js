@@ -27,7 +27,7 @@
 					]
 			};
 			var shapes=$(".icon");
-			var toolBar=$("#test");
+			var toolBar=$("#toolBar");
 			toolBar.data("option",stateMachineConnector);
     }    
   }

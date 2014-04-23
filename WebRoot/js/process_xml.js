@@ -1,5 +1,4 @@
 ;$(function(window,undefined){
-	var c=$("container");
 	//记得写初始化变量的代码
 	var workflowprocess={};
 	var packagedefinition=$("<Package>");

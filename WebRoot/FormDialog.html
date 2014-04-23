@@ -16,13 +16,13 @@
 					<div class="control-group">
     					<label class="control-label" for="inputEmail">标识</label>
     					<div class="controls">
-      						<input type="text" id="inputEmail" class="inputId" placeholder="ID">
+      						<input type="text" id="inputEmail" class="inputId" value="" placeholder="ID" autocomplete="off" />
     					</div>
  					</div>
 				  	<div class="control-group">
 				   		<label class="control-label" for="inputPassword" placeholder="Discribe">描述</label>
 				    	<div class="controls">
-				   	   		<input type="password" id="inputPassword">
+				   	   		<input type="password" id="inputPassword" autocomplete="off" value=""/>
 				    	</div>
 				  	</div>
 				  	<div class="control-group form">
@@ -138,7 +138,7 @@
 	         		type: "POST",
 	         		data: {"json":JSON.stringify(data1)},
 	         		success:function(data){
-	         			//console.log(data);
+	         			console.log(data);
 						var parent=$("select.Field");
 						for(var i=0;i<data.length;i++){
 							//alert("");

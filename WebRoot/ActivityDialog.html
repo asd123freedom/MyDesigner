@@ -79,15 +79,6 @@
 								</select>
 								<a href="#" class="btn btn-primary addActualParam" style="margin-left:20px">确定</a>
 				    	</div>
-							<!--<form class="form-inline">
-								<select class="span2 Module">							  
-								  <option class="temple">DK</option>
-								</select>
-								<select class="span2 Field">							  
-								  <option class="temple">IG</option>
-								</select>
-								<a href="#" class="btn btn-primary addActualParam">确定</a>
-							</form-->
 				  	</div>
 				  	<div class="hide control-group send app">
 				   		<label class="control-label" for="inputPassword">描述</label>
@@ -111,13 +102,13 @@
 	              </thead>
 	              <tbody>
 	                <tr class="hide temple">
-	                  <td class="id">0</td>
-	                  <td class="moduleID"><span style="">Mushi</span></td>
-	                  <td class="module"><span style="">Mushi</span></td>
-	                  <td class="fieldID">3ice</td>
-	                  <td class="field">3ice</td>
-	                  <td class="actualParam"><input type="text" class="input-small" style="margin-bottom:1px;padding:2px" title="实参"></td>
-	                  <td class="oper"><button class="btn btn-danger btn-mini">删除</button></td>
+	                  <td class="id" style="vertical-align:middle">0</td>
+	                  <td class="moduleID" style="vertical-align:middle"><span style="">Mushi</span></td>
+	                  <td class="module" style="vertical-align:middle"><span style="">Mushi</span></td>
+	                  <td class="fieldID" style="vertical-align:middle">3ice</td>
+	                  <td class="field" style="vertical-align:middle">3ice</td>
+	                  <td class="actualParam" style="vertical-align:middle"><input type="text" class="input-small" style="margin-bottom:1px;padding:2px" title="实参"></td>
+	                  <td class="oper" style="vertical-align:middle"><button class="btn btn-danger btn-mini">删除</button></td>
 	                </tr>
 	              </tbody>
             </table>
@@ -160,7 +151,7 @@
 				}
 			});
 		});
-		//$("table").data("index",1);
+		//存数据业务中的添加实参
 		$(".btn.addActualParam").bind("click",function(){
 			$("table").find("tr.head").removeClass("hide");
 			var line=$("table").find("tr.temple").clone();
@@ -181,13 +172,27 @@
 			});
 			line.appendTo($("table"));
 		});
+		var getAllUsers=function(dtd){
+			$.ajax({
+				url: "http://127.0.0.1:8080/HiServiceCRM/findAllUsers.action",
+					type: "POST",
+			        success:function(data){
+						dtd.resolve(data);
+			        }
+			});
+			return dtd;
+		}
 		$("select.app_type").bind("change",function(){
 			var s=$(this).val();
 			//console.log(s);
 			$(".app").addClass("hide");
 			if(s.toLocaleLowerCase().indexOf("send")>=0){
 				$(".send").removeClass("hide");
-				$.ajax({
+				var dtd = $.Deferred();
+				$.when(getAllUsers(dtd)).done(function(data){
+					console.log(data);
+				});
+				/*$.ajax({
 					url: "http://127.0.0.1:8080/HiServiceCRM/findAllUsers.action",
 	         		type: "POST",
 	         		success:function(data){
@@ -210,7 +215,7 @@
 	  						$("select.receive_type").data("TypeIndex",null);
 						}
 	         		},
-	         	});
+	         	});*/
 			}
 			if(s.toLocaleLowerCase().indexOf("get")>=0){
 				$(".get").removeClass("hide");

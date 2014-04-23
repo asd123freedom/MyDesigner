@@ -7,7 +7,7 @@
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <script language="javascript" type="text/javascript" src="jquery/jquery-1.9.1.js"></script>
     <script src="jquery-ui/jquery-ui.js"></script>
-	<script src="jsplumb/jquery.jsPlumb-1.5.2.js"></script>
+	<script src="jsplumb/jquery.jsPlumb-1.5.5-min.js"></script>
     <script src="js/init.js"></script>
     <script src="js/process_xml.js"></script>
     <script src="js/constructor.js"></script>
@@ -77,12 +77,19 @@
 		border: 1px solid #06C;
 		border-top: 10px solid #06C;
 		}
+		img{
+		display:inline-block;
+		}
 	</style>
     
  </head>
     <body>
-	<div id="test" class="section_header" style="margin-top:50px;margin-left:20px;width:1000px;height:50px;">
-		 <img id="select" class="icon unselected" src="images/select.gif" style=""></img>
+	<div id="toolBar" class="section_header" style="margin-top:50px;margin-left:20px;width:1000px;height:50px;">
+		 <div style="height:32px;width:32px;border:1px solid;
+    	border-radius:10px;
+    	vertical-align:middle;
+    	border-color:gray;;background-position:center;background-repeat:no-repeat;display:inline-block;background-image: url(images/select.gif);"></div>
+		 <!--img id="select" class="icon unselected" src="images/select.gif" style=""></img-->
 		 <img id="participant" class="icon unselected" src="images/participantrole.png"></img>
 		 <img id="participant_free" class="icon unselected" src="images/freetextparticipant.png"></img>
 		 <img id="start" class="icon unselected" src="images/start.png"></img>
@@ -109,15 +116,15 @@
 <script type="text/javascript">
 jsPlumb.bind("ready", function() {
 	//To store the from and go of transition
-	$("#test").data("come","");
-	$("#test").data("go","");
+	$("#toolBar").data("come","");
+	$("#toolBar").data("go","");
 	//var come="";
 	//var go="";
 	document.onselectstart = function () { return false; };	
 	jsPlumbDemo.init();
 	//cilck settings of icons
-	var icons=$("#test").find(".icon");
-	var stateMachineConnector=$("#test").data("option");
+	var icons=$("#toolBar").find(".icon");
+	var stateMachineConnector=$("#toolBar").data("option");
 	icons.each(function(index,el){
 				 $(el).bind("click",function(){
 				 	$(icons).removeClass("selected");
@@ -164,7 +171,7 @@ jsPlumb.bind("ready", function() {
 		//$('#new_course_dialog').load("ActivityDialog.html?num="+d.getTime());
 	});
 	//存储参与者的序号
-	$("#test").data("participant",1);
+	$("#toolBar").data("participant",1);
     //$( ".icon:not(#participant)" ).draggable({helper:"clone",revert: "valid"});
     //刚开始只有参与者的图标能动
     $("#participant").draggable({helper:"clone"});
@@ -220,7 +227,7 @@ jsPlumb.bind("ready", function() {
 				$(this).data(str,1);
 				num=1;
 			}
-			var index=$("#test").data("participant");
+			var index=$("#toolBar").data("participant");
 			if(str=="participant"){			
 				$(this).data(str,index);
 			}
@@ -240,7 +247,7 @@ jsPlumb.bind("ready", function() {
 				line.insertAfter($(this));
 				new_element.attr("title","participant"+index);
 				parent.attr("id","participant",index);
-				$("#test").data("participant",index++);
+				$("#toolBar").data("participant",index++);
 				new_element.appendTo(parent);
 				parent.appendTo(line);
 				return;
@@ -250,6 +257,7 @@ jsPlumb.bind("ready", function() {
 			parent.attr("id",name);
 			//双击图标事件
 			parent.bind("dblclick",function(){
+				console.log($(this));
 				$(".dialog").trigger("click",[$(this)]);
 			});			
 			parent.appendTo(this);

@@ -14,6 +14,7 @@
 	$("#new_course_dialog").on("show_send",function(){
 				//$("select.app_type").trigger("change");
 				var obj=$("#new_course_dialog").data("obj");
+				console.log(obj);
 	  			var arr=$("#container").data("w").activities || [];
 	  			console.log(arr);
 	  			$(arr).each(function(index,e){

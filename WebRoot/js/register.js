@@ -15,6 +15,7 @@ $("#container").on("activity",function(e,name){
 		var arr=w1.activities || [];
 		//console.log(w1.activities);
 		var n1=name+$("#container").data(name);
+		console.log(name);
 		var p1=w1.participants[0]|| "default_participant";
 		var a1=new task_activity(p1);
 		a1.name=n1;

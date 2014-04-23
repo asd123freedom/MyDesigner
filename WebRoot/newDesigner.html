@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>WorkFlow Designer</title>
+    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/main.css" rel="stylesheet" media="screen">
+ </head>
+    <body>
+	<div id="toolBar" class="section_header" style="margin-top:50px;margin-left:20px;width:1000px;height:50px;">
+		 <div class="userSelect"></div>
+		 <!--img id="select" class="icon unselected" src="images/select.gif" style=""></img-->
+		 <img id="participant" class="icon unselected" src="images/participantrole.png"></img>
+		 <img id="participant_free" class="icon unselected" src="images/freetextparticipant.png"></img>
+		 <img id="start" class="icon unselected" src="images/start.png"></img>
+		 <img id="end" class="icon unselected" src="images/end.png"></img>
+		 <img id="voidnode" class="icon unselected" src="images/genericactivity.png"></img>
+		 
+		 <img id="autoactivity" class="icon unselected" src="images/autoactivity.png"></img>
+		 <img id="humantaskactivity" class="icon unselected" src="images/humantaskactivity.png"></img>
+		 <img id="businessactivity" class="icon unselected" src="images/activitytask.png"></img>
+		 <img id="blockactivity" class="icon unselected" src="images/blockactivity.png"></img>
+		 <img id="routesplitactivity" class="icon unselected" src="images/route_split_activity.png"></img>
+		 <img id="routejoinactivity" class="icon unselected" src="images/route_join_activity.png"></img>
+		 <img id="redo" class="icon unselected" src="images/redo.png"></img>
+		 
+		 <img id="undo" class="icon unselected" src="images/undo.png" style="left:100px"></img>
+		 <img id="unCondition_transition" class="icon unselected" src="images/transition.png" style="left:150px"></img>
+		 <img id="zoomout" class="icon unselected" src="images/zoomout.png" style="left:200px"></img>
+		 <!--div class="move unselected" style="background-image:url(images/zoomout.png)"-->
+		 <button class="btn save btn-primary"  data-loading-text="正在保存">保存</button>
+		 <button class="btn dialog btn-primary"  data-loading-text="正在打开">绑定表单</button>
+	 </div>
+	<div id="container" class="box" style="margin-top:0px;margin-left:20px;width:1000px;height:255px;">
+	 </div>
+		<!-- 容器结束，对话框开始 -->
+		<div class="modal hide fade in" id="new_course_dialog">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>流程定义</h3>
+		  </div>
+		  <div class="modal-body">
+			<ul class="nav nav-tabs">
+  			<li class="temple active">
+    			<a href="#">活动</a>
+  			</li>
+  			<li class="temple">
+    			<a href="#">属性</a>
+  			</li>
+			</ul>
+			<div id="content"></div>
+		  </div>
+		  <div class="modal-footer">
+			<a href="#" data-dismiss="modal" class="btn">取消</a>
+			<a href="#" class="btn btn-primary submit" data-loading-text="正在添加">确定</a>
+		  </div>
+		</div>
+</body>
+<script language="javascript" type="text/javascript" src="jquery/jquery-1.9.1.js"></script>
+<script src="jquery-ui/jquery-ui.js"></script>
+<script src="jsplumb/jquery.jsPlumb-1.5.5-min.js"></script>
+<script src="js/init.js"></script>
+<script src="js/process_xml.js"></script>
+<script src="js/constructor.js"></script>
+<script src="js/register.js"></script>
+<script src="js/ActivityDialog.js"></script>
+<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+function appendNewElement(container,ui){
+		var incoming=ui.helper.context.id;
+		var new_element=$('<img>').attr("src",ui.helper.context.src).addClass("dropped").addClass("unselected");
+		var num_y=$(container).css("height").match(/\d*/);
+		var parent=null;
+		var arr=$("#container").data("w").participants || [];
+		var name="";
+		var new_container=null;
+		var off_y=(num_y[0])*(arr.length-1)+119+10*(arr.length-1);
+			//console.log(off_y);
+		var index=0;
+		if(incoming.indexOf("activity")>0){
+			//index=$("#container").data("activity");
+			//name="activity"+index;
+			//$("#container").data("activity",index);
+		}
+		{
+			index=$("#container").data(incoming);
+			name=incoming+""+index;
+			//$("#container").data(incoming,index);
+			//name=incoming+$("#container").data("w")[incoming+'s'].length;
+		}
+		console.log(name);
+		if(incoming!="participant"){
+				parent=$('<div>').css({
+					position:'absolute',
+					left:ui.offset.left,
+					top:ui.offset.top
+				});
+		}else{
+				parent=$('<div>').css({
+					position:'absolute',
+					left:27,
+					top:off_y
+				});
+		}
+		new_element.attr("title",name);
+		new_element.appendTo(parent);
+		parent.attr("id",name);
+		//双击图标事件
+		parent.bind("dblclick",function(){
+				$(".dialog").trigger("click",[$(this)]);
+		});
+		if(new_container=addNewLine(container,incoming)){
+			parent.appendTo(new_container);
+		}else{		
+			parent.appendTo(container);
+		}			
+};
+function trigger(container,str){
+	var _this=$(container);
+	var num=$("#container").data(str)|| 0;
+	num++;
+	$("#container").data(str,num);
+	if(str.indexOf("activity")>0){
+		_this.trigger("activity",[str]);
+	}else{
+		_this.trigger(str);
+	}
+}
+function addNewLine(current,incoming){
+	if($("#container").data("w").participants.length>1 && incoming=="participant"){
+		var line=$(current).clone();
+		var opt=$(current).droppable("option");
+		var index=$("#container").data(incoming);
+		line.attr("id","container"+index);
+		line.addClass("line");
+		line.droppable(opt);
+		line.insertAfter($(current));
+		return line;
+	}else{
+		return null;
+	}
+}
+jsPlumb.bind("ready", function() {
+	document.onselectstart = function () { return false; };	
+	jsPlumbDemo.init();
+	var icons=$("#toolBar").find(".icon");
+	var stateMachineConnector=$("#toolBar").data("option");
+	icons.each(function(index,el){
+				 $(el).bind("click",function(){
+				 	$(icons).removeClass("selected");
+				 	$(icons).addClass("unselected");
+				 	$(this).removeClass("unselected");
+				 	$(this).addClass("selected");		
+			 	 });
+	});
+	$(".dialog").bind("click",function(e,obj){
+		$('#new_course_dialog').data("obj",obj);
+		$('#new_course_dialog').modal("show");
+	});
+	$("#participant").draggable({helper:"clone"});
+	$("#container").droppable({
+		drop:function(event,ui){
+			var incoming=ui.helper.context.id;
+			if(!$("#container").data("w").participants || $("#container").data("w").participants.length==0){
+				if(incoming!="participant"){
+					return;
+				}else{
+					$( ".icon" ).draggable({helper:"clone"});
+				}
+			}
+			trigger($(this),incoming);
+			appendNewElement($(this),ui);
+		},
+	});
+	$(".save").bind("click",function(){
+		var tmp=$("#container").data("w").getXml();
+		//console.log(tmp[0]);
+		var pac=$("#container").data("p");
+		tmp.appendTo(pac);
+		var test=$("<test>");
+		pac.appendTo(test);
+		//$("<test>").append($("#container").data("w").getXml());
+		//console.log(pac[0]);
+		var str=test.html();
+		str = str.replace(/[ <\/]\w/g,function(s){
+			console.log(s.toLocaleUpperCase());
+			//var c=str.match(/\w/);
+			//console.log(c[0]);
+			return s.toLocaleUpperCase();
+		});
+		console.log(str);
+		var data1={"processdefinition":test.html()};
+		$.ajax({
+				//url: "http://127.0.0.1:8080/HiServiceCRM/checkProcessDefinition.action",
+				url:"http://127.0.0.1:8080/struts2_demo/XmlString.action",
+         		type: "POST",
+         		//data: {"json":JSON.stringify(data1)},
+         		data:{"xml":data1.processdefinition},
+         		success:function(data){
+         			console.log(data);
+         		},
+         });
+	});
+});
+
+</script>
+</html>
