@@ -12,8 +12,9 @@
 		"EditBusinessFormData":"修改业务数据",
 	};
 	$("#new_course_dialog").on("show_send",function(){
+				Model.showSendOptionFilled(dict_appname);
 				//$("select.app_type").trigger("change");
-				var obj=$("#new_course_dialog").data("obj");
+				/*var obj=$("#new_course_dialog").data("obj");
 				console.log(obj);
 	  			var arr=$("#container").data("w").activities || [];
 	  			console.log(arr);
@@ -30,11 +31,12 @@
 	  					$("select.receive_id").data("IdVal",app.ReceiverId_val);
 	  					$("textarea.app_info").val(app.Content);
 	  				}
-	  			});
+	  			});*/
 	});
 	$("#new_course_dialog").on("show_get",function(){
 				//$("select.app_type").trigger("change");
-				var obj=$("#new_course_dialog").data("obj");
+				Model.showGetOptionFilled(dict_appname);
+				/*var obj=$("#new_course_dialog").data("obj");
 	  			var arr=$("#container").data("w").activities || [];
 	  			console.log(arr);
 	  			$(arr).each(function(index,e){
@@ -54,11 +56,12 @@
 	  					//$("select.Field").data("FieldID",app.ReceiverId_val);
 	  					//$("textarea.app_info").val(app.Content);
 	  				}
-	  			});
+	  			});*/
 	});
 	$("#new_course_dialog").on("init",function(){
 			$("select.app_type").trigger("change");
-			$.ajax({
+			 /*
+			  * $.ajax({
 					url: "http://127.0.0.1:8080/HiServiceCRM/findAllUsers.action",
 	         		type: "POST",
 	         		success:function(data){
@@ -74,52 +77,7 @@
 						}
 	         		},
 	        });
-	});
-	//和注册submit事件的函数一样，不应该放在这个文件
-	$('#new_course_dialog').on('show', function (e,o) {
-			var flag="init";
-			var tran=$("#new_course_dialog").data("tran");
-			var d=new Date();
-			if(tran){
-				$('#new_course_dialog').load("Transition.html?num="+d.getTime());
-				var arr_actual=$("#container").data("w").actualParameters || [];
-				var arr_tran=$("#container").data("w").transitions || [];
-				$(arr_tran).each(function(index,e){
-					if(tran.sourceId==e.from && tran.targetId==e.to){
-						//这里添加的是显示的时候代码
-						$("td.condition").find("input").val(e.condition);
-					}
-				});
-				return;
-			}
-			var obj=$("#new_course_dialog").data("obj");
-			if(obj){
-				var arr=$("#container").data("w").activities || [];
-		  		$(arr).each(function(index,e){
-		  				if(obj.attr("id")==e.name){
-		  					var app=$(e).data("app");
-		  					if(!app){
-		  						flag="init";
-		  					}else{
-		  						flag=e.taskApplicationType;
-		  					}
-		  				}
-		  		});
-				$('#new_course_dialog').load("ActivityDialog.html?num="+d.getTime(),function(){
-					//show();
-					console.log(flag);
-					if(flag=="init"){					
-						$('#new_course_dialog').trigger(flag);
-					}else{
-						$('#new_course_dialog').trigger("show_"+flag);
-					}
-				});
-				return;
-			}
-			//什么图标都没点，那么显示添加表单应用的对话框，在此之上的代码都是对点击图标有反应的
-			$('#new_course_dialog').load("FormDialog.html?num="+d.getTime(),function(){
-				$("#new_course_dialog").trigger("show_form");
-			});
+			*/
 	});
 	$("#new_course_dialog").on("get",function(){
 		  	var obj=$(this).data("obj");
@@ -129,13 +87,12 @@
   			$(arr).each(function(index,e){
   				if(obj.attr("id")==e.name){
   					//将设置好的参数传给相应的activity对象
-  					//目前只完成了发送提醒的功能，剩下的功能要逐步完成
   					$("#container").trigger("application");
   					var arr=$("#container").data("w").applications;  					
   					var app=arr[arr.length-1];
   					app.Name=$("select.app_type").val()+""+arr.length;
-					app.Type="Class";
-					app.BusinessType=$("select.app_type").val();
+					//app.Type="Class";
+					app.Type=$("select.app_type").val();
 					app.ClassPath=dict_classpath[$("select.app_type").val()];
 					app.ModuleID=$(".Module").val();
 					var actual=[];

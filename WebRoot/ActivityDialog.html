@@ -172,25 +172,14 @@
 			});
 			line.appendTo($("table"));
 		});
-		var getAllUsers=function(dtd){
-			$.ajax({
-				url: "http://127.0.0.1:8080/HiServiceCRM/findAllUsers.action",
-					type: "POST",
-			        success:function(data){
-						dtd.resolve(data);
-			        }
-			});
-			return dtd;
-		}
-		$("select.app_type").bind("change",function(){
+		$("select.app_type").bind("change",function(e,callbacks){
 			var s=$(this).val();
-			//console.log(s);
+			var callbacks = callbacks || $.Callbacks();
 			$(".app").addClass("hide");
 			if(s.toLocaleLowerCase().indexOf("send")>=0){
 				$(".send").removeClass("hide");
-				var dtd = $.Deferred();
-				$.when(getAllUsers(dtd)).done(function(data){
-					console.log(data);
+				Model.findAllUsers().done(Model.fillInUsers).done(function(){
+					callbacks.fire();
 				});
 				/*$.ajax({
 					url: "http://127.0.0.1:8080/HiServiceCRM/findAllUsers.action",
@@ -206,7 +195,7 @@
 							opt.html(data[i].id+":"+data[i].userName);
 							opt.appendTo(parent);
 						}
-						if($("select.receive_type").data("TypeIndex") || $("select.receive_type").data("TypeIndex") ===0){
+						/*if($("select.receive_type").data("TypeIndex") || $("select.receive_type").data("TypeIndex") ===0){
 							var index=$("select.receive_type").data("TypeIndex");
 							$("select.receive_type").find("option:eq("+index+")")
 	  						.attr("selected",true);
@@ -220,7 +209,10 @@
 			if(s.toLocaleLowerCase().indexOf("get")>=0){
 				$(".get").removeClass("hide");
 				//$(".get").find("option").addClass("hide");
-				$.ajax({
+				Model.findAllDynamicModuleMetaData().done(Model.fillInAllDynamicModuleMetaData).done(function(){
+					callbacks.fire();
+				});
+				/*$.ajax({
 					url: "http://127.0.0.1:8080/HiServiceCRM/findAllDynamicModuleMetaData.action",
 	         		type: "POST",
 	         		success:function(data){
@@ -266,15 +258,18 @@
 							}
 						}
 	         		},
-	         	});
+	         	});*/
 			}
-			
 		});
-		$("select.Module").bind("change",function(){
+		$("select.Module").bind("change",function(e,callbacks){
 			var index=$(this).find("option:selected").data("id");
 			var data1={"moduleId":index};
+			var callbacks=callbacks || $.Callbacks();
 			$("select.Field option:not(.temple)").remove();
-			$.ajax({
+			Model.findFieldbyDynamicModule(data1).done(Model.fillInFieldbyDynamicModule).done(function(){
+				callbacks.fire();
+			});
+			/*$.ajax({
 					url: "http://127.0.0.1:8080/HiServiceCRM/findFieldbyDynamicModule.action",
 	         		type: "POST",
 	         		data: {"json":JSON.stringify(data1)},
@@ -298,59 +293,27 @@
 						if(val){
 							$("select.receive_id").val(val);
 							$("select.receive_id").data("ReceiverId_val",null);
-						}*/
+						}*//*
 	         		},
-	         	});
-			
+	         });*/	
 		});
-		$("select.receive_type").bind("change",function(){
+		$("select.receive_type").bind("change",function(e,callbacks){
+			var callbacks = callbacks || $.Callbacks();
 			var s=$(this).val();
 			//alert("");
 			console.log(s);
 			$("select.receive_id option:not(.temple)").remove();
 			if(s=="user"){
-				$.ajax({
-					url: "http://127.0.0.1:8080/HiServiceCRM/findAllUsers.action",
-	         		type: "POST",
-	         		success:function(data){
-						var parent=$("select.receive_id");
-						for(var i=0;i<data.length;i++){
-							//alert("");
-							var opt=parent.find(".temple").clone();
-							opt.removeClass("hide temple");
-							opt.attr("value",data[i].id+":"+data[i].userName);
-							opt.html(data[i].id+":"+data[i].userName);
-							opt.appendTo(parent);
-						}
-						var val=$("select.receive_id").data("IdVal");
-						if(val){
-							$("select.receive_id").val(val);
-							$("select.receive_id").data("ReceiverId_val",null);
-						}
-	         		},
-	         	});
+				Model.findAllUsers().done(Model.fillInUsers).done(function(){
+					callbacks.fire();
+				});				
 			}
 			else if(s=="role"){
-				$.ajax({
-					url: "http://127.0.0.1:8080/HiServiceCRM/findAllRolesList.action",
-	         		type: "POST",
-	         		success:function(data){
-						var parent=$("select.receive_id");
-						for(var i=0;i<data.length;i++){
-							//alert("");
-							var opt=parent.find(".temple").clone();
-							opt.removeClass("hide temple");
-							opt.attr("value",data[i].id+":"+data[i].name);
-							opt.html(data[i].id+":&nbsp&nbsp"+data[i].name);
-							opt.appendTo(parent);
-						}
-						var val=$("select.receive_id").data("ReceiverId_val");
-						if(val){
-							$("select.receive_id").val(val);
-							$("select.receive_id").data("ReceiverId_val",null);
-						}
-	         		},
-	         	});
+				Model.findAllRolesList().done(Model.fillInAllRolesList).done(function(){
+					callbacks.fire();
+				});
+			}else{
+				callbacks.fire();
 			}
 		});
   	});

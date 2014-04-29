@@ -66,6 +66,8 @@
 <script src="js/register.js"></script>
 <script src="js/ActivityDialog.js"></script>
 <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="js/Model.js"></script>
+<script src="js/controller.js"></script>
 <script type="text/javascript">
 function appendNewElement(container,ui){
 		var incoming=ui.helper.context.id;
@@ -76,46 +78,101 @@ function appendNewElement(container,ui){
 		var name="";
 		var new_container=null;
 		var off_y=(num_y[0])*(arr.length-1)+119+10*(arr.length-1);
-			//console.log(off_y);
 		var index=0;
-		if(incoming.indexOf("activity")>0){
-			//index=$("#container").data("activity");
-			//name="activity"+index;
-			//$("#container").data("activity",index);
+		var name_index=0;
+		var span=$("<span>").css({
+			position:'absolute',
+			display:'none'
+		});
+		index=$("#container").data(incoming);
+		name=incoming+""+index;
+		name_index=name.indexOf('activity');
+		if(name_index>=0){
+			//name=name.substr(name_index);
 		}
-		{
-			index=$("#container").data(incoming);
-			name=incoming+""+index;
-			//$("#container").data(incoming,index);
-			//name=incoming+$("#container").data("w")[incoming+'s'].length;
-		}
-		console.log(name);
+		span.html(name);
 		if(incoming!="participant"){
 				parent=$('<div>').css({
 					position:'absolute',
 					left:ui.offset.left,
 					top:ui.offset.top
+				})
+				span.css({
+					left:0,
+					top:32,
 				});
 		}else{
 				parent=$('<div>').css({
 					position:'absolute',
 					left:27,
-					top:off_y
+					top:off_y,
+				});
+				
+				span.css({
+					left:0,
+					top:32,
 				});
 		}
 		new_element.attr("title",name);
 		new_element.appendTo(parent);
-		parent.attr("id",name);
+		span.appendTo(parent);//要想修改它的位置要在append操作之后修改
+		parent.attr("id",name).addClass("dropped");
 		//双击图标事件
 		parent.bind("dblclick",function(){
-				$(".dialog").trigger("click",[$(this)]);
+			$(".dialog").trigger("click",[$(this)]);
 		});
 		if(new_container=addNewLine(container,incoming)){
 			parent.appendTo(new_container);
 		}else{		
 			parent.appendTo(container);
-		}			
+		}
+		jsPlumb.draggable(parent,{revert: "invalid"});
+		parent.bind("click",function(){
+			if(!getFrom() && !getTo()){
+				setFrom($(this).attr("id"));
+			}else if(getFrom() && !getTo()){
+				setTo($(this).attr("id"));
+				createTransition(getFrom,getTo,stateMachineConnector);
+			}
+		});			
 };
+function getFrom(){
+	return $("#toolBar").data("from");
+}
+function getTo(){
+	return $("#toolBar").data("to");
+}
+function setFrom(from){
+	$("#toolBar").data("from",from);
+}
+function setFrom(to){
+	$("#toolBar").data("to",to);
+}
+function createTransition(from,to,stateMachineConnector){
+	var come=from
+	var go=to;
+	var connect=null;
+	var num=$("#container").data("transition")|| 1;
+	num++;
+	$("#container").data("transition",num);
+	connect=jsPlumb.connect({
+			source:come,
+			target:go,
+	},stateMachineConnector);
+	connect.setLabel({ cssClass:"component label",label:"tran"+num, location:0.5 });
+	if(from.indexOf("start")<0 && to.indexOf("end")<0){					
+			$("#container").trigger("transition",[from,to]);
+	}
+	//将起点和终点恢复成空值
+	setFrom(null);
+	setTo(null);
+	connect.bind("dblclick", function(conn) {
+			$('#new_course_dialog').data('tran',conn);
+			$('#new_course_dialog').modal('show');
+			//jsPlumb.detach(conn);
+	});
+	return connect;
+}
 function trigger(container,str){
 	var _this=$(container);
 	var num=$("#container").data(str)|| 0;
@@ -168,6 +225,10 @@ jsPlumb.bind("ready", function() {
 				}else{
 					$( ".icon" ).draggable({helper:"clone"});
 				}
+			}
+			var str=ui.helper.context.className;
+			if(str.indexOf("dropped")>=0){
+				return;
 			}
 			trigger($(this),incoming);
 			appendNewElement($(this),ui);
