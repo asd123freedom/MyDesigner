@@ -1,5 +1,6 @@
 ;$(function(window,undefined){
 	//记得写初始化变量的代码
+	var c=$("#container");
 	var workflowprocess={};
 	var packagedefinition=$("<Package>");
 	packagedefinition.attr("Id","package1");

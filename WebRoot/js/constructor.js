@@ -128,15 +128,29 @@ var participant=function(name){
 		};		
 	}
 	var ActualParameter=function(){
+		this.ID="";
 		this.moduleID="";
 		this.module="";
 		this.fieldID="";
 		this.field=""
 		this.actualName="";
 		this.parent=null;
+		this.content="";
 		this.getXml=function(){
-			//var str=MoudleID+";"+"RECORDID;"+FieldID+";"+act;
-			$("<ActualParameter>").html(this.moduleID+";"+"RECORDID;"+this.fieldeID+";"+this.actualName).appendTo(parent);
+			// var content=[];
+			// for(item in this){
+			// 	if(item=="parent"){
+			// 		continue;
+			// 	}
+			// 	if(this[item]){
+			// 		content.push(this[item]);	
+			// 	}
+			// }
+			// content=content.join(";");
+			// console.log("content="+content);
+			// //这个只是取数据的情况
+			// $("<ActualParameter>").html(content).appendTo(parent);
+			return this.content;
 		};
 	}
 	//集成三种activity，具体设置type是在事件的handler里
@@ -161,7 +175,7 @@ var participant=function(name){
 			var taskapp=$("<TaskApplication>");
 			var param=$("<ActualParameters>");
 			for(var i=0;i<this.actualParameters.length;i++){
-				$("<ActualParameter>").html(this.actualParameters[i]).appendTo(param);
+				$("<ActualParameter>").html(this.actualParameters[i].getXml()).appendTo(param);
 			}
 			if(this.actualParameters.length){				
 				param.appendTo(taskapp);
@@ -242,14 +256,24 @@ var participant=function(name){
 			app.attr("Id",this.Name);
 			$("<Pojo/>").appendTo(app);
 			var es=$("<ExtendedAttributes>");
-			for(var i=0;i<application_array.length;i++){
-				if(!this[application_array[i]]){
+			for(item in this){
+				if(item=="parent"){
 					continue;
 				}
-				var e=new extended_attribute(application_array[i],this[application_array[i]]);
-				e.parent=es;
-				e.getXml();
+				if(this.hasOwnProperty(item) && this[item]){
+					var e=new extended_attribute(item,this[item]);
+					e.parent=es;
+					e.getXml();
+				}
 			}
+			// for(var i=0;i<application_array.length;i++){
+			// 	if(!this[application_array[i]]){
+			// 		continue;
+			// 	}
+			// 	var e=new extended_attribute(application_array[i],this[application_array[i]]);
+			// 	e.parent=es;
+			// 	e.getXml();
+			// }
 			es.appendTo(app);
 			app.appendTo(this.parent);
 		}

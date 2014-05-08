@@ -11,8 +11,8 @@ var Model=(function(){
 			});
 			return dtd.promise();
 		},
-		fillInUsers:function(data){
-			var parent=$("select.receive_id");
+		fillInUsers:function(data,parent){
+			var parent=parent || $("select.receive_id");
 			for(var i=0;i<data.length;i++){
 					var opt=parent.find(".temple").clone();
 					opt.removeClass("hide temple");
@@ -34,7 +34,7 @@ var Model=(function(){
 			return dtd.promise();
 		},
 		fillInAllDynamicModuleMetaData:function(data){
-			var parent=$("select.Module");
+			var parent=$(".app:not('.hide') select.Module");
 			for(var i=0;i<data.length;i++){
 							//alert("");
 				var opt=parent.find(".temple").clone();
@@ -59,8 +59,8 @@ var Model=(function(){
 			return dtd.promise();
 		},
 		fillInFieldbyDynamicModule:function(data){
-			$("select.Field option:not(.temple)").remove();
-			var parent=$("select.Field");
+			$(".app:not('.hide') select.Field option:not(.temple)").remove();
+			var parent=$(".app:not('.hide') select.Field");
 			for(var i=0;i<data.length;i++){
 							//alert("");
 				var opt=parent.find(".temple").clone();
@@ -127,17 +127,17 @@ var Model=(function(){
 	  			if(obj.attr("id")==e.name){
 	  				var app=$(e).data("app");
 	  				console.log(app.Type);
-	  				$("select.app_type").val(app.Type);
+	  				$("select.app_type").val(app.BusinessType);
 	  				//$("select.Module").data("ModuleID",app.ModuleID);
 	  				//console.log($("select.Module").data("ModuleID"));
 	  				//$("select.Module").data("arr",e.actualParameters)
 	  				var arr=e.actualParameters;
 	  				cbForApp.add(function() {
 	  					if(arr.length>0){
-							$("table").find("tr.head").removeClass("hide");
+							$("table.get").find("tr.head").removeClass("hide");
 						}
 						for(var i=0;i<arr.length;i++){
-							var line=$("table").find("tr.temple").clone();
+							var line=$("table.get").find("tr.temple").clone();
 							line.removeClass("hide temple");
 							line.addClass("actual");
 							line.find("td.id").text((i+1)+"");
@@ -149,18 +149,57 @@ var Model=(function(){
 							line.find(".btn-danger").bind("click",function(){
 							$(this).parents("tr:eq(0)").remove();
 								if($("tr:not(.temple)").length==1){
-									$("table").find("tr.head").addClass("hide");
+									$("table.get").find("tr.head").addClass("hide");
 								}
 							});
-							line.appendTo($("table"));
+							line.appendTo($("table.get"));
 						}
 
 	  				});
 	  				$("select.app_type").trigger("change",[cbForApp]);
-	  				//$("select.Field").data("FieldID",app.ReceiverId_val);
-	  				//$("textarea.app_info").val(app.Content);
 	  			}
-
+	  		});
+		},
+		showSaveOptionFilled:function(dict_appname){
+			var obj=$("#new_course_dialog").data("obj");
+	  		var arr=$("#container").data("w").activities || [];
+	  		var cbForApp=$.Callbacks();
+	  		$(arr).each(function(index,e){
+	  			if(obj.attr("id")==e.name){
+	  				var app=$(e).data("app");
+	  				console.log(app.Type);
+	  				$("select.app_type").val(app.BusinessType);
+	  				//$("select.Module").data("ModuleID",app.ModuleID);
+	  				//console.log($("select.Module").data("ModuleID"));
+	  				//$("select.Module").data("arr",e.actualParameters)
+	  				var arr=e.actualParameters;
+	  				console.log(arr);
+	  				cbForApp.add(function() {
+	  					if(arr.length>0){
+							$("table.save").find("tr.head").removeClass("hide");
+						}
+						for(var i=0;i<arr.length;i++){
+							var line=$("table.save").find("tr.temple").clone();
+							line.removeClass("hide temple");
+							line.addClass("actual");
+							line.find("td.id").text((i+1)+"");
+							line.find("td.moduleID").text(arr[i].moduleID);
+							line.find("td.module").text(arr[i].module);
+							line.find("td.fieldID").text(arr[i].fieldID);
+							line.find("td.field").text(arr[i].field);
+							line.find("td.ActualParam").val(arr[i].ActualParam);
+							line.find("td.recordID").text(arr[i].recordID);
+							line.find(".btn-danger").bind("click",function(){
+								$(this).parents("tr:eq(0)").remove();
+								if($("tr:not(.temple)").length==1){
+									$("table.save").find("tr.head").addClass("hide");
+								}
+							});
+							line.appendTo($("table.save"));
+						}
+	  				});
+	  				$("select.app_type").trigger("change",[cbForApp]);
+	  			}
 	  		});
 		}
 	};

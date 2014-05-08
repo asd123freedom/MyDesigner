@@ -12,72 +12,16 @@
 		"EditBusinessFormData":"修改业务数据",
 	};
 	$("#new_course_dialog").on("show_send",function(){
-				Model.showSendOptionFilled(dict_appname);
-				//$("select.app_type").trigger("change");
-				/*var obj=$("#new_course_dialog").data("obj");
-				console.log(obj);
-	  			var arr=$("#container").data("w").activities || [];
-	  			console.log(arr);
-	  			$(arr).each(function(index,e){
-	  				if(obj.attr("id")==e.name){
-	  					var app=$(e).data("app");
-	  					$("select.app_type").val(dict_appname[app.Type]);
-	  					$("select.app_type").trigger("change");
-	  					$("select.receive_type").data("TypeIndex",app.ReceiverType_index);
-	  					//$("select.receive_type").find("option:eq("+app.ReceiverType_index+")")
-	  					//.attr("selected",true);
-	  					//console.log(app.ReceiverId_val);
-	  					//$("select.receive_type").trigger("change");
-	  					$("select.receive_id").data("IdVal",app.ReceiverId_val);
-	  					$("textarea.app_info").val(app.Content);
-	  				}
-	  			});*/
+			Model.showSendOptionFilled(dict_appname);
 	});
 	$("#new_course_dialog").on("show_get",function(){
-				//$("select.app_type").trigger("change");
-				Model.showGetOptionFilled(dict_appname);
-				/*var obj=$("#new_course_dialog").data("obj");
-	  			var arr=$("#container").data("w").activities || [];
-	  			console.log(arr);
-	  			$(arr).each(function(index,e){
-	  				if(obj.attr("id")==e.name){
-	  					var app=$(e).data("app");
-	  					//console.log(dict_appname[app.BusinessType]);
-	  					$("select.app_type").val(app.BusinessType);
-	  					//console.log($("select.app_type").val());
-	  					$("select.app_type").trigger("change");
-//	  					$("select.receive_type").find("option:eq("+app.ReceiverType_index+")")
-//	  					.attr("selected",true);
-	  					//console.log(app.ReceiverId_val);
-	  					$("select.Module").data("ModuleID",app.ModuleID);
-	  					console.log(app);
-	  					console.log($("select.Module").data("ModuleID"));
-	  					$("select.Module").data("arr",e.actualParameters);
-	  					//$("select.Field").data("FieldID",app.ReceiverId_val);
-	  					//$("textarea.app_info").val(app.Content);
-	  				}
-	  			});*/
+			Model.showGetOptionFilled(dict_appname);
+	});
+	$("#new_course_dialog").on("show_save",function(){
+			Model.showSaveOptionFilled(dict_appname);
 	});
 	$("#new_course_dialog").on("init",function(){
-			$("select.app_type").trigger("change");
-			 /*
-			  * $.ajax({
-					url: "http://127.0.0.1:8080/HiServiceCRM/findAllUsers.action",
-	         		type: "POST",
-	         		success:function(data){
-						var parent=$("select.receive_id");
-	         			//console.log(parent);
-						for(var i=0;i<data.length;i++){
-							//alert("");
-							var opt=parent.find(".temple").clone();
-							opt.removeClass("hide temple");
-							opt.attr("value",data[i].id+":"+data[i].userName);
-							opt.html(data[i].id+":&nbsp&nbsp"+data[i].userName);
-							opt.appendTo(parent);
-						}
-	         		},
-	        });
-			*/
+			$("select.app_type").trigger("change");			
 	});
 	$("#new_course_dialog").on("get",function(){
 		  	var obj=$(this).data("obj");
@@ -91,69 +35,117 @@
   					var arr=$("#container").data("w").applications;  					
   					var app=arr[arr.length-1];
   					app.Name=$("select.app_type").val()+""+arr.length;
-					//app.Type="Class";
-					app.Type=$("select.app_type").val();
+					app.Type="Class";
+					app.BusinessType=$("select.app_type").val();
 					app.ClassPath=dict_classpath[$("select.app_type").val()];
 					app.ModuleID=$(".Module").val();
+					var patrnt=e;
 					var actual=[];
-					$("table").find("tr.actual").each(function(index,e){
+					$("table.get").find("tr.actual").each(function(index,e){
 						var a=new ActualParameter();
 						a.module=$(e).find("td.module").text();
 						a.moduleID=$(e).find("td.moduleID").text();
 						a.fieldID=$(e).find("td.fieldID").text();
 						a.field=$(e).find("td.field").text();
 						a.actualName=$(e).find(".actualParam").find("input").val();
+						a.content=a.moduleID+";"+"RECORDID;"+a.fieldID+";"+a.actualName;
+						//a.parent=parent;
 						//var str=MoudleID+";"+"RECORDID;"+FieldID+";"+act;
 						//console.log(str);
 						console.log(a);
 						actual.push(a);
 					});
 					var w1=$("#container").data("w") || {};
-					w1.actualParameters=actual;
+					w1.actualParameters=w1.actualParameters || [];
+					w1.actualParameters=w1.actualParameters.concat(actual);
 					$("#container").data("w",w1);
 					e.taskApplicationId=app.Name;
 					e.taskApplicationType="get";
 					e.actualParameters=actual;
-					//app.Content=$("textarea.app_info").val();
-					//console.log($("textarea.app_info").val());
 					$(e).data("app",app);
   				}
   			});
 	});
+	$("#new_course_dialog").on("save",function(){
+		var obj=$(this).data("obj");
+		var arr=$("#container").data("w").activities || [];
+		console.log(arr);
+		$(arr).each(function(index,e){
+			if(obj.attr("id")==e.name){
+				//将设置好的参数传给相应的activity对象
+				$("#container").trigger("application");
+				var arr=$("#container").data("w").applications;  					
+				var app=arr[arr.length-1];
+				app.Name=$("select.app_type").val()+""+arr.length;
+				app.Type="Class";
+				app.BusinessType=$("select.app_type").val();
+				app.ClassPath=dict_classpath[app.Type];
+				var parent=e;
+				var actual=[];
+				$("table.save").find("tr.actual").each(function(index,e){
+						var a=new ActualParameter();
+						a.ID=$(e).find("td.id").text();
+						a.module=$(e).find("td.module").text();
+						a.moduleID=$(e).find("td.moduleID").text();
+						a.fieldID=$(e).find("td.fieldID").text();
+						a.field=$(e).find("td.field").text();
+						a.ActualParam=$(e).find("td.ActualParam").text();
+						a.recordID=$(e).find("td.recordID").text();
+						a.content=a.ID+";"+a.moduleID+";"+a.fieldID+";"+
+								  a.ActualParam.substring(0,a.ActualParam.indexOf(":"))+";"+a.recordID;
+						console.log(a);
+						actual.push(a);
+				});
+				e.taskApplicationId=app.Name;
+				e.taskApplicationType="save";
+				e.actualParameters=actual;
+				$(e).data("app",app);
+			}
+		});
+	});
 	$("#new_course_dialog").on("send",function(){
 		var obj=$(this).data("obj");
-  			// console.log($(this).data("obj"));
-  			var arr=$("#container").data("w").activities || [];
-  			console.log(arr);
-  			$(arr).each(function(index,e){
-  				if(obj.attr("id")==e.name){
-  					//将设置好的参数传给相应的activity对象
-  					//目前只完成了发送提醒的功能，剩下的功能要逐步完成
-  					$("#container").trigger("application");
-  					var arr=$("#container").data("w").applications;  					
-  					var app=arr[arr.length-1];
-  					app.Name=$("select.app_type").val()+""+arr.length;
-					app.Type=$("select.app_type").val();
-					app.ClassPath=dict_classpath[app.Type];
-					app.ReceiverType=$("select.receive_type").val();
-					app.ReceiverType_index=$("select.receive_type").prop("selectedIndex");
-					app.ReceiverId_val=$("select.receive_id").val();
-					var id="";
-					if(app.ReceiverType!="ActualParameters"){
-						id="0"+":"+$("select.receive_id").val().match(/\d+/)[0];
-						app.ReceiverId=id;
-					}else{
-					    app.ReceiverType="user";
-					    id="1"+":"+$("select.receive_id").val().match(/\d+/)[0];
-					    app.ReceiverId=id;
-					}
-					e.taskApplicationId=app.Name;
-					e.taskApplicationType="send";
-					app.Content=$("textarea.app_info").val();
-					console.log($("textarea.app_info").val());
-					$(e).data("app",app);
-  				}
-  			});
+		var arr=$("#container").data("w").activities || [];
+		console.log(arr);
+		$(arr).each(function(index,e){
+			if(obj.attr("id")==e.name){
+				//将设置好的参数传给相应的activity对象
+				//目前只完成了发送提醒的功能，剩下的功能要逐步完成
+				$("#container").trigger("application");
+				var arr=$("#container").data("w").applications;  					
+				var app=arr[arr.length-1];
+				app.Name=$("select.app_type").val()+""+arr.length;
+				app.Type=$("select.app_type").val();
+				app.ClassPath=dict_classpath[app.Type];
+				app.ReceiverType=$("select.receive_type").val();
+				app.ReceiverType_index=$("select.receive_type").prop("selectedIndex");
+				app.ReceiverId_val=$("select.receive_id").val();
+				var id="";
+				if(app.ReceiverType!="ActualParameters"){
+					id="0"+":"+$("select.receive_id").val().match(/\d+/)[0];
+					app.ReceiverId=id;
+				}else{
+				    app.ReceiverType="user";
+				    id="1"+":"+$("select.receive_id").val().match(/\d+/)[0];
+				    app.ReceiverId=id;
+				}
+				e.taskApplicationId=app.Name;
+				e.taskApplicationType="send";
+				app.Content=$("textarea.app_info").val();
+				console.log($("textarea.app_info").val());
+				$(e).data("app",app);
+			}
+		});
+	});
+	$("#new_course_dialog").on("delete",function(){
+		var obj=$(this).data("obj");
+		var arr=$("#container").data("w").activities || [];
+		console.log(arr);
+		$(arr).each(function(index,e){
+			if(obj.attr("id")==e.name){
+				arr.splice(index,1);	
+			}
+		});
 	});
 	//这个函数不应该放在这儿，以后改
 	$('#new_course_dialog').on('submit', function (e,name) {
@@ -164,6 +156,9 @@
 			}
 			if($("select.app_type").val().toLocaleLowerCase().indexOf("get")>=0){
 				$('#new_course_dialog').trigger("get");
+			}
+			if($("select.app_type").val().toLocaleLowerCase().indexOf("save")>=0){
+				$('#new_course_dialog').trigger("save");
 			}
 		}			
 	});

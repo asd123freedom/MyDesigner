@@ -17,6 +17,10 @@ $(function(){
 				return;
 			}
 			var obj=$("#new_course_dialog").data("obj");
+			if(obj.attr("id").indexOf("participant")>=0){
+				$('#new_course_dialog').load("ParticipantDialog.html?num="+d.getTime(),function(){});
+				return;
+			}
 			if(obj){
 				var arr=$("#container").data("w").activities || [];
 		  		$(arr).each(function(index,e){

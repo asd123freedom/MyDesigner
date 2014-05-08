@@ -22,9 +22,9 @@
 				hoverPaintStyle:{strokeStyle:"#dbe300"},
 				endpoint:"Blank",
 				anchor:"Continuous",
-				overlays:[ ["PlainArrow", {location:1,width:10, length:12} ],
-					[ "Label", { cssClass:"component label",label:"1", location:0.5 }]
-					]
+				overlays:[ ["PlainArrow", {location:1,width:10, length:12} ]]
+					//[ "Label", { cssClass:"component label",label:"1", location:0.5 }]
+					//]
 			};
 			var shapes=$(".icon");
 			var toolBar=$("#toolBar");
