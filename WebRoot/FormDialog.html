@@ -1,3 +1,11 @@
+<style>
+    div.addFormApp{
+    	margin-left: 20px;
+    }
+    .addFormApp li{
+    	font-size: 100%;
+    }
+</style>
 <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 			<h3>表单应用</h3>
@@ -7,6 +15,9 @@
   			<li class="temple app active">
     			<a href="#">表单应用</a>
   			</li>
+  			<li class="temple childModule">
+    			<a href="#">添加子表</a>
+  			</li>
   			<li class="temple formal">
     			<a href="#">形参设定</a>
   			</li>
@@ -14,46 +25,45 @@
 			<div id="content1" class="content">
 				<form class="form-horizontal">
 					<div class="control-group">
-    					<label class="control-label" for="inputEmail">标识</label>
-    					<div class="controls">
-      						<input type="text" id="inputEmail" class="inputId" value="" placeholder="ID" autocomplete="off" />
+    					<div class="addFormApp">
+      						<input type="text" class="inputId" value="" placeholder="application1" autocomplete="off" />
+      						<button class="btn btn-primary addFormApp">添加</button>
+      						<div class="btn-group">
+								  <a class="btn dropdown-toggle formAppName" data-toggle="dropdown" href="#">
+								    <span>选择应用</span>
+								    <span class="caret"></span>
+								  </a>
+								  <ul class="dropdown-menu selectFormApp">
+								    <!-- dropdown menu links -->
+								    <li class="hide temple"><a href="#"></a></li>
+								  </ul>
+							</div>
     					</div>
  					</div>
-				  	<div class="control-group">
-				   		<label class="control-label" for="inputPassword" placeholder="Discribe">描述</label>
-				    	<div class="controls">
-				   	   		<input type="password" id="inputPassword" autocomplete="off" value=""/>
-				    	</div>
-				  	</div>
-				  	<div class="control-group form">
-				  		<label class="control-label"  style="padding:0px">
-				  				<select class="span2 Module">							  
+ 					<div class="control-group selectParentModule">
+				  		<label class="control-label"  style="padding:0px;margin-left:20px">
+				  				<select class="span3 Module">							  
 								  <option class="hide temple"></option>
 								</select></label>
-				    	<div class="controls">
-								<select class="span2 Field">							  
+				    	<div class="controls" style="margin-left:260px">
+								<select class="span3 Field">							  
 								  <option class="hide temple"></option>
 								</select>
 								<a href="#" class="btn btn-primary addActualParam" style="margin-left:20px">确定</a>
-				    	</div>
-				  	</div>
-				  	<div class="hide control-group app">
-				   		<label class="control-label" for="inputPassword">描述</label>
-				    	<div class="controls">
-				   	   		<textarea rows="5" class="app_info">...
-				   	   		</textarea>
+								<a href="#" class="btn btn-danger">删除</a>
 				    	</div>
 				  	</div>
 				</form>
-			<table class="table table-condensed table-hover get app">
+			<table class="table table-condensed table-hover parentModule">
 	              <thead>
-	                <tr class="hide head">
+	                <tr class="head">
 	                  <th width="10%">#</th>
-	                  <th width="16%">模块ID</th>
+	                  <th width="10%">模块ID</th>
 	                  <th width="16%">模块名</th>
-	                  <th width="16%">字段ID</th>
+	                  <th width="10%">字段ID</th>
 	                  <th width="16%">字段名</th>
-	                  <th width="16%">模式</th>
+	                  <th width="10%">模式</th>
+	                  <th width="10%">子类型</th>
 	                </tr>
 	              </thead>
 	              <tbody>
@@ -64,16 +74,17 @@
 	                  <td class="fieldID">3ice</td>
 	                  <td class="field">3ice</td>
 	                  <td class="model"><p class="text-info"></p></td>
+	                  <td class="type"><p class="text-info"></p></td>
 	                </tr>
 	              </tbody>
             </table>
 			</div>
-			<div id="content2" class="hide content">
+			<div id="content3" class="hide content">
 				<form class="form-horizontal">
 					<div class="control-group">
     					<label class="control-label formal_label">形参标识</label>
     					<div class="controls">
-      						<input type="text" id="inputEmail" class="formal_label" placeholder="ID">
+      						<input type="text" class="formal_label" placeholder="ID">
     					</div>
  					</div>
 				  	<div class="control-group">
@@ -86,118 +97,322 @@
 							</select>
 				    	</div>
 				  	</div>
+				  	<div class="control-group">
+				   		<label class="control-label">子类型</label>
+				    	<div class="controls">
+							<select class="data_type">
+							  <option value="STRING">STRING</option>
+							  <option value="LIST">LIST</option>
+							</select>
+				    	</div>
+				  	</div>
 				  	<div class="btn-group">
             			<a class="btn btn-primary form_remove" style="margin-left:10px" href="#">删除</a>
 	            		<a class="btn formal_submit" href="#">提交</a>
-            </div>
+            		</div>
 				</form>
+			</div>
+			<div id="content2" class="hide content">
+				<div class="control-group selectChildModule">
+				  		<label class="control-label"  style="padding:0px;margin-left:20px;float:left">
+				  				<select class="span3 Module" style="margin-bottom:0px">							  
+								  <option class="hide temple"></option>
+								</select></label>
+				    	<div class="controls" style="margin-left:260px;">
+								<select class="span3 Field" style="margin-bottom:0px">							  
+								  <option class="hide temple"></option>
+								</select>
+								<a href="#" class="btn btn-primary addActualParam" style="margin-left:20px">确定</a>
+								<a href="#" class="btn btn-danger">删除</a>
+				    	</div>
+				  	</div>
+				</form>
+				<table class="table table-condensed table-hover childModule">
+		              <thead>
+		                <tr class="head">
+		                  <th width="10%">#</th>
+		                  <th width="10%">模块ID</th>
+		                  <th width="16%">模块名</th>
+		                  <th width="10%">字段ID</th>
+		                  <th width="16%">字段名</th>
+		                  <th width="10%">模式</th>
+		                  <th width="10%">子类型</th>
+		                </tr>
+		              </thead>
+		              <tbody>
+		                <tr class="hide temple" title="双击编辑">
+		                  <td class="id">0</td>
+		                  <td class="moduleID"><span style="">Mushi</span></td>
+		                  <td class="module"><span style="">Mushi</span></td>
+		                  <td class="fieldID">3ice</td>
+		                  <td class="field">3ice</td>
+		                  <td class="model"><p class="text-info"></p></td>
+		                  <td class="type"><p class="text-info"></p></td>
+		                </tr>
+		              </tbody>
+	            </table>
 			</div>
 		</div>
 		<div class="modal-footer">
 			<a href="#" data-dismiss="modal" class="btn">取消</a>
-			<a href="#" class="btn btn-primary submit" data-loading-text="正在添加">确定</a>
+			<a href="#" class="btn btn-primary formapp submit" data-loading-text="正在添加">确定</a>
 		</div>
 <script type="text/javascript">
   	$(function(){
-  		$(".submit").bind("click",function(){
-  			if($("li.formal").hasClass("active")){
+  		//填写应用Id的输入框获得焦点的事件
+  		$("input.inputId").bind("focus",function(){
+  			$(this).val($(this).attr("placeholder"));
+  		});
+  		//选择应用的事件
+  		var bindSelectAppEvent=function(parent,data){
+  			parent.find("a").bind("click",function(){
+  				var str=$(this).text();
+  				$(this).parent().parent().parent().find("a.formAppName").find("span:eq(0)").text(str);
+  				if(data.Modules){
+  					var arr=data.Modules;
+  					for(var i=0;i<arr.length;i++){
+  						var moduleID=arr[i].ModuleId;
+  						var module=arr[i].ModuleName;
+  						for(var j=0;j<arr[i].FormalParameters.length;j++){
+  							var f_data={};
+  							f_data.moduleID=moduleID;
+  							f_data.module=module;
+  							f_data.fieldID=arr[i].FormalParameters[j].Id.split("_")[0];
+  							f_data.field=arr[i].FormalParameters[j].Id.split("_")[1];
+  							f_data.type=arr[i].FormalParameters[j].BasicType;
+  							f_data.model=arr[i].FormalParameters[j].Mode;
+  							fillFormParametersTable(f_data,$("#content1 table"));
+  						}
+  					}
+  				}
+  				if(data.ChildModules){
+  					var arr=data.Modules;
+  					for(var i=0;i<arr.length;i++){
+  						var moduleID=arr[i].ModuleId;
+  						var module=arr[i].ModuleName;
+  						for(var j=0;j<arr[i].FormalParameters.length;j++){
+  							var f_data={};
+  							f_data.moduleID=moduleID;
+  							f_data.module=module;
+  							f_data.fieldID=arr[i].FormalParameters[j].Id.split("_")[0];
+  							f_data.field=arr[i].FormalParameters[j].Id.split("_")[1];
+  							f_data.type=arr[i].FormalParameters[j].BasicType;
+  							f_data.model=arr[i].FormalParameters[j].Mode;
+  							fillFormParametersTable(f_data,$("#content2 table"));
+  						}
+  					}
+  				}
+  			});
+  		}
+  		//初始化应用列表
+  		var initFormAppList=function(){
+  			var arr=$("#container").data("w").applications || [];
+  			console.log(arr);
+  			$(".selectFormApp").find("li:not(.temple)").remove();
+  			for(var i=0;i<arr.length;i++){
+  				if(arr[i].type=="form"){
+  					var $li=$(".selectFormApp").find("li.temple").clone();
+	  				$li.removeClass("hide temple");
+	  				$li.find("a").text(arr[i].id);
+	  				$li.appendTo($("ul.selectFormApp"));
+	  				bindSelectAppEvent($li,arr[i].Form);
+	  				//$li.find("a").trigger("click");
+  				}
+  			}
+  		};
+  		//填写形参表格
+  		var fillFormParametersTable=function(data,table){
+  			var $tr=table.find("tr.temple").clone();
+  			$tr.removeClass("hide temple");
+  			$tr.find("td.moduleID").text(data.moduleID);
+  			$tr.find("td.module").text(data.module);
+  			$tr.find("td.fieldID").text(data.fieldID);
+  			$tr.find("td.field").text(data.field);
+  			if(data.type){
+  				$tr.find("td.type").text(data.type);
+  			}
+  			if(data.model){
+  				$tr.find("td.model").text(data.model);
+  			}
+  			$tr.appendTo(table);
+  			$tr.bind("click",function(){
+  				if($(this).hasClass("warning")){
+  					$(this).removeClass("warning");
+  				}else{
+  					table.find("tr.warning").removeClass("warning");
+  					$(this).addClass("warning");
+  				}
+  			});
+  			$tr.bind("dblclick",function(){
+  				$("li.formal").data("val",$(this));
+  				initFormalEdit($(this));
+  				$("li.formal").trigger("click");
+  				$(".formapp.submit").addClass("disabled");
+  			});
+  			initTableIndex(table);
+  		};
+  		//调整表格的index
+  		var initTableIndex=function(table){
+  			var $trs=table.find("tbody tr:not(.temple)");
+  			$trs.each(function(index,e){
+  				$(e).find("td.id").text(index+1);
+  			});
+  		};
+  		//初始化编辑形参的界面
+  		var initFormalEdit=function(tr){
+  			$("input.formal_label").val(tr.find("td.fieldID").text()+":"+tr.find("td.field").text());
+  		}
+  		//提交形参的编辑结果
+  		$(".btn.formal_submit").bind("click",function(){
+  			var $tr=$("li.formal").data("val");
+  			$tr.find("td.model").text($("select.data_model").val());
+  			$tr.find("td.type").text($("select.data_type").val());
+  			if($tr.parents(".content").attr("id")=="content1"){
   				$("li.app").trigger("click");
+  			}else{
+  				$("li.childModule").trigger("click");
+  			}
+  			$(".formapp.submit").removeClass("disabled");
+  		});
+  		//删除表格中被选中的行
+  		$(".btn.btn-danger").bind("click",function(){
+  			$(this).parents(".content").find("tr.warning").remove();
+  			initTableIndex($(this).parents(".content").find("table"));
+  		});
+  		//将形参数据填到表格中
+  		$(".btn.addActualParam").bind("click",function(){
+  			var temp=$("a.formAppName span:eq(0)").text();
+  			if(temp=="选择应用"){
+  				alert("先选择应用");
   				return;
   			}
-  			$('#new_course_dialog').trigger("submit",["form"]);
-  			$('#new_course_dialog').modal('hide');
+  			var data={};
+  			var selectModule=$(this).parents(".content:eq(0)").find("select.Module");
+  			var selectField=$(this).parents(".content:eq(0)").find("select.Field");
+  			data.moduleID=selectModule.find("option:selected").data("id");
+  			data.module=selectModule.find("option:selected").val();
+  			data.fieldID=selectField.find("option:selected").data("id");
+  			data.field=selectField.find("option:selected").html().split(":")[1];
+  			var table=$(this).parents(".content:eq(0)").find("table");
+  			fillFormParametersTable(data,table);
+  			table.find("tr.warning").removeClass("warning");
   		});
-  		$("#new_course_dialog").on("show_form",function(){
-  			$.ajax({
-					url: "http://127.0.0.1:8080/HiServiceCRM/findAllDynamicModuleMetaData.action",
-	         		type: "POST",
-	         		success:function(data){
-	         			//console.log(data);
-						var parent=$("select.Module");
-						for(var i=0;i<data.length;i++){
-							//alert("");
-							var opt=parent.find(".temple").clone();
-							opt.removeClass("hide temple");
-							opt.attr("value",data[i].modulelabel);
-							opt.html(data[i].moduleID+":"+data[i].modulelabel);
-							opt.appendTo(parent);
-							opt.data("id",data[i].moduleID);
-						}
-					},
-			});
+  		//添加一个应用
+  		$(".btn.addFormApp").bind("click",function(e){
+  			e.preventDefault();
+  			var arr=$("#container").data("w").applications || [];
+  			var name=$(this).parent().find("input").val() || $(this).parent().find("input").attr("placeholder");
+  			for(var i=0;i<arr.length;i++){
+  				if(arr[i].id==name){
+  					alert("该ID已经存在");
+  					return;
+  				}
+  			}
+  			var cb=$.Callbacks();
+  			cb.add(function(){
+  				initFormAppList();
+  			});
+  			$("#container").trigger("formapplication",[name,cb]);
+  			alert("添加成功！");
   		});
-  		$("tr").bind("dblclick",function(){
-  			$("li.formal").trigger("click");
+  		//提交所有编辑结果
+  		$(".formapp.submit").bind("click",function(){
+  			var name=$("a.formAppName span:eq(0)").text();
+  			var arr=$("#container").data("w").applications || [];
+  			var parent_trs=$(".parentModule tbody tr:not(.temple)");
+  			var child_trs=$(".childModule tbody tr:not(.temple)");
+  			var parent_data={};
+  			parent_trs.each(function(index,e){
+  				var moduleID=$(e).find("td.moduleID").text();
+  				if(parent_data[moduleID]){
+  					parent_data[moduleID].push($(e));
+  				}else{
+  					parent_data[moduleID]=[];
+  					parent_data[moduleID].push($(e));
+  				}
+  			});
+  			var child_data={};
+  			child_trs.each(function(index,e){
+  				var moduleID=$(e).find("td.moduleID").text();
+  				if(child_data[moduleID]){
+  					child_data[moduleID].push($(e));
+  				}else{
+  					child_data[moduleID]=[];
+  					child_data[moduleID].push($(e));
+  				}
+  			});
+  			for(var i=0;i<arr.length;i++){
+  				if(arr[i].type=="form" && arr[i].id==name){
+  					var arr_module=arr[i].Form.Modules;
+  					//console.log(data);
+  					for(item in parent_data){
+  						if(parent_data.hasOwnProperty(item)){
+  							var elements=parent_data[item];
+  							var module=new Module();
+  							arr_module.push(module);
+  							module.ModuleId=item;
+  							module.ModuleName=elements[0].find("td.module").text();
+  							var arr_formalParam=module.FormalParameters;
+  							for(var j=0;j<elements.length;j++){
+  								var formParam=new FormalParameter();
+  								formParam.Name=elements[j].find("td.fieldID").text();
+  								formParam.Id=elements[j].find("td.fieldID").text()+"_"+
+  											 elements[j].find("td.field").text()+"_1";
+  								formParam.BasicType=elements[j].find("td.type").text();
+  								formParam.Mode=elements[j].find("td.model").text();
+  								arr_formalParam.push(formParam);
+  							}
+  						}
+  					}
+  					var arr_childmodule=arr[i].Form.ChildModules;
+  					for(item in child_data){
+  						if(child_data.hasOwnProperty(item)){
+  							var elements=child_data[item];
+  							var module=new Module();
+  							arr_childmodule.push(module);
+  							module.ModuleId=item;
+  							module.ModuleName=elements[0].find("td.module").text();
+  							var arr_formalParam=module.FormalParameters;
+  							for(var k=0;k<elements.length;k++){
+  								var formParam=new FormalParameter();
+  								formParam.Name=elements[k].find("td.fieldID").text();
+  								formParam.Id=elements[k].find("td.fieldID").text()+"_"+
+  											 elements[k].find("td.field").text()+"_1";
+  								formParam.BasicType=elements[k].find("td.type").text();
+  								formParam.Mode=elements[k].find("td.model").text();
+  								arr_formalParam.push(formParam);
+  							}
+  						}
+  					}
+  				}
+  			}
+  			$("#new_course_dialog").modal("hide");
   		});
-  		$("select.Module").bind("change",function(){
+  		//确定对话框初始的显示
+  		$("#new_course_dialog").unbind("show_form");
+  		$("#new_course_dialog").bind("show_form",function(){
+  			initFormAppList();	
+  		});
+  		//页面初始化的时候填写好所有父模块
+  		Model.findAllParentDynamicModuleMetaData().done(function(data){
+  			Model.fillInAllDynamicModuleMetaData(data,$("#content1 select.Module"));
+  		});
+  		//页面初始化的时候填好所有的子模块
+  		Model.findAllChildDynamicModuleMetaData().done(function(data){
+  			Model.fillInAllDynamicModuleMetaData(data,$("#content2 select.Module"));
+  		});
+  		$("select.Module").bind("change",function(e,callbacks){
 			var index=$(this).find("option:selected").data("id");
 			var data1={"moduleId":index};
+			var callbacks=callbacks || $.Callbacks();
 			$("select.Field option:not(.temple)").remove();
-			$.ajax({
-					url: "http://127.0.0.1:8080/HiServiceCRM/findFieldbyDynamicModule.action",
-	         		type: "POST",
-	         		data: {"json":JSON.stringify(data1)},
-	         		success:function(data){
-	         			console.log(data);
-						var parent=$("select.Field");
-						for(var i=0;i<data.length;i++){
-							//alert("");
-							var opt=parent.find(".temple").clone();
-							opt.removeClass("hide temple");
-							opt.attr("value",data[i].fieldLable);
-							opt.html(data[i].fieldId+":"+data[i].fieldLable);
-							opt.appendTo(parent);
-							opt.data("id",data[i].fieldId);
-						}
-						if(parent.data("Field")){						
-							parent.val(parent.data("Field"));
-							parent.data("Field",null);
-						}
-						/*var val=$("select.receive_id").data("ReceiverId_val");
-						if(val){
-							$("select.receive_id").val(val);
-							$("select.receive_id").data("ReceiverId_val",null);
-						}*/
-	         		},
-	         	});
-			
+			var selectField=$(this).parent().next().find("select.Field");
+			Model.findFieldbyDynamicModule(data1).done(function(data){
+				Model.fillInFieldbyDynamicModule(data,selectField,true);
+			}).done(function(){
+				callbacks.fire();
+			});	
 		});
-  		$("li.app").bind("click",function(){
-  			$(".btn.cancel").removeClass("disabled");
-  		});
-  		$("li.formal").bind("click",function(){
-  			$(".btn.cancel").addClass("disabled");
-  			var line=$(this).data("line");
-  			if(line){
-  				var str=line.find("td.fieldID").text()+"_"+line.find("td.field").text();
-  				$("input.formal_label").val(str);
-  			}else{
-  				$("input.formal_label").val("");
-  			}
-  		});
-  		$(".btn.formal_submit").bind("click",function(){
-  			var line=$("li.formal").data("line");
-  			line.find("td.model").find("p").remove();
-  			line.find("td.model").text($("select.data_model").val());
-  			$("li.app").trigger("click");
-  			$("li.formal").data("line",null);
-  		});
-  		$(".btn.form_remove").bind("click",function(){
-  			var line=$("li.formal").data("line");
-  			line.remove();
-  			$("li.formal").data("line",null);
-  			if($("tr:not(.temple)").length==1){
-					$("table").find("tr.head").addClass("hide");
-			}else{
-					$("table").find("tr:not(.head)").each(function(index,e){
-						$(e).find("td.id").text(index);
-					});
-			}
-			
-			$("select.Module").val("");
-			$("select.Field").val("");
-  			$("li.app").trigger("click");
-  		});
   		var $navs = $('.nav > li ');
 		//var $content = $('.modal-body').find("#content");
 		//$content.html(new Date()+"");
@@ -205,6 +420,7 @@
 			$navs.removeClass("active");
 			$(this).addClass("active");
 			//$content.html(new Date()+"");
+			$("tr.warning").removeClass("warning");
 			$navs.each(function(index,e){
 				if($(e).hasClass("active")){
 					$(".content").addClass("hide");
@@ -216,60 +432,6 @@
 		  if(e.which==13){
 		  	$(this).blur();
 		  }
-		});
-		//$("table").data("index",1);
-		$(".btn.addActualParam").bind("click",function(){
-			if($("select.Field").val()==""){
-				return;
-			}
-			$("table").find("tr.head").removeClass("hide");
-			var line=$("table").find("tr.temple").clone();
-			line.removeClass("hide temple");
-			line.addClass("actual");
-			var n=$("tr:last-child:eq(1)").find("td.id").text();
-			n++;
-			line.find("td.id").text(n);
-			line.find("td.moduleID").text($("select.Module").find("option:selected").data("id"));
-			line.find("td.module").text($("select.Module").find("option:selected").val());
-			line.find("td.fieldID").text($("select.Field").find("option:selected").data("id"));
-			line.find("td.field").text($("select.Field").find("option:selected").val());
-			line.find("td.model").find("p").text("双击行以编辑");
-			line.appendTo($("table"));
-			line.find("td").hover(function(){
-				$(this).css("cursor","default")
-			});
-			line.bind("dblclick",function(){
-				$("li.formal").data("line",line);
-				$("li.formal").trigger("click");
-			});
-		});
-		$("select.Module").bind("change",function(){
-			var index=$(this).find("option:selected").data("id");
-			var data1={"moduleId":index};
-			$("select.Field option:not(.temple)").remove();
-			$.ajax({
-					url: "http://127.0.0.1:8080/HiServiceCRM/findFieldbyDynamicModule.action",
-	         		type: "POST",
-	         		data: {"json":JSON.stringify(data1)},
-	         		success:function(data){
-	         			//console.log(data);
-						var parent=$("select.Field");
-						for(var i=0;i<data.length;i++){
-							//alert("");
-							var opt=parent.find(".temple").clone();
-							opt.removeClass("hide temple");
-							opt.attr("value",data[i].fieldLable);
-							opt.html(data[i].fieldId+":"+data[i].fieldLable);
-							opt.appendTo(parent);
-							opt.data("id",data[i].fieldId);
-						}
-						if(parent.data("Field")){						
-							parent.val(parent.data("Field"));
-							parent.data("Field",null);
-						}
-	         		},
-	         	});
-			
 		});
   	});
 </script>

@@ -8,6 +8,7 @@
     <link href="css/main.css" rel="stylesheet" media="screen">
  </head>
     <body>
+    <div id="sideBar"></div>
 	<div id="toolBar" class="section_header" style="margin-top:50px;margin-left:20px;width:1000px;height:50px;">
 		 <div class="userSelect"></div>
 		 <!--img id="select" class="icon unselected" src="images/select.gif" style=""></img-->
@@ -31,9 +32,9 @@
 		 <!--div class="move unselected" style="background-image:url(images/zoomout.png)"-->
 		 <button class="btn save btn-primary"  data-loading-text="正在保存">保存</button>
 		 <button class="btn dialog btn-primary"  data-loading-text="正在打开">绑定表单</button>
-	 </div>
+	</div>
 	<div id="container" class="box" style="margin-top:0px;margin-left:20px;width:1000px;height:255px;">
-	 </div>
+	</div>
 		<!-- 容器结束，对话框开始 -->
 		<div class="modal hide fade in" id="new_course_dialog" style="width:700px;margin-left:-350px">
 		  <div class="modal-header">
@@ -52,8 +53,6 @@
 			<div id="content"></div>
 		  </div>
 		  <div class="modal-footer">
-			<a href="#" data-dismiss="modal" class="btn">取消</a>
-			<a href="#" class="btn btn-primary submit" data-loading-text="正在添加">确定</a>
 		  </div>
 		</div>
 </body>
@@ -102,7 +101,7 @@ function appendNewElement(container,ui){
 		if(name_index>=0){
 			//name=name.substr(name_index);
 		}
-		span.html(name);
+		//span.html(name);
 		if(incoming!="participant"){
 				parent=$('<div>').css({
 					position:'absolute',
@@ -112,6 +111,7 @@ function appendNewElement(container,ui){
 				span.css({
 					left:0,
 					top:32,
+					width:50
 				});
 		}else{
 				parent=$('<div>').css({
@@ -123,6 +123,7 @@ function appendNewElement(container,ui){
 				span.css({
 					left:0,
 					top:32,
+					width:50
 				});
 		}
 		new_element.attr("title",name);
@@ -204,41 +205,41 @@ function addNewLine(current,incoming){
 		return null;
 	}
 }
-jsPlumb.bind("ready", function() {
-	document.onselectstart = function () { return false; };	
-	jsPlumbDemo.init();
-	var icons=$("#toolBar").find(".icon");
-	var stateMachineConnector=$("#toolBar").data("option");
-	icons.each(function(index,el){
-				 $(el).bind("click",function(){
-				 	$(icons).removeClass("selected");
-				 	$(icons).addClass("unselected");
-				 	$(this).removeClass("unselected");
-				 	$(this).addClass("selected");		
-			 	 });
-	});
-	$(".dialog").bind("click",function(e,obj){
-		$('#new_course_dialog').data("obj",obj);
-		$('#new_course_dialog').modal("show");
-	});
-	$("#participant").draggable({helper:"clone"});
-	$("#container").droppable({
-		drop:function(event,ui){
-			var incoming=ui.helper.context.id;
-			if(!$("#container").data("w").participants || $("#container").data("w").participants.length==0){
-				if(incoming!="participant"){
-					return;
-				}else{
-					$( ".icon" ).draggable({helper:"clone"});
+	jsPlumb.bind("ready", function() {
+		document.onselectstart = function () { return false; };	
+		jsPlumbDemo.init();
+		var icons=$("#toolBar").find(".icon");
+		var stateMachineConnector=$("#toolBar").data("option");
+		icons.each(function(index,el){
+					 $(el).bind("click",function(){
+					 	$(icons).removeClass("selected");
+					 	$(icons).addClass("unselected");
+					 	$(this).removeClass("unselected");
+					 	$(this).addClass("selected");		
+				 	 });
+		});
+		$(".dialog").bind("click",function(e,obj){
+			$('#new_course_dialog').data("obj",obj);
+			$('#new_course_dialog').modal("show");
+		});
+		$("#participant").draggable({helper:"clone"});
+		$("#container").droppable({
+			drop:function(event,ui){
+				var incoming=ui.helper.context.id;
+				if(!$("#container").data("w").participants || $("#container").data("w").participants.length==0){
+					if(incoming!="participant"){
+						return;
+					}else{
+						$( ".icon" ).draggable({helper:"clone"});
+					}
 				}
-			}
-			var str=ui.helper.context.className;
-			if(str.indexOf("dropped")>=0){
-				return;
-			}
-			trigger($(this),incoming);
-			appendNewElement($(this),ui);
-		},
+				var str=ui.helper.context.className;
+				if(str.indexOf("dropped")>=0){
+					return;
+				}
+				trigger($(this),incoming);
+				appendNewElement($(this),ui);
+			},
 	});
 	$(".save").bind("click",function(){
 		var tmp=$("#container").data("w").getXml();

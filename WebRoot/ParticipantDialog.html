@@ -24,13 +24,13 @@
   					<div class="control-group">
     					<label class="control-label" for="inputEmail">标识</label>
     					<div class="controls">
-      						<input type="text" id="inputEmail" placeholder="ID">
+      						<input type="text" id="UUID" placeholder="ID" disabled="disabled">
     					</div>
  					</div>
 				  	<div class="control-group">
 				   		<label class="control-label" for="inputPassword">名称</label>
 				    	<div class="controls">
-				   	   		<input type="password" id="inputPassword">
+				   	   		<input type="text" id="name">
 				    	</div>
 				  	</div>
 				  	<div class="control-group">
@@ -69,7 +69,7 @@
 		</div>
 		<div class="modal-footer">
 			<a href="#" data-dismiss="modal" class="btn">取消</a>
-			<a href="#" class="btn btn-primary submit" data-loading-text="正在添加">确定</a>
+			<a href="#" class="btn btn-primary participant submit" data-loading-text="正在添加">确定</a>
 		</div>
 <script type="text/javascript">
   	$(function(){
@@ -80,10 +80,6 @@
   		$(".btn-success").bind("click",function(){
   			$(this).addClass("disabled");
   			$(".btn-danger").removeClass("disabled");
-  		});
-  		$(".submit").bind("click",function(){
-  			$('#new_course_dialog').trigger("submit",["pojo"]);
-  			$('#new_course_dialog').modal('hide');
   		});
   		var $navs = $('.nav > li ');
 		$navs.on('click', function(){			
@@ -100,11 +96,29 @@
 				}
 			});
 		});
+		$(".btn.submit").bind("click",function(){
+			$("#new_course_dialog").modal("hide");
+		});
 		$("select.type").bind("change",function(){
 			var type=$(this).val();
+			$("select > option").each(function(index,e){
+				$(".btn.submit").removeClass($(e).val());
+			});
+			$(".btn.submit").addClass(type);
 			if(type=="user"){
 				var d=new Date();
 			 	$("#content2").find("div.setAssignOption").load("AssignUser.html?num="+d.getTime(),function(){});
+			 	//$("select.method").append($("<option>").html("直接分配模式"));
+			}else if(type=="group"){
+				d=new Date();
+				$("#content2").find("div.setAssignOption").load("AssignGroup.html?num="+d.getTime(),function(){});
+				//$("select.method").append($("<option>").html("基于组分配模式"))；
+			}else if(type=="role"){
+				d=new Date();
+				$("#content2").find("div.setAssignOption").load("AssignRole.html?num="+d.getTime(),function(){});
+			}else if(type=="area"){
+				d=new Date();
+				$("#content2").find("div.setAssignOption").load("AssignArea.html?num="+d.getTime(),function(){});
 			}
 		});
   	});

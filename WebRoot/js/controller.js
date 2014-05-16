@@ -2,22 +2,23 @@ $(function(){
 	$('#new_course_dialog').on('show', function (e,o) {
 			var flag="init";
 			var tran=$("#new_course_dialog").data("tran");
-			$("#new_course_dialog").data("tran",null);
+			console.log(tran);
+			//$("#new_course_dialog").data("tran",null);
 			var d=new Date();
 			if(tran){
 				$('#new_course_dialog').load("Transition.html?num="+d.getTime());
-				var arr_actual=$("#container").data("w").actualParameters || [];
-				var arr_tran=$("#container").data("w").transitions || [];
-				$(arr_tran).each(function(index,e){
-					if(tran.sourceId==e.from && tran.targetId==e.to){
-						//这里添加的是显示的时候代码
-						$("td.condition").find("input").val(e.condition);
-					}
-				});
+				//var arr_actual=$("#container").data("w").actualParameters || [];
+				// var arr_tran=$("#container").data("w").transitions || [];
+				// $(arr_tran).each(function(index,e){
+				// 	if(tran.sourceId==e.from && tran.targetId==e.to){
+				// 		//这里添加的是显示的时候代码
+				// 		$("td.condition").find("input").val(e.condition);
+				// 	}
+				// });
 				return;
 			}
 			var obj=$("#new_course_dialog").data("obj");
-			if(obj.attr("id").indexOf("participant")>=0){
+			if(obj && obj.attr("id").indexOf("participant")>=0){
 				$('#new_course_dialog').load("ParticipantDialog.html?num="+d.getTime(),function(){});
 				return;
 			}
@@ -49,4 +50,14 @@ $(function(){
 				$("#new_course_dialog").trigger("show_form");
 			});
 	});
+	$("#new_course_dialog").on("hide",function(e,o){
+		var obj=$(this).data("obj");
+		//console.log(obj);
+		if(!obj){
+			return;
+		}
+		console.log($(this).find("#name").val());
+		obj.find("span").text($(this).find("#name").val()).css("display","block");
+		$(this).data("obj",null);
+	})
 });

@@ -10,7 +10,7 @@
 		$("#container").data("w",w1);
 		//console.log(w1);
 	});
-$("#container").on("activity",function(e,name){
+	$("#container").on("activity",function(e,name){
 		var w1=$("#container").data("w") || {};
 		var arr=w1.activities || [];
 		//console.log(w1.activities);
@@ -25,7 +25,7 @@ $("#container").on("activity",function(e,name){
 		//console.log(w1);
 		$("#container").data("w",w1);
 	});
-$("#container").on("transition",function(e,from,to){
+	$("#container").on("transition",function(e,from,to){
 		//console.log(to);
 		var w1=$("#container").data("w") || {};
 		var arr=w1.transitions || [];
@@ -40,7 +40,7 @@ $("#container").on("transition",function(e,from,to){
 		$("#container").data("w",w1);
 		//console.log(w1);
 	});
-$("#container").on("start",function(){
+	$("#container").on("start",function(){
 		var w1=$("#container").data("w") || {};
 		//console.log(w1.activities);
 		var p1=w1.participants[0].name;
@@ -48,7 +48,7 @@ $("#container").on("start",function(){
 		w1.start=a1;
 		$("#container").data("w",w1);
 	});
-$("#container").on("end",function(){
+	$("#container").on("end",function(){
 		var w1=$("#container").data("w") || {};
 		//console.log(w1.activities);
 		var p1=w1.participants[0].name;
@@ -56,13 +56,24 @@ $("#container").on("end",function(){
 		w1.end=a1;
 		$("#container").data("w",w1);
 	});
-$("#container").on("application",function(){
+	$("#container").on("application",function(){
 		var w1=$("#container").data("w") || {};
 		//console.log(w1.activities);
 		var arr=w1.applications||[];
 		var a1=new pojoapplication();
 		arr.push(a1);
 		w1.applications=arr;
-		//$("#container").data("w",w1);
+		$("#container").data("w",w1);
+	});
+	$("#container").on("formapplication",function(e,n,callbacks){
+		var callbacks=callbacks || $.Callbacks();
+		var w1=$("#container").data("w") || {};
+		var arr=w1.applications||[];
+		var a1=new formapplication();
+		a1.id=n;
+		arr.push(a1);
+		w1.applications=arr;
+		$("#container").data("w",w1);
+		callbacks.fire();
 	});
 });

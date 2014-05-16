@@ -18,9 +18,10 @@ var dict_extendattr={
 		//this.Content="";
 		//this.IsFormular="flase";//公式的功能暂时未实现
 var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Content","IsFormular","BusinessType"];
-var participant=function(name){
+	var participant=function(name){
 		this.name=name || "default_participant";
 		this.parent=null;
+		this.Description=null;
 		//还有缺少的属性，编写参与者的对话框时再编写
 		this.getXml=function(){
 			var temp_part=$("<Participant>")
@@ -29,6 +30,7 @@ var participant=function(name){
 			var part_type=$("<ParticipantType>");
 			part_type.attr("Type",dict_part_type["用户"]);
 			part_type.appendTo(temp_part);
+			this.Description.appendTo(temp_part);
 			//console.log(this.parent);
 			temp_part.appendTo(this.parent);
 		};
@@ -75,8 +77,9 @@ var participant=function(name){
 		};
 	};
 	var Form=function(){
-		this.Moudles=[];
+		this.Modules=[];
 		this.parent=null;
+		this.ChildModules=[];
 		this.getXml=function(){
 			var Form=$("<Form>")
 			var Moudles=$("<Moudles>");
@@ -85,6 +88,13 @@ var participant=function(name){
 				tmp.appendTo(Moudles);
 			}
 			Moudles.appendTo(Form);
+			var ChildModules=$("<ChildModules>");
+			var Description=$("<Description>");
+			for(var i=0;i<this.ChildMoudles.length;i++){
+				var tmp=this.ChildMoudles[i];
+				tmp.appendTo(ChildMoudles);
+			}
+			Description.appendTo(ChildModules);
 			Form.appendTo(this.parent);
 		};
 	};
@@ -125,6 +135,7 @@ var participant=function(name){
 			e1.parent=es;
 			e1.getXml();
 			es.appendTo(FormalParameter);
+			FormalParameter.appendTo(this.parent);
 		};		
 	}
 	var ActualParameter=function(){
@@ -276,6 +287,16 @@ var participant=function(name){
 			// }
 			es.appendTo(app);
 			app.appendTo(this.parent);
+		}
+	};
+	var formapplication=function(){
+		this.id="";
+		this.type="form";
+		this.Form=new Form();
+		this.getXml=function(){
+			var app=$("<application>");
+			app.attr("Id",this.id);
+			this.Form.parent=app;
 		}
 	};
 	

@@ -57,3 +57,12 @@
 	    	display:inline-block;
 	    	background-image: url(../images/select.gif);
 		}
+		#sideBar{
+			//margin-top: 50px;
+			//float:left;
+			//width:0px;
+			//border-right: 1px solid #06c;
+		}
+		.dropped span{
+			font-size: 4px;
+		}

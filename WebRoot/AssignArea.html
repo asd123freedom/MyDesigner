@@ -1,0 +1,65 @@
+<style>
+    p.showAssign{
+      border-bottom:1px solid #ddd;
+    }
+    div.buttons{
+      float:left;
+      width: 45px;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+    div.left{
+      float:left;
+      width:280px;
+    }
+    div.right{
+      margin-left:345px;
+      width:280px;
+    }
+    .btn.add{
+      margin-bottom: 10px;
+    }
+    tr{
+      cursor:default;
+    }
+</style>
+<p class="showAssign"><strong>延迟分配模式</strong></p>
+<h3>延迟分配模式将在流程运行中为任务动态指定分配的资源</h3>
+<div class="left" style="">
+  <label class="checkbox inline">
+    <input type="checkbox" id="UserCheckbox" value="user"> 用户
+  </label>
+  <label class="checkbox inline">
+    <input type="checkbox" id="RoleCheckbox" value="role"> 角色
+  </label>
+  <label class="checkbox inline">
+    <input type="checkbox" id="GroupCheckbox" value="group"> 组
+  </label>
+  <div style="margin-bottom:100px;margin-top:20px;">
+    <input type="text" id="variable" placeholder="资源变量名称">
+  </div>
+</div>
+<script>
+  $(function(){
+    $("select.method").find("option").remove();
+    $("select.method").append($("<option>").html("延迟分配模式").attr("selected",true));
+    $(".group.submit").bind("click",function(){
+          var obj=$("#new_course_dialog").data("obj");
+          var arr=$("#container").data("w").participants || [];
+          $(arr).each(function(index,e){
+            if(e.name==obj.attr("id")){
+               $Description=$("<Description>");
+               //Task的name属性填写的是当前泳道的人工任务节点的ID
+               $Task=$("<Task>").attr("name","").attr("assignType","deffered").attr("reAssign","false");
+               var str=$("input[type='checkbox']:checked").val()+":"+$("#variable").val();
+               $Variable=$("<Variable>").html(str);
+               $Variable.appendTo($Task);
+               $Task.appendTo($Description);
+               e.Description=$Description;
+            }
+          });
+          console.log("submit");
+          $("#new_course_dialog").modal("hide");
+      });
+  });
+</script>

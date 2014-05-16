@@ -33,10 +33,31 @@ var Model=(function(){
 			});  
 			return dtd.promise();
 		},
-		fillInAllDynamicModuleMetaData:function(data){
-			var parent=$(".app:not('.hide') select.Module");
+		findAllParentDynamicModuleMetaData:function(){
+			var dtd = $.Deferred();
+			$.ajax({
+					url: "http://127.0.0.1:8080/HiServiceCRM/findAllDynamicModuleMetaData!findParentDynamicModuleMetaData.action",
+	         		type: "POST",
+	         		success:function(data){
+						dtd.resolve(data || []);
+	         		}
+			});  
+			return dtd.promise();
+		},
+		findAllChildDynamicModuleMetaData:function(){
+			var dtd = $.Deferred();
+			$.ajax({
+					url: "http://127.0.0.1:8080/HiServiceCRM/findAllDynamicModuleMetaData!findChildDynamicModuleMetaData.action",
+	         		type: "POST",
+	         		success:function(data){
+						dtd.resolve(data || []);
+	         		}
+			});  
+			return dtd.promise();
+		},
+		fillInAllDynamicModuleMetaData:function(data,parent){
+			var parent=parent || $(".app:not('.hide') select.Module");
 			for(var i=0;i<data.length;i++){
-							//alert("");
 				var opt=parent.find(".temple").clone();
 				opt.removeClass("hide temple");
 				opt.attr("value",data[i].modulelabel);
@@ -52,21 +73,26 @@ var Model=(function(){
 	         		type: "POST",
 	         		data: {"json":JSON.stringify(index)},
 	         		success:function(data){
-	         			//console.log(data);
 	         			dtd.resolve(data || []);
 	         		},
 	         	});
 			return dtd.promise();
 		},
-		fillInFieldbyDynamicModule:function(data){
-			$(".app:not('.hide') select.Field option:not(.temple)").remove();
-			var parent=$(".app:not('.hide') select.Field");
+		fillInFieldbyDynamicModule:function(data,parent,flag){
+			//$(".app:not('.hide') select.Field option:not(.temple)").remove();
+			var parent=parent || $(".app:not('.hide') select.Field");
+			parent.find("option:not(.temple)").remove();
 			for(var i=0;i<data.length;i++){
 							//alert("");
 				var opt=parent.find(".temple").clone();
 				opt.removeClass("hide temple");
 				opt.attr("value",data[i].fieldLable);
-				opt.html(data[i].fieldId+":"+data[i].fieldLable);
+				if(flag && data[i].isRequest=="true"){
+					opt.html(data[i].fieldId+":*"+data[i].fieldLable);
+				}else{
+					opt.html(data[i].fieldId+":"+data[i].fieldLable);
+				}
+				
 				opt.appendTo(parent);
 				opt.data("id",data[i].fieldId);
 			}
