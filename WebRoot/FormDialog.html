@@ -186,7 +186,7 @@
   					}
   				}
   				if(data.ChildModules){
-  					var arr=data.Modules;
+  					var arr=data.ChildModules;
   					for(var i=0;i<arr.length;i++){
   						var moduleID=arr[i].ModuleId;
   						var module=arr[i].ModuleName;
@@ -343,6 +343,7 @@
   			});
   			for(var i=0;i<arr.length;i++){
   				if(arr[i].type=="form" && arr[i].id==name){
+            arr[i].Form.Modules=[];
   					var arr_module=arr[i].Form.Modules;
   					//console.log(data);
   					for(item in parent_data){
@@ -364,6 +365,7 @@
   							}
   						}
   					}
+            arr[i].Form.ChildModules=[];
   					var arr_childmodule=arr[i].Form.ChildModules;
   					for(item in child_data){
   						if(child_data.hasOwnProperty(item)){

@@ -180,13 +180,13 @@ function createTransition(from,to,stateMachineConnector){
 	});
 	return connect;
 }
-function trigger(container,str){
+function trigger(container,str,performer){
 	var _this=$(container);
 	var num=$("#container").data(str)|| 0;
 	num++;
 	$("#container").data(str,num);
 	if(str.indexOf("activity")>0){
-		_this.trigger("activity",[str]);
+		_this.trigger("activity",[str,performer]);
 	}else{
 		_this.trigger(str);
 	}
@@ -237,7 +237,8 @@ function addNewLine(current,incoming){
 				if(str.indexOf("dropped")>=0){
 					return;
 				}
-				trigger($(this),incoming);
+				var performer=$(this).find("div[id*='participant']").attr("id");
+				trigger($(this),incoming,performer);
 				appendNewElement($(this),ui);
 			},
 	});

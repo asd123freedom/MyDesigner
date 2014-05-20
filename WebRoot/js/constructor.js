@@ -175,6 +175,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.actualParameters=[];
 		this.task_type="";
 		this.signalmode="last";
+		this.loopcounter="";
 		this.x;
 		this.y;
 		this.getXml=function(){
@@ -191,16 +192,30 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			if(this.actualParameters.length){				
 				param.appendTo(taskapp);
 			}
+			// <Loop>
+			//     <LoopStandard>
+			//       <LoopCounter>32</LoopCounter>
+			//     </LoopStandard>
+			// </Loop>
+			if(this.loopcounter){
+				var loop=$("<Loop>");
+				var loopstandard=$("<LoopStandard>");
+				var lc=$("<LoopCounter>").html(this.loopcounter);
+				lc.appendTo(loopstandard);
+				loopstandard.appendTo(loop);
+			}
 			taskapp.appendTo(task);
-			task.appendTo(activity);
+			task.appendTo(impl);
+			impl.appendTo(activity);
 			taskapp.attr("Id",this.taskApplicationId);
 			$("<Description>").html(this.description).appendTo(activity);
 			$("<Performer>").html(this.performer.name).appendTo(activity);
-			if(this.name.indexOf("humanactivity")>0){
+			if(this.name.indexOf("humantaskactivity")>0){
 				$("<StartMode>").append($("<Manual/>")).appendTo(activity);
 			}else{				
 				$("<StartMode>").append($("<Automatic/>")).appendTo(activity);
 			}
+			loop.appendTo(activity);
 			//还没有设置<ExtendedAttributes>标签
 			var es=$("<ExtendedAttributes>");
 			var e1=new extended_attribute(dict_extendattr.paticipant,this.performer.name);
@@ -209,7 +224,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			var e2=new extended_attribute(dict_extendattr.signalmode,this.signalmode);
 			e2.parent=es;
 			e2.getXml();
-			var e3=new extended_attribute(dict_extendattr.task_type,"BusinessTask");
+			var e3=new extended_attribute(dict_extendattr.task_type,this.task_type || "BusinessTask");
 			e3.parent=es;
 			e3.getXml();
 			var e4=new extended_attribute(dict_extendattr.offset,this.x+","+this.y);

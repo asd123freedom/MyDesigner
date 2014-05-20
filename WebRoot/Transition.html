@@ -36,7 +36,7 @@
 </div>
 <div class="modal-footer">
 			<a href="#" data-dismiss="modal" class="btn">取消</a>
-			<a href="#" class="btn btn-primary submit" data-loading-text="正在添加">确定</a>
+			<a href="#" class="btn btn-primary transition submit" data-loading-text="正在添加">确定</a>
 </div>
 <script type="text/javascript">
   $(function(){
@@ -60,24 +60,24 @@
   			$(this).addClass("disabled");
   			$(".btn-danger").removeClass("disabled");
   		});
-  		$(".submit").bind("click",function(){
-  			$("#new_course_dialog").modal('hide');
-  			if($(".btn-danger").hasClass("disabled")){
-  				var conn=$("#new_course_dialog").data("tran");
-  				jsPlumb.detach(conn);
-  			}
-  			var tran=$("#new_course_dialog").data("tran");
-			if(tran){
-				//var arr_actul=$("#container").data("w").actualParameters || [];
-				var arr_tran=$("#container").data("w").transitions || [];
-				$(arr_tran).each(function(index,e){
-					if(tran.sourceId==e.from && tran.targetId==e.to){
-						//这里添加的是显示的时候代码
-						e.condition=$("td.condition").find("input").val();
-					}
-				});
-			}
-			$("#new_course_dialog").data("tran",null);
+  		$(".transition.submit").bind("click",function(){
+    			$("#new_course_dialog").modal('hide');
+    			if($(".btn-danger").hasClass("disabled")){
+    				var conn=$("#new_course_dialog").data("tran");
+    				jsPlumb.detach(conn);
+    			}
+    			var tran=$("#new_course_dialog").data("tran");
+    			if(tran){
+    				//var arr_actul=$("#container").data("w").actualParameters || [];
+    				var arr_tran=$("#container").data("w").transitions || [];
+    				$(arr_tran).each(function(index,e){
+    					if(tran.sourceId==e.from && tran.targetId==e.to){
+    						//这里添加的是显示的时候代码
+    						e.condition=$("td.condition").find("input").val();
+    					}
+    				});
+    			}
+			   $("#new_course_dialog").data("tran",null);
   		});
   		$('#new_course_dialog').on('hidden',function(){
 			$('#new_course_dialog').data("tran",null);

@@ -2,7 +2,8 @@ $(function(){
 	$('#new_course_dialog').on('show', function (e,o) {
 			var flag="init";
 			var tran=$("#new_course_dialog").data("tran");
-			console.log(tran);
+			var type="";
+			//console.log(tran);
 			//$("#new_course_dialog").data("tran",null);
 			var d=new Date();
 			if(tran){
@@ -32,18 +33,27 @@ $(function(){
 		  					}else{
 		  						flag=e.taskApplicationType;
 		  					}
+		  					type=e.name.replace(/\d+/,"");
 		  				}
 		  		});
-				$('#new_course_dialog').load("ActivityDialog.html?num="+d.getTime(),function(){
-					//show();
-					console.log(flag);
-					if(flag=="init"){					
-						$('#new_course_dialog').trigger(flag);
-					}else{
-						$('#new_course_dialog').trigger("show_"+flag);
-					}
-				});
-				return;
+		  		//console.log(type);
+		  		if(type=="businessactivity"){
+		  			$('#new_course_dialog').load("ActivityDialog.html?num="+d.getTime(),function(){
+						//show();
+						console.log(flag);
+						if(flag=="init"){					
+							$('#new_course_dialog').trigger(flag);
+						}else{
+							$('#new_course_dialog').trigger("show_"+flag);
+						}
+					});
+					return;
+		  		}else if(type=="humantaskactivity"){
+		  			$('#new_course_dialog').load("HumanActivityDialog.html?num="+d.getTime(),function(){
+		  				$('#new_course_dialog').trigger("show_humanactivity");
+					});
+					return;
+		  		}
 			}
 			//什么图标都没点，那么显示添加表单应用的对话框，在此之上的代码都是对点击图标有反应的
 			$('#new_course_dialog').load("FormDialog.html?num="+d.getTime(),function(){
@@ -56,7 +66,7 @@ $(function(){
 		if(!obj){
 			return;
 		}
-		console.log($(this).find("#name").val());
+		//console.log($(this).find("#name").val());
 		obj.find("span").text($(this).find("#name").val()).css("display","block");
 		$(this).data("obj",null);
 	})

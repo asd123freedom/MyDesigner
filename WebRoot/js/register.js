@@ -10,13 +10,12 @@
 		$("#container").data("w",w1);
 		//console.log(w1);
 	});
-	$("#container").on("activity",function(e,name){
+	$("#container").on("activity",function(e,name,performer){
 		var w1=$("#container").data("w") || {};
 		var arr=w1.activities || [];
 		//console.log(w1.activities);
 		var n1=name+$("#container").data(name);
-		console.log(name);
-		var p1=w1.participants[0]|| "default_participant";
+		var p1=performer || "default_participant";
 		var a1=new task_activity(p1);
 		a1.name=n1;
 		arr.push(a1);

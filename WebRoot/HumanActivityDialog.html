@@ -1,0 +1,339 @@
+<style>
+    div.selectFormApp{
+    	margin-left: 20px;
+    }
+    .selectFormAppForHumanTask li{
+    	font-size: 100%;
+    }
+    table.actualFormParam{
+      width:300px;
+      margin-left: 100px;
+    }
+</style>
+<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>人工活动</h3>
+		</div>
+		<div class="modal-body">
+			<ul class="nav nav-tabs">
+  			<li class="temple app active">
+    			<a href="#">基本信息</a>
+  			</li>
+  			<li class="temple childModule">
+    			<a href="#">形参信息</a>
+  			</li>
+  			<li class="temple formal">
+    			<a href="#">添加实参</a>
+  			</li>
+			</ul>
+      <div id="content1" class="content">
+        <form class="form-horizontal">
+            <div class="control-group">
+              <label class="control-label">名称</label>
+              <div class="controls">
+                  <input type="text" id="name" placeholder="name">
+              </div>
+          </div>
+            <div class="control-group">
+              <label class="control-label">参与者</label>
+              <div class="controls">
+                  <input type="text" class="participant_name">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">描述</label>
+              <div class="controls">
+                  <textarea rows="5" class="basic_info">...
+                  </textarea>
+              </div>
+            </div>
+        </form>
+      </div>
+			<div id="content2" class="hide content">
+				<form class="form-horizontal">
+          <div class="btn-group">
+                <button class="btn dropdown-toggle formAppName" data-toggle="dropdown">
+                  <span>选择应用</span>
+                  <span class="caret"></span></button>
+                <ul class="dropdown-menu selectFormAppForHumanTask">
+                  <li class="hide temple"><a href="#">application1</a></li>
+                </ul>
+          </div>
+          <input type="text" class="multiple" style="width:90px;margin-left:30px;
+                  margin-right:10px;" value="" placeholder="多实例" autocomplete="off" />
+				</form>
+			  <table class="table table-condensed table-hover">
+	              <thead>
+	                <tr class="head">
+	                  <th width="10%">#</th>
+	                  <th width="10%">模块ID</th>
+	                  <th width="16%">模块名</th>
+	                  <th width="10%">字段ID</th>
+	                  <th width="16%">字段名</th>
+	                  <th width="10%">模式</th>
+	                  <th width="10%">子类型</th>
+	                </tr>
+	              </thead>
+	              <tbody>
+	                <tr class="hide temple" title="">
+	                  <td class="id">0</td>
+	                  <td class="moduleID"><span style="">Mushi</span></td>
+	                  <td class="module"><span style="">Mushi</span></td>
+	                  <td class="fieldID">3ice</td>
+	                  <td class="field">3ice</td>
+	                  <td class="model"><p class="text-info"></p></td>
+	                  <td class="type"><p class="text-info"></p></td>
+	                </tr>
+	              </tbody>
+        </table>
+        <label class="radio inline">
+              方式
+        </label>
+        <label class="radio inline">
+              <input type="radio"  name="optionsRadios" value="unsynchronized"> unsynchronized
+        </label>
+        <label class="radio inline">
+              <input type="radio"  name="optionsRadios" value="never"> never
+        </label>
+        <label class="radio inline">
+               <input type="radio"  name="optionsRadios" value="first"> first
+        </label>
+        <label class="radio inline">
+               <input type="radio"  name="optionsRadios" value="last"> last
+        </label>
+			</div>
+			<div id="content3" class="hide content">
+				<form class="form-horizontal">
+					<div class="control-group">
+    					<label class="control-label actual_label">实参标识</label>
+    					<div class="controls">
+      						<input type="text" class="actual_label" placeholder="ID">
+    					</div>
+ 					</div>
+			  	<div class="btn-group">
+          			<a class="btn btn-primary actual_remove" style="margin-left:10px" href="#">删除</a>
+            		<a class="btn actual_submit" href="#">添加</a>
+          </div>
+          <div class="btn-group">
+                <a class="btn up" style="margin-left:10px;" href="#"><i class="icon-arrow-up"></i></a>
+                <a class="btn down" href="#"><i class="icon-arrow-down"></i></a>
+          </div>
+				</form>
+        <table class="table table-condensed table-hover actualFormParam">
+            <thead>
+              <tr class="head">
+                <th width="50%">#</th>
+                <th width="50%">模块ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="hide temple" title="">
+                <td class="id">0</td>
+                <td class="actualFormParamName"><span style="">Mushi</span></td>
+              </tr>
+            </tbody>
+        </table>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<a href="#" data-dismiss="modal" class="btn">取消</a>
+			<a href="#" class="btn btn-primary humantask submit" data-loading-text="正在添加">确定</a>
+		</div>
+<script type="text/javascript">
+  	$(function(){
+  		//填写形参表格
+  		var fillFormParametersTable=function(data,table){
+  			var $tr=table.find("tr.temple").clone();
+  			$tr.removeClass("hide temple");
+  			$tr.find("td.moduleID").text(data.moduleID);
+  			$tr.find("td.module").text(data.module);
+  			$tr.find("td.fieldID").text(data.fieldID);
+  			$tr.find("td.field").text(data.field);
+  			if(data.type){
+  				$tr.find("td.type").text(data.type);
+  			}
+  			if(data.model){
+  				$tr.find("td.model").text(data.model);
+  			}
+  			$tr.appendTo(table);
+  			$tr.bind("click",function(){
+  				if($(this).hasClass("warning")){
+  					$(this).removeClass("warning");
+  				}else{
+  					table.find("tr.warning").removeClass("warning");
+  					$(this).addClass("warning");
+  				}
+  			});
+  			initTableIndex(table);
+  		};
+  		//调整表格的index
+  		var initTableIndex=function(table){
+  			var $trs=table.find("tbody tr:not(.temple)");
+  			$trs.each(function(index,e){
+  				$(e).find("td.id").text(index+1);
+  			});
+  		};
+      var bindSelectAppEvent=function(parent,data){
+        parent.find("a").bind("click",function(){
+          var str=$(this).text();
+          console.log(data);
+          $(this).parent().parent().parent().find("button.formAppName").find("span:eq(0)").text(str);
+          if(data.Modules){
+            var arr=data.Modules;
+            for(var i=0;i<arr.length;i++){
+              var moduleID=arr[i].ModuleId;
+              var module=arr[i].ModuleName;
+              for(var j=0;j<arr[i].FormalParameters.length;j++){
+                var f_data={};
+                f_data.moduleID=moduleID;
+                f_data.module=module;
+                f_data.fieldID=arr[i].FormalParameters[j].Id.split("_")[0];
+                f_data.field=arr[i].FormalParameters[j].Id.split("_")[1];
+                f_data.type=arr[i].FormalParameters[j].BasicType;
+                f_data.model=arr[i].FormalParameters[j].Mode;
+                fillFormParametersTable(f_data,$("#content2 table"));
+              }
+            }
+          }
+          if(data.ChildModules){
+            var arr=data.ChildModules;
+            for(var i=0;i<arr.length;i++){
+              var moduleID=arr[i].ModuleId;
+              var module=arr[i].ModuleName;
+              for(var j=0;j<arr[i].FormalParameters.length;j++){
+                var f_data={};
+                f_data.moduleID=moduleID;
+                f_data.module=module;
+                f_data.fieldID=arr[i].FormalParameters[j].Id.split("_")[0];
+                f_data.field=arr[i].FormalParameters[j].Id.split("_")[1];
+                f_data.type=arr[i].FormalParameters[j].BasicType;
+                f_data.model=arr[i].FormalParameters[j].Mode;
+                fillFormParametersTable(f_data,$("#content2 table"));
+              }
+            }
+          }
+        });
+      }
+      //显示应用列表
+      var showAllFormApps=function(){
+        var arr=$("#container").data("w").applications || [];
+        console.log(arr);
+        $(".selectFormAppForHumanTask").find("li:not(.temple)").remove();
+        for(var i=0;i<arr.length;i++){
+          console.log(arr[i]);
+          if(arr[i].type=="form"){
+            var $li=$(".selectFormAppForHumanTask").find("li.temple").clone();
+            $li.removeClass("hide temple");
+            $li.find("a").text(arr[i].id);
+            $li.appendTo($("ul.selectFormAppForHumanTask"));
+            bindSelectAppEvent($li,arr[i].Form);
+          }
+        }
+      };
+      //加载页面的时候初始化应用列表
+      showAllFormApps();
+      //使用事件代理减少代码量
+      $("table.actualFormParam").delegate("tbody tr","click",function(){
+        $(this).parent().find("tr").removeClass("warning");
+        $(this).addClass("warning");
+      });
+      //添加实参标识
+      $(".btn.actual_submit").bind("click",function(){
+        var str=$("input.actual_label").val();
+        if(str==""){
+          return;
+        }else{
+          var $tr=$("table.actualFormParam").find("tr.temple").clone();
+          $tr.removeClass("hide temple");
+          $tr.find("td.actualFormParamName").text(str);
+          $tr.appendTo($("table.actualFormParam"));
+          initTableIndex($("table.actualFormParam"));
+        }
+      });
+      //删除实参标识
+      $(".btn.actual_remove").bind("click",function(){
+        var $tr=$("table.actualFormParam").find("tr.warning");
+        $tr.remove();
+        initTableIndex($("table.actualFormParam"));
+      })
+  		//提交所有编辑结果
+  		$(".humantask.submit").bind("click",function(){
+  			var name=$("button.formAppName span:eq(0)").text();
+        var obj=$("#new_course_dialog").data("obj");
+        var arr=$("#container").data("w").activities || [];
+        console.log(obj.attr("id"));
+        $(arr).each(function(index,e){
+          if(obj.attr("id")==e.name){
+            //将设置好的参数传给相应的activity对象           
+            var actual=[];
+            var appName=$("#content2").find("button.formAppName").find("span:eq(0)").text();
+            $("table.actualFormParam").find("tbody tr:not(.temple)").each(function(index,e){
+                var a=new ActualParameter();
+                a.content=$(e).find("td.actualFormParamName").text();
+                actual.push(a);
+            });
+            e.loopcounter=$("input.multiple").val();
+            e.taskApplicationId=appName;
+            e.task_type="Task";
+            e.signalmode=$("#content2").find("input:checked").val();
+            e.actualParameters=actual;
+          }
+        });
+  			$("#new_course_dialog").modal("hide");
+  		});
+  		//确定对话框初始的显示
+  		$("#new_course_dialog").unbind("show_humanactivity");
+  		$("#new_course_dialog").bind("show_humanactivity",function(){
+            var obj=$("#new_course_dialog").data("obj");
+          	var arr=$("#container").data("w").activities || [];
+            $(arr).each(function(index,e){
+                if(obj.attr("id")==e.name){
+                   console.log(e);
+                   $("input.participant_name").val(e.performer);          
+                }
+            });
+  		});
+      //调整表格中行的位置，点击向上的箭头
+      $(".btn.up").bind("click",function(){
+          var $tr=$("table.actualFormParam").find("tr.warning");
+          var index=$("table.actualFormParam").find("tbody tr:not(.hide)").index($tr);
+          var length=$("table.actualFormParam").find("tbody tr:not(.hide)").length;
+          var $pre;
+          var $next;
+          if(index==0){
+            return;
+          }
+          $pre=$tr.prev();
+          $tr.remove();
+          $tr.insertBefore($pre);
+          initTableIndex($("table.actualFormParam"));
+      });
+      //调整表格中行的位置，点击向下的箭头
+      $(".btn.down").bind("click",function(){
+          var $tr=$("table.actualFormParam").find("tr.warning");
+          var index=$("table.actualFormParam").find("tbody tr:not(.hide)").index($tr);
+          var length=$("table.actualFormParam").find("tbody tr:not(.hide)").length;
+          var $next;
+          if(index==length-1){
+            return;
+          }
+          $next=$tr.next();
+          $tr.remove();
+          $tr.insertAfter($next);
+          initTableIndex($("table.actualFormParam"));
+      });
+  		var $navs = $('.nav > li ');
+  		$navs.on('click', function(){			
+  			$navs.removeClass("active");
+  			$(this).addClass("active");
+  			//$content.html(new Date()+"");
+  			$("tr.warning").removeClass("warning");
+  			$navs.each(function(index,e){
+  				if($(e).hasClass("active")){
+  					$(".content").addClass("hide");
+  					$("#content"+(index+1)).removeClass("hide");
+  				}
+  			});
+  		});
+  });
+</script>
