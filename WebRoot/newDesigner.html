@@ -185,8 +185,10 @@ function trigger(container,str,performer){
 	var num=$("#container").data(str)|| 0;
 	num++;
 	$("#container").data(str,num);
-	if(str.indexOf("activity")>0){
+	if(str.indexOf("activity")>0 && str.indexOf("route")==-1){
 		_this.trigger("activity",[str,performer]);
+	}else if(str.indexOf("route")>=0){
+		_this.trigger(str,[str,performer]);
 	}else{
 		_this.trigger(str);
 	}

@@ -5,27 +5,27 @@
 <div class="modal-body">
     <form class="form-horizontal">
         <div class="control-group">
-          <label class="control-label" for="inputEmail">名称</label>
+          <label class="control-label">名称</label>
           <div class="controls">
               <input type="text" id="name" placeholder="name">
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="inputPassword">起点</label>
+          <label class="control-label">起点</label>
           <div class="controls">
               <input type="text" class="start">
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="inputPassword">终点</label>
+          <label class="control-label">终点</label>
           <div class="controls">
               <input type="text" class="end">
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="inputPassword">条件</label>
+          <label class="control-label">条件</label>
           <div class="controls">
-              <input type="text" placeholder="输入等式或不等式">
+              <input type="text" class="condition" placeholder="输入等式或不等式">
           </div>
         </div>
     </form>
@@ -40,18 +40,22 @@
 </div>
 <script type="text/javascript">
   $(function(){
-  		var arr_actual=$("#container").data("w").actualParameters || [];
-  		$("select.actual").bind("change",function(){
-  			var content=$(this).val();
-  			$("td.condition").find("input").val(content);
-  		});
-  		for(var i=0;i<arr_actual.length;i++){
-  			var opt=$("select.actual").find("option.temple").clone();
-  			opt.removeClass("hide");
-  			opt.attr("value",arr_actual[i].actualName);
-  			opt.html(arr_actual[i].actualName);
-  			opt.appendTo($("select.actual"));
-  		}
+      //用于对话框的初步显示
+      $("#new_course_dialog").bind("show_transition",function(){
+        var tran=$("#new_course_dialog").data("tran");
+          if(tran){
+            var arr_tran=$("#container").data("w").transitions || [];
+            $(arr_tran).each(function(index,e){
+              if(tran.sourceId==e.from && tran.targetId==e.to){
+                $("input.start").val(e.from);
+                $("input.end").val(e.to);
+                if(e.condition){
+                  $("input.condition").val(e.condition);
+                }
+              }
+            });
+        }
+      });
   		$(".btn-danger").bind("click",function(){
   			$(this).addClass("disabled");
   			$(".btn-success").removeClass("disabled");
@@ -61,26 +65,21 @@
   			$(".btn-danger").removeClass("disabled");
   		});
   		$(".transition.submit").bind("click",function(){
-    			$("#new_course_dialog").modal('hide');
     			if($(".btn-danger").hasClass("disabled")){
     				var conn=$("#new_course_dialog").data("tran");
     				jsPlumb.detach(conn);
     			}
     			var tran=$("#new_course_dialog").data("tran");
     			if(tran){
-    				//var arr_actul=$("#container").data("w").actualParameters || [];
     				var arr_tran=$("#container").data("w").transitions || [];
     				$(arr_tran).each(function(index,e){
     					if(tran.sourceId==e.from && tran.targetId==e.to){
     						//这里添加的是显示的时候代码
-    						e.condition=$("td.condition").find("input").val();
+    						e.condition=$("input.condition").val();
     					}
     				});
     			}
-			   $("#new_course_dialog").data("tran",null);
+         $("#new_course_dialog").modal('hide');
   		});
-  		$('#new_course_dialog').on('hidden',function(){
-			$('#new_course_dialog').data("tran",null);
-		});
   });
 </script>

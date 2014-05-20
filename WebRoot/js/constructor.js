@@ -209,16 +209,15 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			impl.appendTo(activity);
 			taskapp.attr("Id",this.taskApplicationId);
 			$("<Description>").html(this.description).appendTo(activity);
-			$("<Performer>").html(this.performer.name).appendTo(activity);
+			$("<Performer>").html(this.performer).appendTo(activity);
 			if(this.name.indexOf("humantaskactivity")>0){
 				$("<StartMode>").append($("<Manual/>")).appendTo(activity);
 			}else{				
 				$("<StartMode>").append($("<Automatic/>")).appendTo(activity);
 			}
 			loop.appendTo(activity);
-			//还没有设置<ExtendedAttributes>标签
 			var es=$("<ExtendedAttributes>");
-			var e1=new extended_attribute(dict_extendattr.paticipant,this.performer.name);
+			var e1=new extended_attribute(dict_extendattr.paticipant,this.performer);
 			e1.parent=es;
 			e1.getXml();
 			var e2=new extended_attribute(dict_extendattr.signalmode,this.signalmode);
@@ -312,6 +311,43 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			var app=$("<application>");
 			app.attr("Id",this.id);
 			this.Form.parent=app;
+		}
+	};
+	var routesplitactivity=function(performer){
+		this.id="";
+		this.description="";
+		this.performer=performer || "default_participant";
+		this.parent=null;
+		this.TransitionRefs=[];
+		this.split_type="";
+		this.OutgoingCondition="";
+		this.getXml=function(){
+			var activity=$("<Activity>");
+			var route=$("<Route>");
+			route.appendTo(activity);
+			var TransitionRestrictions=$("<TransitionRestrictions>");
+			var TransitionRestriction=$("<TransitionRestriction>");
+			var split=$("<Split>").attr("Type",this.split_type);
+			if(this.OutgoingCondition){
+				split.attr("OutgoingCondition",this.OutgoingCondition);
+			}
+			var TransitionRefs=$("<TransitionRefs>");
+			for(var i=0;i<this.TransitionRefs.length;i++){
+				var tranName=this.TransitionRefs[i];
+				$("TransitionRef").attr("Id",tranName).appendTo(TransitionRefs);
+			}
+			TransitionRefs.appendTo(split);
+			split.appendTo(TransitionRestriction);
+			TransitionRestriction.appendTo(TransitionRestrictions);
+			$("<Performer>").html(this.performer).appendTo(activity);
+			var es=$("<ExtendedAttributes>");
+			var e1=new extended_attribute(dict_extendattr.paticipant,this.performer);
+			e1.parent=es;
+			e1.getXml();
+			var e4=new extended_attribute(dict_extendattr.offset,this.x+","+this.y);
+			e4.parent=es;
+			e4.getXml();
+			es.appendTo(activity);
 		}
 	};
 	

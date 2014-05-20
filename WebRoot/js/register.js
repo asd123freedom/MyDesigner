@@ -75,4 +75,18 @@
 		$("#container").data("w",w1);
 		callbacks.fire();
 	});
+	$("#container").on("routesplitactivity",function(e,name,performer){
+		var w1=$("#container").data("w") || {};
+		var arr=w1.activities || [];
+		//console.log(w1.activities);
+		var n1=name+$("#container").data(name);
+		var p1=performer || "default_participant";
+		var a1=new routesplitactivity(p1);
+		a1.name=n1;
+		arr.push(a1);
+		w1.activities=arr;
+		console.log(arr);
+		//console.log(w1);
+		$("#container").data("w",w1);
+	});
 });

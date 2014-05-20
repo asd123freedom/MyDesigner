@@ -7,7 +7,9 @@ $(function(){
 			//$("#new_course_dialog").data("tran",null);
 			var d=new Date();
 			if(tran){
-				$('#new_course_dialog').load("Transition.html?num="+d.getTime());
+				$('#new_course_dialog').load("Transition.html?num="+d.getTime(),function(){
+					$("#new_course_dialog").trigger("show_transition");
+				});
 				//var arr_actual=$("#container").data("w").actualParameters || [];
 				// var arr_tran=$("#container").data("w").transitions || [];
 				// $(arr_tran).each(function(index,e){
@@ -36,7 +38,7 @@ $(function(){
 		  					type=e.name.replace(/\d+/,"");
 		  				}
 		  		});
-		  		//console.log(type);
+		  		console.log(type);
 		  		if(type=="businessactivity"){
 		  			$('#new_course_dialog').load("ActivityDialog.html?num="+d.getTime(),function(){
 						//show();
@@ -53,6 +55,11 @@ $(function(){
 		  				$('#new_course_dialog').trigger("show_humanactivity");
 					});
 					return;
+		  		}else if(type=="routesplitactivity"){
+		  			$('#new_course_dialog').load("SplitActivityDialog.html?num="+d.getTime(),function(){
+		  				//$('#new_course_dialog').trigger("show_splitactivity");
+					});
+					return;
 		  		}
 			}
 			//什么图标都没点，那么显示添加表单应用的对话框，在此之上的代码都是对点击图标有反应的
@@ -62,12 +69,26 @@ $(function(){
 	});
 	$("#new_course_dialog").on("hide",function(e,o){
 		var obj=$(this).data("obj");
-		//console.log(obj);
-		if(!obj){
+		var tran=$(this).data("tran");
+		if(!obj && !tran){
 			return;
 		}
 		//console.log($(this).find("#name").val());
-		obj.find("span").text($(this).find("#name").val()).css("display","block");
-		$(this).data("obj",null);
-	})
+		if(obj){
+			obj.find("span").text($(this).find("#name").val()).css("display","block");
+			$(this).data("obj",null);
+			return;
+		}
+		if(tran){
+			//设置连线上需要显示的话
+			var info=$(this).find("#name").val();
+			console.log(info);
+			setTransitionLabel(tran,info);
+			$(this).data("tran",null);
+			return;
+		}
+	});
+	function setTransitionLabel(connect,info){
+		connect.setLabel({ cssClass:"component label",label:info, location:0.5 });
+	}
 });
