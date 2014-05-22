@@ -5,7 +5,7 @@
 </style>
 <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			<h3>分支路由</h3>
+			<h3>聚合路由</h3>
 		</div>
 		<div class="modal-body">
 			<ul class="nav nav-tabs">
@@ -45,42 +45,55 @@
 			<div id="content2" class="hide content">
 				<form class="form-horizontal">
           <div class="btn-group">
-                <button class="btn dropdown-toggle split_type" data-toggle="dropdown">
+                <button class="btn dropdown-toggle join_type" data-toggle="dropdown">
                   <span>分支类型</span>
                   <span class="caret"></span></button>
-                <ul class="dropdown-menu selectSplitType">
+                <ul class="dropdown-menu selectJoinType">
                   <li class=""><a href="#">AND</a></li>
                   <li class=""><a href="#">OR</a></li>
                   <li class=""><a href="#">XOR</a></li>
+                   <li class=""><a href="#">COMPLEX</a></li>
                 </ul>
           </div>
-          <input type="text" class="conditionForOr" style="width:90px;margin-left:30px;
-                  margin-right:10px;" value="" placeholder="条件" autocomplete="off" disabled/>
 				</form>
         <div class="span6 manual">
           <p class="hide or">
-            一个分支分叉成多个分支，基于给定的条件，选择其中的一个或者多个执行下去。
+            当所有的活动分支都完成后，才能继续执行，且后继节点被激活的次数与活动分支的次数相同。
           </p>
           <p class="hide and">
-            一个分支分叉成多个分支,所有分支并行执行
+           当所有的活动分支都完成后，才能继续执行，且后继节点仅被激活一次。
           </p>
           <p class="hide xor">
-            一个分支分叉成多个分支,基于出边上的条件，只会选择其中一个分支执行下去
+            仅有一个分支的完成就使得后继节点执行下去，且任何一个分支的完成都会使得后继节点被激活一次
           </p>
+          <div class="hide complex">
+            <input type="text" class="NM" style="width:90px;margin-bottom:0px;vertical-align:middle" value="" placeholder="M中选N" autocomplete="off"/>
+            <span style="display:inline-block;width:300px;vertical-align:middle">
+              M个分支合并，当其中N个分支完成后就继续执行下去，其余分支执行完成后将被忽略
+            </span>       
+          </div>
+          <div class="hide complex" style="margin-top:20px">
+            <label class="checkbox" style="display:inline-block;vertical-align:middle;margin-right:14px;">
+                <input type="checkbox"> 是否鉴别器
+            </label>
+            <span style="display:inline-block;width:300px;vertical-align:middle">
+              当其中一个分支完成后就立刻激活后续活动，其余分支完成后将被忽略
+            </span>       
+          </div>
         </div>
 			</div>
 			<div id="content3" class="hide content">
         暂时为空，后来人填写吧
 			</div>
       <div style="clear:both"></div>
-      <div class="btn-group" style="margin-top:50px">
+      <div class="btn-group delete" style="margin-top:0px">
         <a class="btn btn-danger pull-left" style="margin-left:10px" href="#">我要删除</a>
         <a class="btn btn-success pull-left disabled" href="#">我不删除</a>
       </div>
 		</div>
 		<div class="modal-footer">
 			<a href="#" data-dismiss="modal" class="btn">取消</a>
-			<a href="#" class="btn btn-primary split submit" data-loading-text="正在添加">确定</a>
+			<a href="#" class="btn btn-primary join submit" data-loading-text="正在添加">确定</a>
 		</div>
 <script type="text/javascript">
   	$(function(){
@@ -94,55 +107,53 @@
         $(".btn-danger").removeClass("disabled");
       });
       //选择路由类型的相关事件
-      $("ul.selectSplitType").find("li a").bind("click",function(){
+      $("ul.selectJoinType").find("li a").bind("click",function(){
          var str=$(this).text();
-         $(this).parent().parent().parent().find("button.split_type").find("span:eq(0)").text(str);
+         $(this).parent().parent().parent().find("button.join_type").find("span:eq(0)").text(str);
          $("div.manual p").addClass("hide");
-         $("input.conditionForOr").prop("disabled",true);
-         $("div.manual").find("p."+str.toLowerCase()).removeClass("hide");
-         if(str=="OR"){
-          $("input.conditionForOr").prop("disabled",false);
-         }
+         $("div.manual div").addClass("hide");
+         $("div.manual").find("."+str.toLowerCase()).removeClass("hide");
       });
       //用于对话框的初步显示
-      $("#new_course_dialog").unbind("show_split");
-      $("#new_course_dialog").bind("show_split",function(){
+      $("#new_course_dialog").unbind("show_join");
+      $("#new_course_dialog").bind("show_join",function(){
           var obj=$("#new_course_dialog").data("obj");
           var arr=$("#container").data("w").activities || [];
           $(arr).each(function(index,e){
             if(obj.attr("id")==e.name){
               $("input.participant_name").val(e.performer);
-              var arr=$("ul.selectSplitType").find("li a");
+              var arr=$("ul.selectJoinType").find("li a");
               $(arr).each(function(index,element){
-                if($(element).text()==e.split_type){
+                if($(element).text()==e.join_type){
                   $(element).trigger("click");
                 }
               });
-              if(e.OutgoingCondition){
-                $("input.conditionForOr").val(e.OutgoingCondition);
-              }           
+              if(e.IncomingCondition=='true'){
+                $("input[type='checkbox']").prop("checked",true);
+              }else{
+                $("input.NM").val(e.IncomingCondition);
+              }
             }
           });
       });
       //提交所有编辑结果
-      $(".split.submit").bind("click",function(){
-          var split_type=$("button.split_type span:eq(0)").text();
+      $(".join.submit").bind("click",function(){
+          var join_type=$("button.join_type span:eq(0)").text();
           var obj=$("#new_course_dialog").data("obj");
           var arr=$("#container").data("w").activities || [];
           $(arr).each(function(index,e){
             if(obj.attr("id")==e.name){
               //将设置好的参数传给相应的activity对象           
-              var tranRefs=[];
-              var tran_arr=$("#container").data("w").transitions || [];
-              for(var i=0;i<tran_arr.length;i++){
-                if(tran_arr[i].from==e.name){
-                  tranRefs.push(tran_arr[i].Id);
+              var condition="";
+              if(join_type=="COMPLEX"){
+                if($("input[type='checkbox']").prop("checked")){
+                  condition='true';
+                }else{
+                  condition=$("input.NM").val();
                 }
               }
-              var condition=$("input.conditionForOr").val();
-              e.TransitionRefs=tranRefs;
-              e.split_type=$("button.split_type").find("span:eq(0)").text();
-              e.OutgoingCondition=condition;
+              e.join_type=$("button.join_type").find("span:eq(0)").text();
+              e.IncomingCondition=condition;
             }
           });
           $("#new_course_dialog").modal("hide");
@@ -157,6 +168,15 @@
   				if($(e).hasClass("active")){
   					$(".content").addClass("hide");
   					$("#content"+(index+1)).removeClass("hide");
+            if(!$("#content2").hasClass("hide")){
+              $("div.delete").css({
+                'margin-top':70,
+              });
+            }else{
+              $("div.delete").css({
+                'margin-top':0,
+              });
+            }
   				}
   			});
   		});

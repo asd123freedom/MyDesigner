@@ -57,7 +57,12 @@ $(function(){
 					return;
 		  		}else if(type=="routesplitactivity"){
 		  			$('#new_course_dialog').load("SplitActivityDialog.html?num="+d.getTime(),function(){
-		  				//$('#new_course_dialog').trigger("show_splitactivity");
+		  				$('#new_course_dialog').trigger("show_split");
+					});
+					return;
+		  		}else if(type=="routejoinactivity"){
+		  			$('#new_course_dialog').load("JoinActivityDialog.html?num="+d.getTime(),function(){
+		  				$('#new_course_dialog').trigger("show_join");
 					});
 					return;
 		  		}

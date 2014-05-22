@@ -41,6 +41,7 @@
 <script type="text/javascript">
   $(function(){
       //用于对话框的初步显示
+      $("#new_course_dialog").unbind("show_transition");
       $("#new_course_dialog").bind("show_transition",function(){
         var tran=$("#new_course_dialog").data("tran");
           if(tran){

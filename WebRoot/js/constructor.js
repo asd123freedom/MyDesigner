@@ -41,8 +41,12 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.outgoing=0;
 		this.participant=par || "default_participant";
 		this.parent=null;
+		this.x="";
+		this.y="";
 		this.getXml=function(){
-			var tmp=new extended_attribute(this.name,this.participant,"");
+			var value=dict_extendattr.participant+"="+this.participant+
+						",TSEGBPM_GRAPH_OFFSET_X:"+this.x+",TSEGBPM_GRAPH_OFFSET_Y:"+this.y;
+			var tmp=new extended_attribute(this.name,value,"");
 			tmp.parent=this.parent;
 			tmp.getXml();
 		};
@@ -53,8 +57,12 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.outgoing=0;
 		this.participant=par || "default_participant";
 		this.parent=null;
+		this.x="";
+		this.y="";
 		this.getXml=function(){
-			var tmp=new extended_attribute(this.name,this.participant,"");
+			var value=dict_extendattr.participant+"="+this.participant+
+						",TSEGBPM_GRAPH_OFFSET_X:"+this.x+",TSEGBPM_GRAPH_OFFSET_Y:"+this.y;
+			var tmp=new extended_attribute(this.name,value,"");
 			tmp.parent=this.parent;
 			tmp.getXml();
 		};
@@ -166,7 +174,9 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 	}
 	//集成三种activity，具体设置type是在事件的handler里
 	var task_activity=function(performer){
+		this.id="";
 		this.name="";
+		this.show_name="";
 		this.description="";
 		this.performer=performer || "default_participant";
 		//事务暂缺
@@ -181,7 +191,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.getXml=function(){
 			var activity=$("<Activity>");
 			activity.attr("Id",this.name);
-			activity.attr("Name",this.name);
+			activity.attr("Name",this.show_name);
 			var impl=$("<Implementation>");
 			var task=$("<Task>");
 			var taskapp=$("<TaskApplication>");
@@ -316,6 +326,8 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 	var routesplitactivity=function(performer){
 		this.id="";
 		this.description="";
+		this.name="";
+		this.show_name="";
 		this.performer=performer || "default_participant";
 		this.parent=null;
 		this.TransitionRefs=[];
@@ -323,6 +335,8 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.OutgoingCondition="";
 		this.getXml=function(){
 			var activity=$("<Activity>");
+			activity.attr("Id",this.name);
+			activity.attr("Name",this.show_name);
 			var route=$("<Route>");
 			route.appendTo(activity);
 			var TransitionRestrictions=$("<TransitionRestrictions>");
@@ -338,6 +352,43 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			}
 			TransitionRefs.appendTo(split);
 			split.appendTo(TransitionRestriction);
+			TransitionRestriction.appendTo(TransitionRestrictions);
+			$("<Performer>").html(this.performer).appendTo(activity);
+			var es=$("<ExtendedAttributes>");
+			var e1=new extended_attribute(dict_extendattr.paticipant,this.performer);
+			e1.parent=es;
+			e1.getXml();
+			var e4=new extended_attribute(dict_extendattr.offset,this.x+","+this.y);
+			e4.parent=es;
+			e4.getXml();
+			es.appendTo(activity);
+		}
+	};
+	var routejoinactivity=function(performer){
+		this.id="";
+		this.description="";
+		this.name="";
+		this.show_name="";
+		this.performer=performer || "default_participant";
+		this.parent=null;
+		this.TransitionRefs=[];
+		this.join_type="";
+		this.IncomingCondtion="";
+		this.x="";
+		this.y="";
+		this.getXml=function(){
+			var activity=$("<Activity>");
+			activity.attr("Id",this.name);
+			activity.attr("Name",this.show_name);
+			var route=$("<Route>");
+			route.appendTo(activity);
+			var TransitionRestrictions=$("<TransitionRestrictions>");
+			var TransitionRestriction=$("<TransitionRestriction>");
+			var join=$("<Join>").attr("Type",this.split_type);
+			if(this.IncomingCondition){
+				join.attr("IncomingCondition",this.OutgoingCondition);
+			}
+			join.appendTo(TransitionRestriction);
 			TransitionRestriction.appendTo(TransitionRestrictions);
 			$("<Performer>").html(this.performer).appendTo(activity);
 			var es=$("<ExtendedAttributes>");

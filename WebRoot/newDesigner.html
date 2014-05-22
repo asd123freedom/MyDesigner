@@ -10,10 +10,10 @@
     <body>
     <div id="sideBar"></div>
 	<div id="toolBar" class="section_header" style="margin-top:50px;margin-left:20px;width:1000px;height:50px;">
-		 <div class="userSelect"></div>
+		 <div class="userSelect icon"></div>
 		 <!--img id="select" class="icon unselected" src="images/select.gif" style=""></img-->
 		 <img id="participant" title="参与者" class="icon unselected" src="images/participantrole.png"></img>
-		 <img id="participant_free" title="任意参与者" class="icon unselected" src="images/freetextparticipant.png"></img>
+		 <img id="participan_t_free" title="任意参与者" class="icon unselected" src="images/freetextparticipant.png"></img>
 		 <img id="start" title="开始" class="icon unselected" src="images/start.png"></img>
 		 <img id="end" title="结束" class="icon unselected" src="images/end.png"></img>
 		 <img id="voidnode" title="空活动" class="icon unselected" src="images/genericactivity.png"></img>
@@ -139,7 +139,11 @@ function appendNewElement(container,ui){
 		}else{		
 			parent.appendTo(container);
 		}
-		jsPlumb.draggable(parent,{revert: "invalid"});
+		jsPlumb.draggable(parent,{revert: "invalid",
+			stop:function(e){
+				console.log($(e.target).attr("id"));
+			}
+		});
 		var stateMachineConnector=$("#toolBar").data("option");
 		parent.bind("click",function(){
 			if(!getFrom() && !getTo()){
@@ -214,10 +218,17 @@ function addNewLine(current,incoming){
 		var stateMachineConnector=$("#toolBar").data("option");
 		icons.each(function(index,el){
 					 $(el).bind("click",function(){
-					 	$(icons).removeClass("selected");
-					 	$(icons).addClass("unselected");
-					 	$(this).removeClass("unselected");
-					 	$(this).addClass("selected");		
+					 	//$(icons).removeClass("selected");
+					 	//$(icons).addClass("unselected");
+					 	$(this).siblings().removeClass("selected");
+					 	$(this).siblings().addClass("unselected");
+					 	if($(this).hasClass("selected")){
+					 		$(this).removeClass("selected");
+					 		$(this).addClass("unselected");			
+					 	}else{
+					 		$(this).removeClass("unselected");
+					 		$(this).addClass("selected");		
+					 	}					 	
 				 	 });
 		});
 		$(".dialog").bind("click",function(e,obj){
@@ -255,7 +266,7 @@ function addNewLine(current,incoming){
 		//console.log(pac[0]);
 		var str=test.html();
 		str = str.replace(/[ <\/]\w/g,function(s){
-			console.log(s.toLocaleUpperCase());
+			//console.log(s.toLocaleUpperCase());
 			//var c=str.match(/\w/);
 			//console.log(c[0]);
 			return s.toLocaleUpperCase();
