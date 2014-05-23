@@ -1,8 +1,8 @@
 ;$(function(window,undefined){
-	$("#container").on("participant",function(){
+	$("#container").on("participant",function(e,name){
 		var w1=$("#container").data("w") || {};
 		var arr=w1.participants || [];
-		var n1="participant"+$("#container").data("participant");
+		var n1=name || "participant"+$("#container").data("participant");
 		var p1=new participant(n1);
 		arr.push(p1);
 		w1.participants=arr;
@@ -103,5 +103,12 @@
 		console.log(arr);
 		//console.log(w1);
 		$("#container").data("w",w1);
+	});
+	$("#container").on("default_participant",function(){
+		var str="participant";
+		var num=$("#container").data(str)|| 0;
+		num++;
+		$("#container").data(str,num);
+		$("#container").trigger("participant",["default_participant"]);
 	});
 });

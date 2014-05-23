@@ -431,8 +431,9 @@
 			});
 		});
 		$( "input.inputId" ).keypress(function(e) {
+      console.log(e.which);
 		  if(e.which==13){
-		  	$(this).blur();
+		  	//$(this).blur();
 		  }
 		});
   	});

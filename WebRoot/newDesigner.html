@@ -13,7 +13,7 @@
 		 <div class="userSelect icon"></div>
 		 <!--img id="select" class="icon unselected" src="images/select.gif" style=""></img-->
 		 <img id="participant" title="参与者" class="icon unselected" src="images/participantrole.png"></img>
-		 <img id="participan_t_free" title="任意参与者" class="icon unselected" src="images/freetextparticipant.png"></img>
+		 <img id="default_participant" title="任意参与者" class="icon unselected" src="images/freetextparticipant.png"></img>
 		 <img id="start" title="开始" class="icon unselected" src="images/start.png"></img>
 		 <img id="end" title="结束" class="icon unselected" src="images/end.png"></img>
 		 <img id="voidnode" title="空活动" class="icon unselected" src="images/genericactivity.png"></img>
@@ -28,7 +28,7 @@
 		 
 		 <img id="undo" class="icon unselected" src="images/undo.png" style="left:100px"></img>
 		 <img id="unCondition_transition" class="icon unselected" src="images/transition.png" style="left:150px"></img>
-		 <img id="zoomout" class="icon unselected" src="images/zoomout.png" style="left:200px"></img>
+		 <!--img id="zoomout" class="icon unselected" src="images/zoomout.png" style="left:200px"></img-->
 		 <!--div class="move unselected" style="background-image:url(images/zoomout.png)"-->
 		 <button class="btn save btn-primary"  data-loading-text="正在保存">保存</button>
 		 <button class="btn dialog btn-primary"  data-loading-text="正在打开">绑定表单</button>
@@ -98,11 +98,11 @@ function appendNewElement(container,ui){
 		index=$("#container").data(incoming);
 		name=incoming+""+index;
 		name_index=name.indexOf('activity');
-		if(name_index>=0){
-			//name=name.substr(name_index);
-		}
-		//span.html(name);
-		if(incoming!="participant"){
+		// if(name_index>=0){
+		// 	//name=name.substr(name_index);
+		// }
+		// //span.html(name);
+		if(incoming!="participant" && incoming!="default_participant"){
 				parent=$('<div>').css({
 					position:'absolute',
 					left:ui.offset.left,
@@ -146,6 +146,9 @@ function appendNewElement(container,ui){
 		});
 		var stateMachineConnector=$("#toolBar").data("option");
 		parent.bind("click",function(){
+			if($("#unCondition_transition").hasClass("unselected")){
+				return;
+			}
 			if(!getFrom() && !getTo()){
 				setFrom($(this).attr("id"));
 			}else if(getFrom() && !getTo()){
@@ -198,7 +201,7 @@ function trigger(container,str,performer){
 	}
 }
 function addNewLine(current,incoming){
-	if($("#container").data("w").participants.length>1 && incoming=="participant"){
+	if($("#container").data("w").participants.length>1 && (incoming=="participant" || incoming=="default_participant")){
 		var line=$(current).clone();
 		var opt=$(current).droppable("option");
 		var index=$("#container").data(incoming);
@@ -211,36 +214,55 @@ function addNewLine(current,incoming){
 		return null;
 	}
 }
+function fillInOffsetForElements(){
+
+}
+$(document).keydown(function(e){
+	if(e.which==46){
+		//console.log("删除节点了啊");
+	}    
+});  
 	jsPlumb.bind("ready", function() {
 		document.onselectstart = function () { return false; };	
 		jsPlumbDemo.init();
 		var icons=$("#toolBar").find(".icon");
 		var stateMachineConnector=$("#toolBar").data("option");
 		icons.each(function(index,el){
-					 $(el).bind("click",function(){
-					 	//$(icons).removeClass("selected");
-					 	//$(icons).addClass("unselected");
-					 	$(this).siblings().removeClass("selected");
-					 	$(this).siblings().addClass("unselected");
-					 	if($(this).hasClass("selected")){
-					 		$(this).removeClass("selected");
-					 		$(this).addClass("unselected");			
-					 	}else{
-					 		$(this).removeClass("unselected");
-					 		$(this).addClass("selected");		
-					 	}					 	
-				 	 });
+			 $(el).bind("click",function(){
+			 	//$(icons).removeClass("selected");
+			 	//$(icons).addClass("unselected");
+			 	$(this).siblings().removeClass("selected");
+			 	$(this).siblings().addClass("unselected");
+			 	if($(this).hasClass("selected")){
+			 		$(this).removeClass("selected");
+			 		$(this).addClass("unselected");			
+			 	}else{
+			 		$(this).removeClass("unselected");
+			 		$(this).addClass("selected");		
+			 	}
+			 	//针对连接操作做特殊设置
+			 	if($(this).attr("id")=="unCondition_transition"){
+			 		setFrom(null);
+					setTo(null);
+					if($(this).hasClass("selected")){
+						$("div[id*='container']").find("div.dropped").draggable("disable");
+					}else{
+						$("div[id*='container']").find("div.dropped").draggable("enable");
+					}					
+			 	}					 	
+		 	 });
 		});
 		$(".dialog").bind("click",function(e,obj){
 			$('#new_course_dialog').data("obj",obj);
 			$('#new_course_dialog').modal("show");
 		});
 		$("#participant").draggable({helper:"clone"});
+		$("#default_participant").draggable({helper:"clone"});
 		$("#container").droppable({
 			drop:function(event,ui){
 				var incoming=ui.helper.context.id;
 				if(!$("#container").data("w").participants || $("#container").data("w").participants.length==0){
-					if(incoming!="participant"){
+					if(incoming!="participant" && incoming!="default_participant"){
 						return;
 					}else{
 						$( ".icon" ).draggable({helper:"clone"});

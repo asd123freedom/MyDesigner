@@ -134,6 +134,10 @@
             </tbody>
         </table>
 			</div>
+      <div class="btn-group">
+              <a class="btn btn-danger pull-left" style="margin-left:10px" href="#">我要删除</a>
+              <a class="btn btn-success pull-left disabled" href="#">我不删除</a>
+      </div>
 		</div>
 		<div class="modal-footer">
 			<a href="#" data-dismiss="modal" class="btn">取消</a>
@@ -321,6 +325,14 @@
           $tr.remove();
           $tr.insertAfter($next);
           initTableIndex($("table.actualFormParam"));
+      });
+      $(".btn-danger").bind("click",function(){
+        $(this).addClass("disabled");
+        $(".btn-success").removeClass("disabled");
+      });
+      $(".btn-success").bind("click",function(){
+        $(this).addClass("disabled");
+        $(".btn-danger").removeClass("disabled");
       });
   		var $navs = $('.nav > li ');
   		$navs.on('click', function(){			

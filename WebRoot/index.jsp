@@ -33,30 +33,38 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   <script>
   	$(function(){
-  		console.log("asd");
-  		$.ajax({
-				url: "http://127.0.0.1:8080/HiServiceCRM/findAllRoles.action",
+  		//console.log("asd");
+  // 		$.ajax({
+		// 		url: "http://127.0.0.1:8080/HiServiceCRM/findAllRoles.action",
+		// 		type: "POST",
+		// 	    success:function(data){
+		// 			console.log($.parseXML($("body").text()));
+		// 			var node=$.parseXML($("body").text());
+		// 			node=node.childNodes[0];
+		// 			$("body").data("node",node);
+		// 			//$("body").append(buildTree($(node)));
+		// 			buildTree($(node)).appendTo($("body")).click(function(e){
+		// 				e=e.originalEvent;
+		// 				console.log(e.target);
+		// 				var target=e.target.tagName.toLowerCase();
+		// 				if(target!="li"){
+		// 					return;
+		// 				}
+		// 				var ul=$(e.target).find("ul:eq(0)");
+		// 				ul=ul[0];
+		// 				console.log(ul);
+		// 				if(ul){
+		// 					ul.style.display=ul.style.display=="none"?"block":"none";
+		// 				}						
+		// 			});;
+		// 	    }
+		// });
+		$.ajax({
+				url: "http://127.0.0.1:8080/HiServiceCRM/getMonitorProcessDefinitionFile.action",
 				type: "POST",
+				data:{"id":"14853"},
 			    success:function(data){
-					console.log($.parseXML($("body").text()));
-					var node=$.parseXML($("body").text());
-					node=node.childNodes[0];
-					$("body").data("node",node);
-					//$("body").append(buildTree($(node)));
-					buildTree($(node)).appendTo($("body")).click(function(e){
-						e=e.originalEvent;
-						console.log(e.target);
-						var target=e.target.tagName.toLowerCase();
-						if(target!="li"){
-							return;
-						}
-						var ul=$(e.target).find("ul:eq(0)");
-						ul=ul[0];
-						console.log(ul);
-						if(ul){
-							ul.style.display=ul.style.display=="none"?"block":"none";
-						}						
-					});;
+					console.log(data);
 			    }
 		});
 		function buildTree(node){

@@ -34,7 +34,7 @@
 		//参与者xml		
 		var par_xml=$("<Participants>");
 		//要在页面中存储参与者数组
-		var participants=workflowprocess["participants"];
+		var participants=workflowprocess["participants"] || [];
 		console.log(participants);
 		//var participants=c.data("participants");
 		//先把参与者的drop方法实现

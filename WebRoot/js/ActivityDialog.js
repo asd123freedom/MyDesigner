@@ -119,14 +119,15 @@
 				app.ClassPath=dict_classpath[app.Type];
 				app.ReceiverType=$("select.receive_type").val();
 				app.ReceiverType_index=$("select.receive_type").prop("selectedIndex");
-				app.ReceiverId_val=$("select.receive_id").val();
+				app.ReceiverId_val=$("select.receive_id").val() || $("select.receive_actual").val();
 				var id="";
 				if(app.ReceiverType!="ActualParameters"){
 					id="0"+":"+$("select.receive_id").val().match(/\d+/)[0];
 					app.ReceiverId=id;
-				}else{
+				}
+				if($("input.receive_actual")){
 				    app.ReceiverType="user";
-				    id="1"+":"+$("select.receive_id").val().match(/\d+/)[0];
+				    id="1"+":"+$("select.receive_actual").val();
 				    app.ReceiverId=id;
 				}
 				e.taskApplicationId=app.Name;

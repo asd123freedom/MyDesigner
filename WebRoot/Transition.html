@@ -69,6 +69,7 @@
     			if($(".btn-danger").hasClass("disabled")){
     				var conn=$("#new_course_dialog").data("tran");
     				jsPlumb.detach(conn);
+            $("#new_course_dialog").data("tran",null);
     			}
     			var tran=$("#new_course_dialog").data("tran");
     			if(tran){
