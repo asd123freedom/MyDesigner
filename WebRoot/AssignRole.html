@@ -156,7 +156,8 @@
         $(this).addClass("disabled");
     });
     //提交编辑结果用的代码
-    $(".role.submit").bind("click",function(){
+    $(".role.submit").unbind("click");
+    $(".role.submit").bind("click.role",function(){
         var obj=$("#new_course_dialog").data("obj");
         var arr=$("#container").data("w").participants || [];
         $(arr).each(function(index,e){

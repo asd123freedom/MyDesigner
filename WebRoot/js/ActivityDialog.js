@@ -119,21 +119,20 @@
 				app.ClassPath=dict_classpath[app.Type];
 				app.ReceiverType=$("select.receive_type").val();
 				app.ReceiverType_index=$("select.receive_type").prop("selectedIndex");
-				app.ReceiverId_val=$("select.receive_id").val() || $("select.receive_actual").val();
+				app.ReceiverId_val=$("select.receive_id").val() || $("input.receive_actual").val();
 				var id="";
-				if(app.ReceiverType!="ActualParameters"){
+				if($("input.receive_actual").val()){
+				    app.ReceiverType="user";
+				    id="1"+":"+$("input.receive_actual").val();
+				    app.ReceiverId=id;
+				}else{
 					id="0"+":"+$("select.receive_id").val().match(/\d+/)[0];
 					app.ReceiverId=id;
 				}
-				if($("input.receive_actual")){
-				    app.ReceiverType="user";
-				    id="1"+":"+$("select.receive_actual").val();
-				    app.ReceiverId=id;
-				}
 				e.taskApplicationId=app.Name;
 				e.taskApplicationType="send";
-				app.Content=$("textarea.app_info").val();
-				console.log($("textarea.app_info").val());
+				app.Content=$("textarea.app_info").val().replace(/\s+/,"");;
+				console.log(app.Content);
 				$(e).data("app",app);
 			}
 		});

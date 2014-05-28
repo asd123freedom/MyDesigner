@@ -227,7 +227,8 @@
         }
         freshTableIndex();
     });
-    $(".user.submit").bind("click",function(){
+    $(".user.submit").unbind("click");
+    $(".user.submit").bind("click.user",function(){
         var obj=$("#new_course_dialog").data("obj");
         var arr=$("#container").data("w").participants || [];
         $(arr).each(function(index,e){

@@ -8,7 +8,8 @@
 	$("<XPDLVersion>").html("2.1").appendTo(packageheader);
 	$("<Vendor>").html("TSEG").appendTo(packageheader);
 	var d=new Date();
-	$("<Created>").html(d.toString()).appendTo(packageheader);
+	var str=d.toString
+	$("<Created>").html(d.toDateString()).appendTo(packageheader);
 	packageheader.appendTo(packagedefinition);
 	$("#container").data("w",workflowprocess);
 	$("#container").data("p",packagedefinition);

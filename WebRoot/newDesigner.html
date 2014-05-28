@@ -90,14 +90,18 @@ function appendNewElement(container,ui){
 		var new_container=null;
 		var off_y=(num_y[0])*(arr.length-1)+119+10*(arr.length-1);
 		var index=0;
-		var name_index=0;
+		//var name_index=0;
 		var span=$("<span>").css({
 			position:'absolute',
 			display:'none'
 		});
 		index=$("#container").data(incoming);
-		name=incoming+""+index;
-		name_index=name.indexOf('activity');
+		if(incoming!="default_participant"){
+			name=incoming+""+index;
+		}else{
+			name=incoming;
+		}
+		//name_index=name.indexOf('activity');
 		// if(name_index>=0){
 		// 	//name=name.substr(name_index);
 		// }
@@ -141,7 +145,7 @@ function appendNewElement(container,ui){
 		}
 		jsPlumb.draggable(parent,{revert: "invalid",
 			stop:function(e){
-				console.log($(e.target).attr("id"));
+				//console.log($(e.target).attr("id"));
 			}
 		});
 		var stateMachineConnector=$("#toolBar").data("option");
@@ -203,12 +207,17 @@ function trigger(container,str,performer){
 function addNewLine(current,incoming){
 	if($("#container").data("w").participants.length>1 && (incoming=="participant" || incoming=="default_participant")){
 		var line=$(current).clone();
+		line.find("div.dropped").remove();
 		var opt=$(current).droppable("option");
 		var index=$("#container").data(incoming);
 		line.attr("id","container"+index);
 		line.addClass("line");
 		line.droppable(opt);
-		line.insertAfter($(current));
+		console.log(opt);
+		var index=$("div[id*='container']").length-1;
+		var pre=$("div[id*='container']:eq("+index+")");
+		//console.log(pre);
+		line.insertAfter(pre);
 		return line;
 	}else{
 		return null;
@@ -273,10 +282,23 @@ $(document).keydown(function(e){
 					return;
 				}
 				var performer=$(this).find("div[id*='participant']").attr("id");
-				trigger($(this),incoming,performer);
+				trigger($("#container"),incoming,performer);
 				appendNewElement($(this),ui);
 			},
 	});
+	function formatXml(str){
+		str = str.replace(/[ <\/]\w/g,function(s){
+			//console.log(s.toLocaleUpperCase());
+			//var c=str.match(/\w/);
+			//console.log(c[0]);
+			return s.toLocaleUpperCase();
+		});
+		str =str.replace(/ _\w/g,function(s){
+			//console.log(s);
+			return s.substring(1,2);
+		});
+		return str;
+	}
 	$(".save").bind("click",function(){
 		var tmp=$("#container").data("w").getXml();
 		//console.log(tmp[0]);
@@ -293,17 +315,21 @@ $(document).keydown(function(e){
 			//console.log(c[0]);
 			return s.toLocaleUpperCase();
 		});
-		console.log(str);
-		var data1={"processdefinition":test.html()};
+		str =str.replace(/ _\w/g,function(s){
+			//console.log(s);
+			return s.substring(1,2);
+		});
+		//console.log(str);
+		var data1={"processdefinition":str};
 		$.ajax({
-				//url: "http://127.0.0.1:8080/HiServiceCRM/checkProcessDefinition.action",
-				url:"http://127.0.0.1:8080/struts2_demo/XmlString.action",
-         		type: "POST",
-         		//data: {"json":JSON.stringify(data1)},
-         		data:{"xml":data1.processdefinition},
-         		success:function(data){
-         			console.log(data);
-         		},
+			//url: "http://127.0.0.1:8080/HiServiceCRM/checkProcessDefinition.action",
+			url:"http://127.0.0.1:8080/struts2_demo/XmlString.action",
+     		type: "POST",
+     		//data: {"json":JSON.stringify(data1)},
+     		data:{"xml":data1.processdefinition},
+     		success:function(data){
+     			console.log(data);
+     		},
          });
 	});
 });

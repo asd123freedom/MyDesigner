@@ -43,14 +43,15 @@
   $(function(){
     $("select.method").find("option").remove();
     $("select.method").append($("<option>").html("延迟分配模式").attr("selected",true));
-    $(".group.submit").bind("click",function(){
+    $(".area.submit").unbind("click");
+    $(".area.submit").bind("click.group",function(){
           var obj=$("#new_course_dialog").data("obj");
           var arr=$("#container").data("w").participants || [];
           $(arr).each(function(index,e){
             if(e.name==obj.attr("id")){
-               $Description=$("<Description>");
+               var $Description=$("<Description>");
                //Task的name属性填写的是当前泳道的人工任务节点的ID
-               $Task=$("<Task>").attr("name","").attr("assignType","deffered").attr("reAssign","false");
+               $Task=$("<Task>").attr("_name","").attr("_assignType","deffered").attr("_reAssign","false");
                var str=$("input[type='checkbox']:checked").val()+":"+$("#variable").val();
                $Variable=$("<Variable>").html(str);
                $Variable.appendTo($Task);

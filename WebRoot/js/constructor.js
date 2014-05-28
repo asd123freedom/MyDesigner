@@ -1,8 +1,8 @@
 var dict_part_type={
-		"用户":"HUMAN",
-		"组":"ORGANIZATIONAL_UNIT",
-		"角色":"ROLE",
-		"资源域":"RESOURCE_SET",
+		"user":"HUMAN",
+		"group":"ORGANIZATIONAL_UNIT",
+		"role":"ROLE",
+		"area":"RESOURCE_SET",
 	};
 var dict_extendattr={
 		"offset":"TSEGBPM_GRAPH_OFFSET",
@@ -22,6 +22,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.name=name || "default_participant";
 		this.parent=null;
 		this.Description=null;
+		this.type="";
 		//还有缺少的属性，编写参与者的对话框时再编写
 		this.getXml=function(){
 			var temp_part=$("<Participant>")
@@ -30,7 +31,18 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			var part_type=$("<ParticipantType>");
 			part_type.attr("Type",dict_part_type["用户"]);
 			part_type.appendTo(temp_part);
-			this.Description.appendTo(temp_part);
+			if(!this.Description){
+			   //暂时不知道这里应该写什么？
+			}else{
+				var arr_names=[];
+				var human_tasks=$("#"+this.name).parent().find("div[id*='humantaskactivity']");
+				$(human_tasks).each(function(index,e){
+					arr_names.push($(e).attr("id"));
+				});
+				var str=arr_names.join(",");
+				this.Description.find("Task").attr("name",str);
+				this.Description.appendTo(temp_part);
+			}						
 			//console.log(this.parent);
 			temp_part.appendTo(this.parent);
 		};
@@ -218,27 +230,68 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			task.appendTo(impl);
 			impl.appendTo(activity);
 			taskapp.attr("Id",this.taskApplicationId);
-			$("<Description>").html(this.description).appendTo(activity);
-			$("<Performer>").html(this.performer).appendTo(activity);
-			if(this.name.indexOf("humantaskactivity")>0){
+			//$("<Description>").html(this.description).appendTo(activity);
+			//$("<Performer>").html(this.performer).appendTo(activity);
+			if(this.name.indexOf("humantaskactivity")>=0){
+				$("<Description>").html(this.description).appendTo(activity);
+				$("<Performer>").html(this.performer).appendTo(activity);
 				$("<StartMode>").append($("<Manual/>")).appendTo(activity);
 			}else{				
 				$("<StartMode>").append($("<Automatic/>")).appendTo(activity);
 			}
-			loop.appendTo(activity);
+			if(loop!=null){
+				loop.appendTo(activity);
+			}			
 			var es=$("<ExtendedAttributes>");
-			var e1=new extended_attribute(dict_extendattr.paticipant,this.performer);
-			e1.parent=es;
-			e1.getXml();
-			var e2=new extended_attribute(dict_extendattr.signalmode,this.signalmode);
-			e2.parent=es;
-			e2.getXml();
-			var e3=new extended_attribute(dict_extendattr.task_type,this.task_type || "BusinessTask");
-			e3.parent=es;
-			e3.getXml();
-			var e4=new extended_attribute(dict_extendattr.offset,this.x+","+this.y);
-			e4.parent=es;
-			e4.getXml();
+			/*
+				人工任务节点的扩展属性
+				  <ExtendedAttributes>
+				    <ExtendedAttribute Name="TSEGBPM_GRAPH_OFFSET" Value="334,41"/>
+				    <ExtendedAttribute Name="SIGNALMODE" Value="last"/>
+				    <ExtendedAttribute Name="TSEGBPM_GRAPH_PATICIPANT_ID" Value="participant2"/>
+				    <ExtendedAttribute Name="TASK_TYPE" Value="Task"/>
+				    <ExtendedAttribute Name="RECOVERY_PRIVILEGE" Value="false"/>
+				  </ExtendedAttributes>
+			*/
+			/*
+				业务节点的扩展属性
+				  <ExtendedAttributes>
+				    <ExtendedAttribute Name="TSEGBPM_GRAPH_PATICIPANT_ID" Value="default_participant"/>
+				    <ExtendedAttribute Name="TSEGBPM_GRAPH_OFFSET" Value="215,92"/>
+				    <ExtendedAttribute Name="SIGNALMODE" Value="last"/>
+				    <ExtendedAttribute Name="TASK_TYPE" Value="BusinessTask"/>
+				  </ExtendedAttributes>
+			*/			
+			if(this.name.indexOf("humantaskactivity")>=0){
+				var e1=new extended_attribute(dict_extendattr.offset,this.x+","+this.y);
+				e1.parent=es;
+				e1.getXml();
+				var e2=new extended_attribute(dict_extendattr.signalmode,this.signalmode);
+				e2.parent=es;
+				e2.getXml();
+				var e3=new extended_attribute(dict_extendattr.paticipant,this.performer);
+				e3.parent=es;
+				e3.getXml();
+				var e4=new extended_attribute(dict_extendattr.task_type,this.task_type || "BusinessTask");
+				e4.parent=es;
+				e4.getXml();
+				var e5=new extended_attribute("RECOVERY_PRIVILEGE","false");
+				e5.parent=es;
+				e5.getXml(); 
+			}else{
+				var e1=new extended_attribute(dict_extendattr.paticipant,this.performer);
+				e1.parent=es;
+				e1.getXml();
+				var e4=new extended_attribute(dict_extendattr.offset,this.x+","+this.y);
+				e4.parent=es;
+				e4.getXml();
+				var e2=new extended_attribute(dict_extendattr.signalmode,this.signalmode);
+				e2.parent=es;
+				e2.getXml();
+				var e3=new extended_attribute(dict_extendattr.task_type,this.task_type || "BusinessTask");
+				e3.parent=es;
+				e3.getXml();
+			}
 			es.appendTo(activity);
 			activity.appendTo(this.parent);
 		};
@@ -277,6 +330,8 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			con.appendTo(tmp_tran);
 		}
 	};
+	var arr_app=["Type","BusinessType","ClassPath"];
+	var arr_sendApp=["Type","ClassPath","ReceiverType","ReceiverId","Content","IsFormular"];
 	var pojoapplication=function(){
 		this.Name="";
 		this.Type="";
@@ -284,15 +339,21 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.ReceiverType="";
 		this.ReceiverId="";
 		this.Content="";
-		this.IsFormular="flase";//公式的功能暂时未实现
+		this.IsFormular="false";//公式的功能暂时未实现
 		this.parent=null;
 		this.getXml=function(){
 			var app=$("<application>");
 			app.attr("Id",this.Name);
 			$("<Pojo/>").appendTo(app);
 			var es=$("<ExtendedAttributes>");
+			var arr_temp=[];
+			if(this.Name.toLowerCase().indexOf("send")>=0){
+				arr_temp=arr_sendApp;
+			}else{
+				arr_temp=arr_app;
+			}
 			for(item in this){
-				if(item=="parent"){
+				if(item=="parent" || arr_temp.indexOf(item)==-1){
 					continue;
 				}
 				if(this.hasOwnProperty(item) && this[item]){
@@ -309,6 +370,25 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			// 	e.parent=es;
 			// 	e.getXml();
 			// }
+			/*
+				get应用的扩展属性
+				  <ExtendedAttributes>
+			        <ExtendedAttribute Name="Type" Value="Class"/>
+			        <ExtendedAttribute Name="BusinessType" Value="GetBusinessFormData"/>
+			        <ExtendedAttribute Name="ClassPath" Value="org.tseg.tsegbpm.BusinessApplication.GetBusinessFormDataHandler"/>
+			      </ExtendedAttributes>
+			*/
+			/*
+				send应用的扩展属性
+				  <ExtendedAttributes>
+			        <ExtendedAttribute Name="Type" Value="SendRemindMessage"/>
+			        <ExtendedAttribute Name="ClassPath" Value="org.tseg.tsegbpm.BusinessApplication.SendMsgPojo"/>
+			        <ExtendedAttribute Name="ReceiverType" Value="user"/>
+			        <ExtendedAttribute Name="ReceiverId" Value="1:cpjl"/>
+			        <ExtendedAttribute Name="Content" Value="有工单需要处理！"/>
+			        <ExtendedAttribute Name="IsFormular" Value="false"/>
+			      </ExtendedAttributes>
+			*/
 			es.appendTo(app);
 			app.appendTo(this.parent);
 		}
@@ -321,6 +401,8 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			var app=$("<application>");
 			app.attr("Id",this.id);
 			this.Form.parent=app;
+			this.Form.getXml();
+			app.appendTo(this.parent);
 		}
 	};
 	var routesplitactivity=function(performer){
