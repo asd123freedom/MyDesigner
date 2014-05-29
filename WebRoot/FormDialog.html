@@ -127,6 +127,7 @@
 				    	</div>
 				  	</div>
 				</form>
+        <input type="text" class="RecordListName" value="" placeholder="记录引用" autocomplete="off" style="margin-left:20px;margin-top:5px"/>
 				<table class="table table-condensed table-hover childModule">
 		              <thead>
 		                <tr class="head">
@@ -150,7 +151,7 @@
 		                  <td class="type"><p class="text-info"></p></td>
 		                </tr>
 		              </tbody>
-	            </table>
+	      </table>
 			</div>
 		</div>
 		<div class="modal-footer">
@@ -279,6 +280,15 @@
   			$(this).parents(".content").find("tr.warning").remove();
   			initTableIndex($(this).parents(".content").find("table"));
   		});
+      //将引用记录存在相应的输入框中
+       $("#content2 .btn.addActualParam").bind("click",function(){
+        var key=$("#content2 select.Module").find("option:selected").data("id");
+        var value=$("#content2 input.RecordListName").val();
+        if(!value){
+          return;
+        }
+        $("input.RecordListName").data(key+"",value+"");
+      });
   		//将形参数据填到表格中
   		$(".btn.addActualParam").bind("click",function(){
   			var temp=$("a.formAppName span:eq(0)").text();
@@ -352,6 +362,7 @@
   							var module=new Module();
   							arr_module.push(module);
   							module.ModuleId=item;
+                //module.RecordListName=$("input.RecordListName").data(item);
   							module.ModuleName=elements[0].find("td.module").text();
   							var arr_formalParam=module.FormalParameters;
   							for(var j=0;j<elements.length;j++){
@@ -374,6 +385,7 @@
   							arr_childmodule.push(module);
   							module.ModuleId=item;
   							module.ModuleName=elements[0].find("td.module").text();
+                module.RecordListName=$("input.RecordListName").data(item);
   							var arr_formalParam=module.FormalParameters;
   							for(var k=0;k<elements.length;k++){
   								var formParam=new FormalParameter();
@@ -404,16 +416,22 @@
   			Model.fillInAllDynamicModuleMetaData(data,$("#content2 select.Module"));
   		});
   		$("select.Module").bind("change",function(e,callbacks){
-			var index=$(this).find("option:selected").data("id");
-			var data1={"moduleId":index};
-			var callbacks=callbacks || $.Callbacks();
-			$("select.Field option:not(.temple)").remove();
-			var selectField=$(this).parent().next().find("select.Field");
-			Model.findFieldbyDynamicModule(data1).done(function(data){
-				Model.fillInFieldbyDynamicModule(data,selectField,true);
-			}).done(function(){
-				callbacks.fire();
-			});	
+    			var index=$(this).find("option:selected").data("id");
+          console.log(index);
+          $("input.RecordListName").val("");
+          var RecordListName=$("input.RecordListName").data(index+"");
+          if(RecordListName){
+            $("input.RecordListName").val(RecordListName);
+          }
+    			var data1={"moduleId":index};
+    			var callbacks=callbacks || $.Callbacks();
+    			$("select.Field option:not(.temple)").remove();
+    			var selectField=$(this).parent().next().find("select.Field");
+    			Model.findFieldbyDynamicModule(data1).done(function(data){
+    				Model.fillInFieldbyDynamicModule(data,selectField,true);
+    			}).done(function(){
+    				callbacks.fire();
+    			});	
 		});
   		var $navs = $('.nav > li ');
 		//var $content = $('.modal-body').find("#content");

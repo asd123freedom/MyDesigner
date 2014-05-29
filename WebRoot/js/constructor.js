@@ -91,7 +91,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			activity.attr("Name",this.name);
 			$("<Description>").html(this.description).appendTo(activity);
 			$("<Performer>").html(this.performer).appendTo(activity);
-			$("<StartMode>").append($("<Automatic/>")).appendTo(activity);
+			$("<Start_Mode>").append($("<Automatic/>")).appendTo(activity);
 			//console.log(this.parent);
 			activity.appendTo(this.parent);
 		};
@@ -102,18 +102,23 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.ChildModules=[];
 		this.getXml=function(){
 			var Form=$("<Form>")
-			var Moudles=$("<Moudles>");
-			for(var i=0;i<this.Moudles.length;i++){
-				var tmp=this.Moudles[i];
-				tmp.appendTo(Moudles);
+			var Modules=$("<Modules>");
+			for(var i=0;i<this.Modules.length;i++){
+				var tmp=this.Modules[i];
+				tmp.parent=Modules;
+				tmp.getXml(false);
+				//tmp.appendTo(Modules);
 			}
-			Moudles.appendTo(Form);
-			var ChildModules=$("<ChildModules>");
+			Modules.appendTo(Form);
+			var ChildModules=$("<Child_Modules>");
 			var Description=$("<Description>");
-			for(var i=0;i<this.ChildMoudles.length;i++){
-				var tmp=this.ChildMoudles[i];
-				tmp.appendTo(ChildMoudles);
+			for(var i=0;i<this.ChildModules.length;i++){
+				var tmp=this.ChildModules[i];
+				tmp.parent=ChildModules;
+				tmp.getXml(true);
+				//tmp.appendTo(ChildModules);
 			}
+			ChildModules.appendTo(Form);
 			Description.appendTo(ChildModules);
 			Form.appendTo(this.parent);
 		};
@@ -123,16 +128,35 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.ModuleName="";
 		this.parent=null;
 		this.FormalParameters=[];
-		this.getXml=function(){
-			var Moudle=$("<Moudle>");
-			$("<MoudleId>").html(this.MoudleId).appendTo(Moudle);
-			$("<ModuleName>").html(this.MoudleName).appendTo(Moudle);
-			var FormalParamArray=$("FormalParameters");
+		this.RecordListName="";
+		this.getXml=function(flag){
+			var Module=$("<Module>");
+			$("<Module_Id>").html(this.ModuleId).appendTo(Module);
+			$("<Module_Name>").html(this.ModuleName).appendTo(Module);
+			var FormalParamArray=$("<Formal_Parameters>");
 			for(var i=0;i<this.FormalParameters.length;i++){
-				this.FormalParameters[i].appendTo(FormalParamArray);
+				this.FormalParameters[i].parent=FormalParamArray;
+				this.FormalParameters[i].getXml();
+				//this.FormalParameters[i].appendTo(FormalParamArray);
 			}
-			FormalParamArray.appendTo(Moudle);
-			Moudle.appendTo(this.parent);
+			FormalParamArray.appendTo(Module);
+			var es=$("<Extended_Attributes>");
+			if(!this.RecordListName && flag){				
+				var e1=new extended_attribute("IsReferenceRecordList","false");
+				e1.parent=es;
+				e1.getXml();
+			}else if(flag){
+				var e1=new extended_attribute("IsReferenceRecordList","true");
+				e1.parent=es;
+				e1.getXml();
+				var e2=new extended_attribute("RecordListName",this.RecordListName);
+				e2.parent=es;
+				e2.getXml();
+			}
+			if(flag){
+				es.appendTo(Module);
+			}			
+			Module.appendTo(this.parent);
 		};
 	}
 	var FormalParameter=function(){
@@ -142,15 +166,15 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.BasicType="";
 		this.parent=null;
 		this.getXml=function(){
-			var FormalParameter=$("<FormalParameter>");
+			var FormalParameter=$("<Formal_Parameter>");
 			$(FormalParameter).attr("Id",this.Id);
-			$(FormalParameter).attr("Name",this.Name);
 			$(FormalParameter).attr("Mode",this.Mode);
 			$(FormalParameter).attr("Reference","");
-			var dataType=$("<DataType>");
-			$("<BasicType>").attr("Type",this.BasicType).appendtTo(dataType);
+			$(FormalParameter).attr("Name",this.Name);
+			var dataType=$("<Data_Type>");
+			$("<Basic_Type>").attr("Type",this.BasicType).appendTo(dataType);
 			dataType.appendTo(FormalParameter);
-			var es=$("<ExtendedAttributes>");
+			var es=$("<Extended_Attributes>");
 			var e1=new extended_attribute("IsReferenceChildModule","false");
 			e1.parent=es;
 			e1.getXml();
@@ -206,10 +230,10 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			activity.attr("Name",this.show_name);
 			var impl=$("<Implementation>");
 			var task=$("<Task>");
-			var taskapp=$("<TaskApplication>");
-			var param=$("<ActualParameters>");
+			var taskapp=$("<Task_Application>");
+			var param=$("<Actual_Parameters>");
 			for(var i=0;i<this.actualParameters.length;i++){
-				$("<ActualParameter>").html(this.actualParameters[i].getXml()).appendTo(param);
+				$("<Actual_Parameter>").html(this.actualParameters[i].getXml()).appendTo(param);
 			}
 			if(this.actualParameters.length){				
 				param.appendTo(taskapp);
@@ -221,8 +245,8 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			// </Loop>
 			if(this.loopcounter){
 				var loop=$("<Loop>");
-				var loopstandard=$("<LoopStandard>");
-				var lc=$("<LoopCounter>").html(this.loopcounter);
+				var loopstandard=$("<Loop_Standard>");
+				var lc=$("<Loop_Counter>").html(this.loopcounter);
 				lc.appendTo(loopstandard);
 				loopstandard.appendTo(loop);
 			}
@@ -235,14 +259,14 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			if(this.name.indexOf("humantaskactivity")>=0){
 				$("<Description>").html(this.description).appendTo(activity);
 				$("<Performer>").html(this.performer).appendTo(activity);
-				$("<StartMode>").append($("<Manual/>")).appendTo(activity);
+				$("<Start_Mode>").append($("<Manual/>")).appendTo(activity);
 			}else{				
-				$("<StartMode>").append($("<Automatic/>")).appendTo(activity);
+				$("<Start_Mode>").append($("<Automatic/>")).appendTo(activity);
 			}
 			if(loop!=null){
 				loop.appendTo(activity);
 			}			
-			var es=$("<ExtendedAttributes>");
+			var es=$("<Extended_Attributes>");
 			/*
 				人工任务节点的扩展属性
 				  <ExtendedAttributes>
@@ -302,7 +326,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.content=content || "";
 		this.parent=null;
 		this.getXml=function(){
-			var temp_ext=$("<ExtendedAttribute>");
+			var temp_ext=$("<Extended_Attribute>");
 			temp_ext.attr("Name",name);
 			temp_ext.attr("Value",value);
 			temp_ext.appendTo(this.parent);
@@ -345,7 +369,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			var app=$("<application>");
 			app.attr("Id",this.Name);
 			$("<Pojo/>").appendTo(app);
-			var es=$("<ExtendedAttributes>");
+			var es=$("<Extended_Attributes>");
 			var arr_temp=[];
 			if(this.Name.toLowerCase().indexOf("send")>=0){
 				arr_temp=arr_sendApp;
@@ -421,22 +445,22 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			activity.attr("Name",this.show_name);
 			var route=$("<Route>");
 			route.appendTo(activity);
-			var TransitionRestrictions=$("<TransitionRestrictions>");
-			var TransitionRestriction=$("<TransitionRestriction>");
+			var TransitionRestrictions=$("<Transition_Restrictions>");
+			var TransitionRestriction=$("<Transition_Restriction>");
 			var split=$("<Split>").attr("Type",this.split_type);
 			if(this.OutgoingCondition){
-				split.attr("OutgoingCondition",this.OutgoingCondition);
+				split.attr("Outgoing_Condition",this.OutgoingCondition);
 			}
-			var TransitionRefs=$("<TransitionRefs>");
+			var TransitionRefs=$("<Transition_Refs>");
 			for(var i=0;i<this.TransitionRefs.length;i++){
 				var tranName=this.TransitionRefs[i];
-				$("TransitionRef").attr("Id",tranName).appendTo(TransitionRefs);
+				$("Transition_Ref").attr("Id",tranName).appendTo(TransitionRefs);
 			}
 			TransitionRefs.appendTo(split);
 			split.appendTo(TransitionRestriction);
 			TransitionRestriction.appendTo(TransitionRestrictions);
 			$("<Performer>").html(this.performer).appendTo(activity);
-			var es=$("<ExtendedAttributes>");
+			var es=$("<Extended_Attributes>");
 			var e1=new extended_attribute(dict_extendattr.paticipant,this.performer);
 			e1.parent=es;
 			e1.getXml();
@@ -464,16 +488,16 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			activity.attr("Name",this.show_name);
 			var route=$("<Route>");
 			route.appendTo(activity);
-			var TransitionRestrictions=$("<TransitionRestrictions>");
-			var TransitionRestriction=$("<TransitionRestriction>");
+			var TransitionRestrictions=$("<Transition_Restrictions>");
+			var TransitionRestriction=$("<Transition_Restriction>");
 			var join=$("<Join>").attr("Type",this.split_type);
 			if(this.IncomingCondition){
-				join.attr("IncomingCondition",this.OutgoingCondition);
+				join.attr("Incoming_Condition",this.OutgoingCondition);
 			}
 			join.appendTo(TransitionRestriction);
 			TransitionRestriction.appendTo(TransitionRestrictions);
 			$("<Performer>").html(this.performer).appendTo(activity);
-			var es=$("<ExtendedAttributes>");
+			var es=$("<Extended_Attributes>");
 			var e1=new extended_attribute(dict_extendattr.paticipant,this.performer);
 			e1.parent=es;
 			e1.getXml();

@@ -319,6 +319,9 @@ $(document).keydown(function(e){
 			//console.log(s);
 			return s.substring(1,2);
 		});
+		str =str.replace(/\w_(\w)/g,function(s,b){
+			return s.substring(0,1)+b.toUpperCase();
+		})
 		//console.log(str);
 		var data1={"processdefinition":str};
 		$.ajax({
