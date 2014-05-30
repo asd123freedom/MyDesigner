@@ -7,7 +7,7 @@ var dict_part_type={
 var dict_extendattr={
 		"offset":"TSEGBPM_GRAPH_OFFSET",
 		"signalmode":"SIGNALMODE",
-		"paticipant":"TSEGBPM_GRAPH_PATICIPANT_ID",
+		"participant":"TSEGBPM_GRAPH_PATICIPANT_ID",
 		"task_type":"TASK_TYPE",
 	};
 		//this.Name="";
@@ -48,33 +48,45 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		};
 	};
 	var start_activity=function(par){
-		this.name="start1";
-		this.incoming=0;
-		this.outgoing=0;
+		this.name='start1';
+		this.show_name="TSEGBPM_GRAPH_START_ACTIVITY";
+		this.connecting="";
 		this.participant=par || "default_participant";
 		this.parent=null;
 		this.x="";
 		this.y="";
 		this.getXml=function(){
-			var value=dict_extendattr.participant+"="+this.participant+
+			if(this.connecting){
+				var value=dict_extendattr.participant+"="+this.participant+",TSEGBPM_GRAPH_CONNECTING_ACTIVITY="+this.connecting+
 						",TSEGBPM_GRAPH_OFFSET_X:"+this.x+",TSEGBPM_GRAPH_OFFSET_Y:"+this.y;
-			var tmp=new extended_attribute(this.name,value,"");
+			}else{
+				var value=dict_extendattr.participant+"="+this.participant+
+						",TSEGBPM_GRAPH_OFFSET_X:"+this.x+",TSEGBPM_GRAPH_OFFSET_Y:"+this.y;
+			}
+			
+			var tmp=new extended_attribute(this.show_name,value,"");
 			tmp.parent=this.parent;
 			tmp.getXml();
 		};
 	}
 	var end_activity=function(par){
-		this.name="end1";
-		this.incoming=0;
-		this.outgoing=0;
+		this.name='end1';
+		this.show_name="TSEGBPM_GRAPH_END_ACTIVITY";
 		this.participant=par || "default_participant";
+		this.connecting="";
 		this.parent=null;
 		this.x="";
 		this.y="";
 		this.getXml=function(){
-			var value=dict_extendattr.participant+"="+this.participant+
+			if(this.connecting){
+				var value=dict_extendattr.participant+"="+this.participant+",TSEGBPM_GRAPH_CONNECTING_ACTIVITY="+this.connecting+
 						",TSEGBPM_GRAPH_OFFSET_X:"+this.x+",TSEGBPM_GRAPH_OFFSET_Y:"+this.y;
-			var tmp=new extended_attribute(this.name,value,"");
+			}else{
+				var value=dict_extendattr.participant+"="+this.participant+
+						",TSEGBPM_GRAPH_OFFSET_X:"+this.x+",TSEGBPM_GRAPH_OFFSET_Y:"+this.y;
+			}
+			
+			var tmp=new extended_attribute(this.show_name,value,"");
 			tmp.parent=this.parent;
 			tmp.getXml();
 		};
@@ -293,7 +305,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 				var e2=new extended_attribute(dict_extendattr.signalmode,this.signalmode);
 				e2.parent=es;
 				e2.getXml();
-				var e3=new extended_attribute(dict_extendattr.paticipant,this.performer);
+				var e3=new extended_attribute(dict_extendattr.participant,this.performer);
 				e3.parent=es;
 				e3.getXml();
 				var e4=new extended_attribute(dict_extendattr.task_type,this.task_type || "BusinessTask");
@@ -303,7 +315,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 				e5.parent=es;
 				e5.getXml(); 
 			}else{
-				var e1=new extended_attribute(dict_extendattr.paticipant,this.performer);
+				var e1=new extended_attribute(dict_extendattr.participant,this.performer);
 				e1.parent=es;
 				e1.getXml();
 				var e4=new extended_attribute(dict_extendattr.offset,this.x+","+this.y);
@@ -461,7 +473,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			TransitionRestriction.appendTo(TransitionRestrictions);
 			$("<Performer>").html(this.performer).appendTo(activity);
 			var es=$("<Extended_Attributes>");
-			var e1=new extended_attribute(dict_extendattr.paticipant,this.performer);
+			var e1=new extended_attribute(dict_extendattr.participant,this.performer);
 			e1.parent=es;
 			e1.getXml();
 			var e4=new extended_attribute(dict_extendattr.offset,this.x+","+this.y);
@@ -498,7 +510,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			TransitionRestriction.appendTo(TransitionRestrictions);
 			$("<Performer>").html(this.performer).appendTo(activity);
 			var es=$("<Extended_Attributes>");
-			var e1=new extended_attribute(dict_extendattr.paticipant,this.performer);
+			var e1=new extended_attribute(dict_extendattr.participant,this.performer);
 			e1.parent=es;
 			e1.getXml();
 			var e4=new extended_attribute(dict_extendattr.offset,this.x+","+this.y);

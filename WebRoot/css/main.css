@@ -1,4 +1,10 @@
 		li {font-size: 50%}
+		.menu li{
+			font-size: 100%
+		}
+		.application li{
+			font-size: 100%
+		}
 		h5 {font-size: 50%}
 		.component {
 		opacity:0.8; 

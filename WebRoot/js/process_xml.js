@@ -4,18 +4,22 @@
 	var workflowprocess={};
 	var packagedefinition=$("<Package>");
 	packagedefinition.attr("Id","package1");
-	var packageheader=$("<PackageHeader>");
+	var packageheader=$("<Package_Header>");
 	$("<XPDLVersion>").html("2.1").appendTo(packageheader);
 	$("<Vendor>").html("TSEG").appendTo(packageheader);
 	var d=new Date();
-	var str=d.toString
-	$("<Created>").html(d.toDateString()).appendTo(packageheader);
+	var raw_date=d.toString().split(" ");
+	raw_date[6]=raw_date[3];
+	raw_date[3]="";
+	var str=raw_date.join(" ");
+	$("<Created>").html(str).appendTo(packageheader);
 	packageheader.appendTo(packagedefinition);
 	$("#container").data("w",workflowprocess);
 	$("#container").data("p",packagedefinition);
 	//得在页面中new一下，放到数组里，存到某一个对象上
+	//processHeader里面事件用toDateString方法
 	workflowprocess.getXml=function(obj){
-		var xml=$("<WorkflowProcess>");
+		var xml=$("<Workflow_Process>");
 		if(!c.data("process_id")){
 			xml.attr("Id","test");
 		}else{
@@ -39,20 +43,21 @@
 		console.log(participants);
 		//var participants=c.data("participants");
 		//先把参与者的drop方法实现
+		var participants_name_arr=[];
 		if(participants.length>0){
 				for(var i=0;i<participants.length;i++){
 					//console.log(participants[i]);
 					participants[i].parent=xml;
+					if(participants[i].name=='default_participant'){
+						continue;
+					}
+					participants_name_arr.push(participants[i].name);
 					participants[i].getXml();
 				}
-				//$(participants).each(function(index,e){
-				//	e.parent=xml;
-				//	e.getXml();
-				//});	
 		}else{
-				var temp_part=new participant("default_participant");
-				temp_part.parent=xml;
-				temp_part.getXml();
+				//var temp_part=new participant("default_participant");
+				//temp_part.parent=xml;
+				//temp_part.getXml();
 		}
 		//活动XML
 		var temp_activities=$("<Activities>");
@@ -68,15 +73,22 @@
 				transitions[i].parent=xml;
 				transitions[i].getXml();
 		}
+		var es=$("<Extended_Attributes>");
 		if($("#container").data("w").start){
-			this.start.parent=xml;
+			this.start.parent=es;
 			this.start.getXml();
 		}
 		if($("#container").data("w").end){
-			this.end.parent=xml;
+			this.end.parent=es;
 			this.end.getXml();
 		}
+		var e1=new extended_attribute("IsReferenceRecordList","true");
+		e1.parent=es;
+		e1.getXml();
+		//<ExtendedAttribute Name="TSEGBPM_GRAPH_PARTICIPANT_ORDER" Value="default_participant,participant2"/>
+    	//<ExtendedAttribute Name="isTerminationImplicit" Value="true"/>
 		//console.log(xml);
+		es.appendTo(xml);
 		return xml;
 	};
 });

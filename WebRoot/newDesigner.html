@@ -32,6 +32,22 @@
 		 <!--div class="move unselected" style="background-image:url(images/zoomout.png)"-->
 		 <button class="btn save btn-primary"  data-loading-text="正在保存">保存</button>
 		 <button class="btn dialog btn-primary"  data-loading-text="正在打开">绑定表单</button>
+		 <div class="btn-group menu">
+	        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">文件 <span class="caret"></span></button>
+	        <ul class="dropdown-menu">
+	          <li><a href="#" class="checkOrder">检验</a></li>
+	          <li><a href="#" class="saveOreder">保存</a></li>
+	          <li><a href="#" class="importOrder">导入</a></li>
+	          <li><a href="#" class="quit">退出</a></li>
+	        </ul>
+         </div>
+         <div class="btn-group application">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">绑定应用<span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="#" class="formApp">Form</a></li>
+              <li><a href="#" class="scriptApp">Script</a></li>
+            </ul>
+          </div>
 	</div>
 	<div id="container" class="box" style="margin-top:0px;margin-left:20px;width:1000px;height:255px;">
 	</div>
@@ -67,6 +83,7 @@
 <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="js/Model.js"></script>
 <script src="js/controller.js"></script>
+<script src="js/setPosition.js"></script>
 <script type="text/javascript">
 function getFrom(){
 	return $("#toolBar").data("from");
@@ -180,6 +197,10 @@ function createTransition(from,to,stateMachineConnector){
 	connect.setLabel({ cssClass:"component label",label:num+"", location:0.5 });
 	if(from.indexOf("start")<0 && to.indexOf("end")<0){					
 			$("#container").trigger("transition",[from,to]);
+	}else if(from.indexOf("start")>=0){
+		$("#container").data("w").start.connecting=to;
+	}else if(to.indexOf("end")>=0){
+		$("#container").data("w").end.connecting=from;
 	}
 	//将起点和终点恢复成空值
 	setFrom(null);
@@ -198,7 +219,7 @@ function trigger(container,str,performer){
 	$("#container").data(str,num);
 	if(str.indexOf("activity")>0 && str.indexOf("route")==-1){
 		_this.trigger("activity",[str,performer]);
-	}else if(str.indexOf("route")>=0){
+	}else if(str.indexOf("route")>=0 || (str=='start' || str=='end')){
 		_this.trigger(str,[str,performer]);
 	}else{
 		_this.trigger(str);
@@ -213,7 +234,7 @@ function addNewLine(current,incoming){
 		line.attr("id","container"+index);
 		line.addClass("line");
 		line.droppable(opt);
-		console.log(opt);
+		//console.log(opt);
 		var index=$("div[id*='container']").length-1;
 		var pre=$("div[id*='container']:eq("+index+")");
 		//console.log(pre);
@@ -240,8 +261,8 @@ $(document).keydown(function(e){
 			 $(el).bind("click",function(){
 			 	//$(icons).removeClass("selected");
 			 	//$(icons).addClass("unselected");
-			 	$(this).siblings().removeClass("selected");
-			 	$(this).siblings().addClass("unselected");
+			 	$(this).siblings().find(".icon").removeClass("selected");
+			 	$(this).siblings().find(".icon").addClass("unselected");
 			 	if($(this).hasClass("selected")){
 			 		$(this).removeClass("selected");
 			 		$(this).addClass("unselected");			
@@ -285,7 +306,7 @@ $(document).keydown(function(e){
 				trigger($("#container"),incoming,performer);
 				appendNewElement($(this),ui);
 			},
-	});
+		});
 	function formatXml(str){
 		str = str.replace(/[ <\/]\w/g,function(s){
 			//console.log(s.toLocaleUpperCase());
@@ -300,27 +321,42 @@ $(document).keydown(function(e){
 		return str;
 	}
 	$(".save").bind("click",function(){
+		//将图标的位置填写到各个对象中
+		setPosition();
 		var tmp=$("#container").data("w").getXml();
 		//console.log(tmp[0]);
 		var pac=$("#container").data("p");
+		//对package对象进行初始化，清空已经添加的workflow对象
+		pac.find("Workflow_Process").remove();
 		tmp.appendTo(pac);
 		var test=$("<test>");
 		pac.appendTo(test);
 		//$("<test>").append($("#container").data("w").getXml());
 		//console.log(pac[0]);
 		var str=test.html();
+		//标签首字母大写
 		str = str.replace(/[ <\/]\w/g,function(s){
 			//console.log(s.toLocaleUpperCase());
 			//var c=str.match(/\w/);
 			//console.log(c[0]);
 			return s.toLocaleUpperCase();
 		});
+		//某一些不需要大写的属性保持原样
 		str =str.replace(/ _\w/g,function(s){
 			//console.log(s);
 			return s.substring(1,2);
 		});
+		//恢复驼峰是命名的大小写情况
 		str =str.replace(/\w_(\w)/g,function(s,b){
-			return s.substring(0,1)+b.toUpperCase();
+			if(b < 'a'){
+				return s;
+			}else{
+				return s.substring(0,1)+b.toUpperCase();
+			}
+		});
+		//XPDLVersion标签的特殊情况
+		str =str.replace(/Xpdlv/g,function(s){
+			return s.toUpperCase();
 		})
 		//console.log(str);
 		var data1={"processdefinition":str};

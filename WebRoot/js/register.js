@@ -39,18 +39,18 @@
 		$("#container").data("w",w1);
 		//console.log(w1);
 	});
-	$("#container").on("start",function(){
+	$("#container").on("start",function(e,n,performer){
 		var w1=$("#container").data("w") || {};
 		//console.log(w1.activities);
-		var p1=w1.participants[0].name;
+		var p1=performer;
 		var a1=new start_activity(p1);
 		w1.start=a1;
 		$("#container").data("w",w1);
 	});
-	$("#container").on("end",function(){
+	$("#container").on("end",function(e,n,performer){
 		var w1=$("#container").data("w") || {};
 		//console.log(w1.activities);
-		var p1=w1.participants[0].name;
+		var p1=performer;
 		var a1=new end_activity(p1);
 		w1.end=a1;
 		$("#container").data("w",w1);
