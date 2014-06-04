@@ -21,14 +21,16 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 	var participant=function(name){
 		this.name=name || "default_participant";
 		this.parent=null;
+		this.show_name="";
 		this.Description=null;
 		this.type="";
 		//还有缺少的属性，编写参与者的对话框时再编写
 		this.getXml=function(){
 			var temp_part=$("<Participant>")
 			temp_part.attr("Id",this.name+"");
-			temp_part.attr("name",this.name+"");
-			var part_type=$("<ParticipantType>");
+			temp_part.attr("name",this.show_name+"");
+			var part_type=$("<Participant_Type>");
+			//还需要修改，这里是错误的代码
 			part_type.attr("Type",dict_part_type["用户"]);
 			part_type.appendTo(temp_part);
 			if(!this.Description){

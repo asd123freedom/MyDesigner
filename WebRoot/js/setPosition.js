@@ -19,3 +19,13 @@ var setPosition=function(){
 	}
 	
 };
+var getProcessDefinition=function(){
+	$.ajax({
+		url: "http://127.0.0.1:8080/MyDesigner/MyDesigner.json",
+		type: "POST",
+		dataType:"xml",
+		success:function(data){
+			console.log($(data).find("Application"));
+		}
+	});
+}

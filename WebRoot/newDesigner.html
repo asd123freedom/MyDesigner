@@ -84,7 +84,9 @@
 <script src="js/Model.js"></script>
 <script src="js/controller.js"></script>
 <script src="js/setPosition.js"></script>
+<script src="js/parseProcessDefinition.js"></script>
 <script type="text/javascript">
+//这些函数都是全局的，需要改进
 function getFrom(){
 	return $("#toolBar").data("from");
 }
@@ -244,9 +246,6 @@ function addNewLine(current,incoming){
 		return null;
 	}
 }
-function fillInOffsetForElements(){
-
-}
 $(document).keydown(function(e){
 	if(e.which==46){
 		//console.log("删除节点了啊");
@@ -354,6 +353,10 @@ $(document).keydown(function(e){
 				return s.substring(0,1)+b.toUpperCase();
 			}
 		});
+		//针对默认参与者的特殊情况
+		str =str.replace(/defaultParticipant/g,function(){
+			return 'default_participant';
+		})
 		//XPDLVersion标签的特殊情况
 		str =str.replace(/Xpdlv/g,function(s){
 			return s.toUpperCase();
