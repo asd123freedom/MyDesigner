@@ -20,7 +20,7 @@
 		a1.name=n1;
 		arr.push(a1);
 		w1.activities=arr;
-		console.log(arr);
+		//console.log(arr);
 		//console.log(w1);
 		$("#container").data("w",w1);
 	});

@@ -194,7 +194,7 @@
     });
   });
   $(".group.submit").unbind("click");
-  $(".group.submit").bind("click.group",function(){
+  $(".group.submit").bind("click",function(){
         var obj=$("#new_course_dialog").data("obj");
         var arr=$("#container").data("w").participants || [];
         $(arr).each(function(index,e){

@@ -1,4 +1,7 @@
 $(function(){
+	$( document ).ajaxError(function() {
+  		console.log("error");
+	});
 	$('#new_course_dialog').on('show', function (e,o) {
 			var flag="init";
 			var tran=$("#new_course_dialog").data("tran");
@@ -21,6 +24,7 @@ $(function(){
 				return;
 			}
 			var obj=$("#new_course_dialog").data("obj");
+			//console.log(obj);
 			if(obj && obj.attr("id").indexOf("participant")>=0){
 				$('#new_course_dialog').load("ParticipantDialog.html?num="+d.getTime(),function(){});
 				return;

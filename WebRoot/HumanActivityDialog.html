@@ -56,7 +56,7 @@
                   <span>选择应用</span>
                   <span class="caret"></span></button>
                 <ul class="dropdown-menu selectFormAppForHumanTask">
-                  <li class="hide temple"><a href="#">application1</a></li>
+                  <li class="hide temple"><a href="#"></a></li>
                 </ul>
           </div>
           <input type="text" class="multiple" style="width:90px;margin-left:30px;
@@ -180,7 +180,7 @@
       var bindSelectAppEvent=function(parent,data){
         parent.find("a").bind("click",function(){
           var str=$(this).text();
-          console.log(data);
+          //console.log(data);
           $(this).parent().parent().parent().find("button.formAppName").find("span:eq(0)").text(str);
           if(data.Modules){
             var arr=data.Modules;
@@ -221,10 +221,10 @@
       //显示应用列表
       var showAllFormApps=function(){
         var arr=$("#container").data("w").applications || [];
-        console.log(arr);
+        //console.log(arr);
         $(".selectFormAppForHumanTask").find("li:not(.temple)").remove();
         for(var i=0;i<arr.length;i++){
-          console.log(arr[i]);
+          //console.log(arr[i]);
           if(arr[i].type=="form"){
             var $li=$(".selectFormAppForHumanTask").find("li.temple").clone();
             $li.removeClass("hide temple");
@@ -235,7 +235,7 @@
         }
       };
       //加载页面的时候初始化应用列表
-      showAllFormApps();
+      //showAllFormApps();
       //使用事件代理减少代码量
       $("table.actualFormParam").delegate("tbody tr","click",function(){
         $(this).parent().find("tr").removeClass("warning");
@@ -265,7 +265,7 @@
   			var name=$("button.formAppName span:eq(0)").text();
         var obj=$("#new_course_dialog").data("obj");
         var arr=$("#container").data("w").activities || [];
-        console.log(obj.attr("id"));
+        //console.log(obj.attr("id"));
         $(arr).each(function(index,e){
           if(obj.attr("id")==e.name){
             //将设置好的参数传给相应的activity对象           
@@ -288,12 +288,28 @@
   		//确定对话框初始的显示
   		$("#new_course_dialog").unbind("show_humanactivity");
   		$("#new_course_dialog").bind("show_humanactivity",function(){
+            showAllFormApps();
             var obj=$("#new_course_dialog").data("obj");
           	var arr=$("#container").data("w").activities || [];
             $(arr).each(function(index,e){
                 if(obj.attr("id")==e.name){
-                   console.log(e);
-                   $("input.participant_name").val(e.performer);          
+                   $("input.participant_name").val(e.performer);
+                   $("input.multiple").val(e.loopcounter);
+                   $("#content2").find("input[type='radio']");
+                   $("#content2").find("input[type='radio'][value='"+e.signalmode+"']").trigger("click");
+                   var actual=e.actualParameters;
+                   for(var i=0;i<actual.length;i++){
+                     var $tr=$("table.actualFormParam").find("tr.temple").clone();
+                     $tr.removeClass("hide temple");
+                     $tr.find("td.actualFormParamName").text(actual[i].content);
+                     $tr.appendTo($("table.actualFormParam"));
+                     initTableIndex($("table.actualFormParam"));
+                   }
+                   $(".selectFormAppForHumanTask").find("a").each(function(index,element){
+                     if($(element).text()==e.taskApplicationId){
+                        $(element).trigger("click");
+                     }
+                   });
                 }
             });
   		});

@@ -271,7 +271,9 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			//$("<Description>").html(this.description).appendTo(activity);
 			//$("<Performer>").html(this.performer).appendTo(activity);
 			if(this.name.indexOf("humantaskactivity")>=0){
-				$("<Description>").html(this.description).appendTo(activity);
+				if(this.description){
+					$("<Description>").html(this.description).appendTo(activity);
+				}
 				$("<Performer>").html(this.performer).appendTo(activity);
 				$("<Start_Mode>").append($("<Manual/>")).appendTo(activity);
 			}else{				

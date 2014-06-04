@@ -44,7 +44,8 @@
     $("select.method").find("option").remove();
     $("select.method").append($("<option>").html("延迟分配模式").attr("selected",true));
     $(".area.submit").unbind("click");
-    $(".area.submit").bind("click.group",function(){
+    console.log("unbind");
+    $(".area.submit").bind("click",function(){
           var obj=$("#new_course_dialog").data("obj");
           var arr=$("#container").data("w").participants || [];
           $(arr).each(function(index,e){
@@ -56,6 +57,7 @@
                $Variable=$("<Variable>").html(str);
                $Variable.appendTo($Task);
                $Task.appendTo($Description);
+               console.log($Task.html());
                e.Description=$Description;
             }
           });

@@ -137,6 +137,13 @@ var Model=(function(){
 							$("select.receive_type").find("option:eq("+index+")").attr("selected",true);
 		  					cbForReceiveType.add(function(){
 		  						console.log(app.ReceiverId_val);
+		  						if(/^\d+$/.test(app.ReceiverId_val)){
+		  							$("select.receive_id").find("option").each(function(index,e){
+		  								if($(e).val().indexOf(app.ReceiverId_val+":")==0){
+		  									app.ReceiverId_val=$(e).val();
+		  								}
+		  							});
+		  						}
 		  						if(app.ReceiverId.substring(0,1)=="0"){
 		  							$("select.receive_id").val(app.ReceiverId_val);
 		  						}else{
