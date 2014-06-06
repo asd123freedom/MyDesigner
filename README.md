@@ -23,7 +23,9 @@ workflow.appendTo($("body"));
 var str=$("body").html;
 ```
 ### 对象
-- #### 构造方法
+
+#### 构造方法
+
 基本上保证每一个图标，对应一个类(`class`)，除此之外，`xml`文件中出现的一些较为复杂的标签也被抽象成为类，下面是`Module`标签对应的类。
 ```
 var Module=function(){
@@ -63,9 +65,9 @@ var Module=function(){
 	}
 ```
 可以看到其中还包括了`ExtendedAttributes`标签，`FormalParameters`标签，这些标签都有对应的类，在`constructor.js`文件中定义了全部的构造函数
-- #### getXml()方法
+#### getXml()方法
 之前已经讲过得到`xml`文件的方法是利用父标签的`html()`方法，每个对象的getXml()方法都负责生成自定义标签，由于每个对象都有`parent`属性，在`getXml()`方法中还将这些包涵自定义标签的`jQuery`对象添加到`parent`对象中，最终生成`xml`文件是在`process_xml.js`文件中，在这里指定每个对象的`parent`属性
-- #### $("#container").data("w")
+#### $("#container").data("w")
 在运行设计器期间，所有对象都存在`$("#container").data("w")`中的相应数组里面，例如,`$("#container").data("w").activities`存储了所有`Activity`对象，最终生成`xml`文件，实际上就是遍历这些数组里面的对象调用`getXml()`方法
 ### 注册自定义事件
 在容器中，每次一个图标落入，都要出发一个事件，生成与图标相应的对象，因此，要进行后续开发的话除了编写相应的构造函数，还要注册事件,同时，出发自定义事件时，要传入需要的参数，如该活动的参与者，ID等。
@@ -97,7 +99,7 @@ function trigger(container,str,performer){
     	}
 }
 ```
-- #### 编辑页面
+#### 编辑页面
 所有的编辑操作全部在`$("#new_course_dialog")`这样一个模态对话框中，具体的显示内容由`load()`方法确定，`controller.js`中的代码就负责确定到底显示哪一个`html`文件。
 ```
 if(tran){
