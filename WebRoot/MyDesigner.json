@@ -146,19 +146,13 @@
         <ExtendedAttribute Name="RECOVERY_PRIVILEGE" Value="false"/>
       </ExtendedAttributes>
     </Activity>
-    <Transition Id="transition2" Name="transition2" From="businessactivity1" To="businessactivity2">
-      <Condition Type="CONDITION"/>
-    </Transition>
-    <Transition Id="transition3" Name="transition3" From="businessactivity2" To="humantaskactivity1">
-      <Condition Type="CONDITION"/>
-    </Transition>
-    <Transition Id="transition4" Name="transition4" From="humantaskactivity1" To="businessactivity3">
-      <Condition Type="CONDITION"/>
-    </Transition>
+    <Transition Id="transition2" Name="2" From="businessactivity1" To="businessactivity2"/>
+    <Transition Id="transition3" Name="3" From="businessactivity2" To="humantaskactivity1"/>
+    <Transition Id="transition4" Name="4" From="humantaskactivity1" To="businessactivity3"/>
     <ExtendedAttributes>
       <ExtendedAttribute Name="TSEGBPM_GRAPH_PARTICIPANT_ORDER" Value="default_participant,participant2"/>
-      <ExtendedAttribute Name="TSEGBPM_GRAPH_START_ACTIVITY" Value="TSEGBPM_GRAPH_PATICIPANT_ID=default_participant,TSEGBPM_GRAPH_CONNECTING_ACTIVITY=businessactivity1,TSEGBPM_GRAPH_OFFSET_X:149,TSEGBPM_GRAPH_OFFSET_Y:193"/>
-      <ExtendedAttribute Name="TSEGBPM_GRAPH_END_ACTIVITY" Value="TSEGBPM_GRAPH_PATICIPANT_ID=participant2,TSEGBPM_GRAPH_CONNECTING_ACTIVITY=businessactivity3,TSEGBPM_GRAPH_OFFSET_X:510,TSEGBPM_GRAPH_OFFSET_Y:419"/>
+      <ExtendedAttribute Name="TSEGBPM_GRAPH_START_ACTIVITY" Value="TSEGBPM_GRAPH_PATICIPANT_ID=default_participant,TSEGBPM_GRAPH_CONNECTING_ACTIVITY=businessactivity1,TSEGBPM_GRAPH_OFFSET_X=149,TSEGBPM_GRAPH_OFFSET_Y=193"/>
+      <ExtendedAttribute Name="TSEGBPM_GRAPH_END_ACTIVITY" Value="TSEGBPM_GRAPH_PATICIPANT_ID=participant2,TSEGBPM_GRAPH_CONNECTING_ACTIVITY=businessactivity3,TSEGBPM_GRAPH_OFFSET_X=510,TSEGBPM_GRAPH_OFFSET_Y=419"/>
       <ExtendedAttribute Name="IsReferenceRecordList" Value="true"/>
     </ExtendedAttributes>
   </WorkflowProcess>

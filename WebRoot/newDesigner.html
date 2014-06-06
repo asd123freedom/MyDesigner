@@ -196,14 +196,17 @@ function createTransition(from,to,stateMachineConnector){
 			source:come,
 			target:go,
 	},stateMachineConnector);
-	connect.setLabel({ cssClass:"component label",label:num+"", location:0.5 });
+	var info=num+"";
 	if(from.indexOf("start")<0 && to.indexOf("end")<0){					
 			$("#container").trigger("transition",[from,to]);
 	}else if(from.indexOf("start")>=0){
 		$("#container").data("w").start.connecting=to;
+		info="";
 	}else if(to.indexOf("end")>=0){
 		$("#container").data("w").end.connecting=from;
+		info="";
 	}
+	connect.setLabel({ cssClass:"component label",label:info, location:0.5 });
 	//将起点和终点恢复成空值
 	setFrom(null);
 	setTo(null);
@@ -343,7 +346,7 @@ $(document).keydown(function(e){
 		//某一些不需要大写的属性保持原样
 		str =str.replace(/ _\w/g,function(s){
 			//console.log(s);
-			return s.substring(1,2);
+			return s.replace(/_/g,"");
 		});
 		//恢复驼峰是命名的大小写情况
 		str =str.replace(/\w_(\w)/g,function(s,b){
@@ -361,7 +364,7 @@ $(document).keydown(function(e){
 		str =str.replace(/Xpdlv/g,function(s){
 			return s.toUpperCase();
 		})
-		//console.log(str);
+		console.log(str);
 		var data1={"processdefinition":str};
 		$.ajax({
 			//url: "http://127.0.0.1:8080/HiServiceCRM/checkProcessDefinition.action",

@@ -1,6 +1,7 @@
 $(function(){
-	$( document ).ajaxError(function() {
-  		console.log("error");
+	$( document ).ajaxError(function(event,jqXHR,ajaxSettings,thrownError ) {
+		//console.log(data);
+  		console.log(thrownError);
 	});
 	$('#new_course_dialog').on('show', function (e,o) {
 			var flag="init";
@@ -26,7 +27,15 @@ $(function(){
 			var obj=$("#new_course_dialog").data("obj");
 			//console.log(obj);
 			if(obj && obj.attr("id").indexOf("participant")>=0){
-				$('#new_course_dialog').load("ParticipantDialog.html?num="+d.getTime(),function(){});
+				$('#new_course_dialog').load("ParticipantDialog.html?num="+d.getTime(),function(){
+					var arr=$("#container").data("w").participants || [];
+					$(arr).each(function(index,e){
+						if(obj.attr("id")==e.name){
+							var type=e.type;
+							$("select.type").val(e.type);
+						}
+					});
+				});
 				return;
 			}
 			if(obj){

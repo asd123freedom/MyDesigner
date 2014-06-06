@@ -31,8 +31,8 @@
 		//console.log(w1.activities);
 		var n1="transition"+$("#container").data("transition");
 		var a1=new transition(from,to);
-		a1.name=n1;
-		a1.Id=n1;
+		a1.Name=n1;
+		a1.show_name=$("#container").data("transition");
 		arr.push(a1);
 		w1.transitions=arr;
 		//console.log(arr);

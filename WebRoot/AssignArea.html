@@ -44,7 +44,22 @@
     $("select.method").find("option").remove();
     $("select.method").append($("<option>").html("延迟分配模式").attr("selected",true));
     $(".area.submit").unbind("click");
-    console.log("unbind");
+    //console.log("unbind");
+    var showParticipant=(function(){
+      var obj=$("#new_course_dialog").data("obj");
+          var arr=$("#container").data("w").participants || [];
+          $(arr).each(function(index,e){
+            if(e.name==obj.attr("id")){
+              if(!e.type){
+                return;
+              }else{
+                var str=e.Description.find("Variable").html();
+                $("input[type='checkbox'][value='"+str.split(":")[0]+"']").trigger("click");
+                $("#variable").val(str.split(":")[1]);
+              }
+            }
+      });
+    })();
     $(".area.submit").bind("click",function(){
           var obj=$("#new_course_dialog").data("obj");
           var arr=$("#container").data("w").participants || [];
@@ -52,12 +67,13 @@
             if(e.name==obj.attr("id")){
                var $Description=$("<Description>");
                //Task的name属性填写的是当前泳道的人工任务节点的ID
-               $Task=$("<Task>").attr("_name","").attr("_assignType","deffered").attr("_reAssign","false");
+               $Task=$("<Task>").attr("_name","").attr("_assign_Type","deffered").attr("_re_Assign","false");
                var str=$("input[type='checkbox']:checked").val()+":"+$("#variable").val();
                $Variable=$("<Variable>").html(str);
                $Variable.appendTo($Task);
                $Task.appendTo($Description);
                console.log($Task.html());
+               e.type="area";
                e.Description=$Description;
             }
           });

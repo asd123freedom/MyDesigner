@@ -12,13 +12,53 @@ var getProcessDefinition=function(){
 			//parseActivities($(data).find("Activity"),obj);
 			//selectContainer(data);
 			//console.log($(data).find("ActualParameter"));
-			parseParticipants(data,addElement);
-			parseActivities(data,$(data).find("Activity"),addElement,obj);
+			parseParticipants(data,addElementForParse);
+			parseActivities(data,$(data).find("Activity"),addElementForParse,obj);
+			parseStart(data,addElementForParse,obj);
+			parseEnd(data,addElementForParse,obj);
+			parseTransitions(data);
 		}
 	});
 }
-function trigger(container,str,performer){
+function createTransitionForParse(from,to,stateMachineConnector,show_name){
+	//stateMachineConnector=$("#toolBar").data("option");
+	var come=from;
+	var go=to;
+	if(come===go){
+		setFrom(null);
+		setTo(null);
+		return;
+	}
+	var connect=null;
+	var num=$("#container").data("transition")|| 0;
+	num++;
+	$("#container").data("transition",num);
+	connect=jsPlumb.connect({
+			source:come,
+			target:go,
+	},stateMachineConnector);
+	//console.log(show_name);
+	connect.setLabel({ cssClass:"component label",label:show_name+"", location:0.5 });
+	if(from.indexOf("start")<0 && to.indexOf("end")<0){					
+			$("#container").trigger("transition",[from,to]);
+	}else if(from.indexOf("start")>=0){
+		$("#container").data("w").start.connecting=to;
+	}else if(to.indexOf("end")>=0){
+		$("#container").data("w").end.connecting=from;
+	}
+	//将起点和终点恢复成空值
+	setFrom(null);
+	setTo(null);
+	connect.bind("dblclick", function(conn) {
+			$('#new_course_dialog').data('tran',conn);
+			$('#new_course_dialog').modal('show');
+			//jsPlumb.detach(conn);
+	});
+	return connect;
+}
+function triggerForParse(container,str,performer){
 	var _this=$(container);
+	console.log(str);
 	var num=$("#container").data(str)|| 0;
 	num++;
 	$("#container").data(str,num);
@@ -30,7 +70,7 @@ function trigger(container,str,performer){
 		_this.trigger(str);
 	}
 }
-function addElement(container,str,src,x,y,name){
+function addElementForParse(container,str,src,x,y,name){
 	var incoming=str;
 	var new_element=$('<img>').attr("src",src).addClass("dropped").addClass("unselected");
 	var num_y=$(container).css("height").match(/\d*/);
@@ -50,7 +90,7 @@ function addElement(container,str,src,x,y,name){
 	if(incoming!="participant" && incoming!="default_participant"){
 			parent=$('<div>').css({
 				position:'absolute',
-				left:parseInt(x),
+				left:x,
 				top:y
 			});
 			span.css({
@@ -98,7 +138,7 @@ function addElement(container,str,src,x,y,name){
 			setFrom($(this).attr("id"));
 		}else if(getFrom() && !getTo()){
 			setTo($(this).attr("id"));
-			createTransition(getFrom(),getTo(),stateMachineConnector);
+			createTransitionForParse(getFrom(),getTo(),stateMachineConnector);
 		}
 	});
 };
@@ -107,12 +147,12 @@ var parseApplication=function(data){
 		var name=$(e).attr("Id");
 		if(name.indexOf("application")==0){
 			//表单应用
-			console.log(name);
+			//console.log(name);
 			$("#container").trigger("formapplication",[name]);
 			var arr_apps=$("#container").data("w").applications;
 			var app=arr_apps[arr_apps.length-1];
 			var arr_module=$(e).find("Modules").children();
-			console.log(arr_module);
+			//console.log(arr_module);
 			for(var i=0;i<arr_module.length;i++){
 				var module=new Module();
 				app.Form.Modules.push(module);
@@ -156,13 +196,13 @@ var parseActivities=function(parent,data,addElement,obj){
 	async_len=async_len*2;
 	var async_count=0;
 	$("body").data("async",async_count);
-	console.log(async_len);
+	//console.log(async_len);
 	$(data).each(function(index,e){
 		if($(e).attr("Id").indexOf("business")==0){
 			var name=$(e).attr("Id");
 			var performer=$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_PATICIPANT_ID']").attr("Value");
 			//$("#container").trigger("activity",[name,performer]);
-			trigger($("#container"),name.replace(/\d+/,""),performer);
+			triggerForParse($("#container"),name.replace(/\d+/,""),performer);
 			var temp_len=$("#container").data("w").activities.length;
 			var activity=$("#container").data("w").activities[temp_len-1];
 			activity.name=name;
@@ -173,7 +213,7 @@ var parseActivities=function(parent,data,addElement,obj){
 			var x=offset.split(",")[0];
 			var y=offset.split(",")[1];
 			var container=$("#"+obj[performer]);
-			addElement(container,str,src,x,y,name);
+			addElementForParse(container,str,src,x,y,name);
 			//实参的解析
 			var actual=[];
 			activity.actualParameters=actual;
@@ -260,7 +300,7 @@ var parseActivities=function(parent,data,addElement,obj){
 			var name=$(e).attr("Id");
 			var performer=$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_PATICIPANT_ID']").attr("Value");
 			//$("#container").trigger("activity",[name,performer]);
-			trigger($("#container"),name.replace(/\d+/,""),performer);
+			triggerForParse($("#container"),name.replace(/\d+/,""),performer);
 			var temp_len=$("#container").data("w").activities.length;
 			var activity=$("#container").data("w").activities[temp_len-1];
 			activity.name=name;
@@ -271,9 +311,9 @@ var parseActivities=function(parent,data,addElement,obj){
 			var offset=$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_OFFSET']").attr("Value");
 			var x=offset.split(",")[0];
 			var y=offset.split(",")[1];
-			console.log(obj[performer]);
+			//console.log(obj[performer]);
 			var container=$("#"+obj[performer]);
-			addElement(container,str,src,x,y,name);
+			addElementForParse(container,str,src,x,y,name);
 			//实参的解析
 			var actual=[];
 			activity.actualParameters=actual;
@@ -293,13 +333,28 @@ var parseParticipants=function(data,addElement){
 	for(item in obj){
 		if(obj.hasOwnProperty(item)){
 			//$("#container").trigger(item.replace(/\d+/,""),[item]);
-			trigger($("#container"),item.replace(/\d+/,""));
+			triggerForParse($("#container"),item.replace(/\d+/,""));
 			var arr_participant=$("#container").data('w').participants;
 			if(arr_participant.length>0){
 				var src=$("#toolBar").find("#"+item.replace(/\d+/,"")).attr('src');
 				var str=item.replace(/\d+/,"");
 				var container=$("#container");
-				addElement(container,str,src,0,0,item);
+				addElementForParse(container,str,src,0,0,item);
+				var part=arr_participant[arr_participant.length-1];
+				if(item!="default_participant"){
+					var element=$(data).find("#"+item);
+					var raw_type=$(element).find("ParticipantType").attr("Type");
+					if(raw_type=="HUMAN"){
+						part.type="user";
+					}else if(raw_type=="ORGANIZATIONAL_UNIT"){
+						part.type="group";
+					}else if(raw_type=="ROLE"){
+						part.type="role";
+					}else if(raw_type=="RESOURCE_SET"){
+						part.type="area";
+					}
+				}
+				part.Description=element.find("Description");
 			}
 		}
 	}
@@ -318,4 +373,41 @@ var selectContainer=function(data){
 		}
 	}
 	return obj_container;
+}
+var parseStart=function(data,addElement,obj){
+	var str=$(data).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_START_ACTIVITY']").attr("Value");
+	str=str.split(",");
+	var incoming='start';
+	var src=$("#toolBar").find("#start").attr('src');
+	var container=$("#"+obj[str[0].split("=")[1]]);
+	var x=str[2].split("=")[1];
+	var y=str[3].split("=")[1];
+	addElement(container,incoming,src,x,y,"start1");
+	triggerForParse($("#container"),"start",str[0].split("=")[1]);
+	var conn_activity=str[1].split("=")[1];
+	createTransitionForParse("start1",conn_activity,$("#toolBar").data("option"),"");
+}
+var parseEnd=function(data,addElement,obj){
+	var str=$(data).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_END_ACTIVITY']").attr("Value");
+	str=str.split(",");
+	var incoming='start';
+	var src=$("#toolBar").find("#end").attr('src');
+	var container=$("#"+obj[str[0].split("=")[1]]);
+	var x=str[2].split("=")[1];
+	var y=str[3].split("=")[1];
+	addElement(container,incoming,src,x,y,"end1");
+	trigger($("#container"),"end",str[0].split("=")[1]);
+	var conn_activity=str[1].split("=")[1];
+	createTransitionForParse(conn_activity,"end1",$("#toolBar").data("option"),"");
+}
+var parseTransitions=function(data){
+	$(data).find("Transition").each(function(index,e){
+		var from=$(e).attr("From");
+		var to=$(e).attr("To");
+		var info=$(e).attr("Id").replace(/[a-zA-Z]+/g,"");
+		createTransitionForParse(from,to,$("#toolBar").data("option"),info);
+		var arr=$("#container").data("w").transitions;
+		var tran=arr[arr.length-1];
+		tran.condition=$(e).find("Condition").html();
+	});
 }

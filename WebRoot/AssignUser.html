@@ -95,6 +95,7 @@
     $("select.method").find("option").remove();
     $("select.method").append($("<option>").html("直接分配模式").attr("selected",true));
     var getAllRoles=function(){
+        $("h3").html("载入中");
         var dtd=$.Deferred();
         $.ajax({
             url: "http://127.0.0.1:8080/HiServiceCRM/findAllRoles.action",
@@ -123,6 +124,7 @@
                       $(e.target).removeClass("icon-plus").addClass("icon-minus");
                     }           
                 });
+                $("h3").html("参与者");
                 dtd.resolve(); 
             }             
         });
@@ -195,8 +197,10 @@
                     data.name=$(this).find("td.name").text();
                     $(".btn.add").data("val",data);
                 });
+               
             });
         });
+        showParticipant();
     });
     //点击加号的事件
     $(".btn.add").bind("click",function(){
@@ -227,6 +231,28 @@
         }
         freshTableIndex();
     });
+    var showParticipant=function(){
+        var obj=$("#new_course_dialog").data("obj");
+        var arr=$("#container").data("w").participants || [];
+        $(arr).each(function(index,e){
+            if(e.name==obj.attr("id")){
+              if(!e.type){
+                return;
+              }else{
+                var actors=e.Description.find("actor");
+                $(actors).each(function(index,element){
+                  var data={};
+                  data.id=$(element).attr("Id");
+                  data.name=$(element).attr("Name");
+                  console.log(data);
+                   $(".btn.add").removeClass("disabled");
+                   $(".btn.add").data("val",data);
+                   $(".btn.add").trigger("click");
+                });
+              }
+            }
+        });
+    }
     $(".user.submit").unbind("click");
     $(".user.submit").bind("click",function(){
         var obj=$("#new_course_dialog").data("obj");
@@ -235,8 +261,8 @@
           if(e.name==obj.attr("id")){
              $Description=$("<Description>");
              //Task的name属性填写的是当前泳道的人工任务节点的ID
-             $Task=$("<Task>").attr("name","").attr("assignType","direct").attr("reAssign","false");
-             $DirectActors=$("DirectActors");
+             $Task=$("<Task>").attr("_name","").attr("_assign_Type","direct").attr("_re_Assign","false");
+             $DirectActors=$("<Direct_Actors>");
              var trs=$("table.finalList tr.filled");
              for(var i=0;i<trs.length;i++){
                 $Actor=$("<Actor>");
@@ -247,6 +273,7 @@
              $DirectActors.appendTo($Task);
              $Task.appendTo($Description);
              e.Description=$Description;
+             e.type="user";
           }
         });
         console.log("submit");

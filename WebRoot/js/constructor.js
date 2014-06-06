@@ -30,8 +30,8 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			temp_part.attr("Id",this.name+"");
 			temp_part.attr("name",this.show_name+"");
 			var part_type=$("<Participant_Type>");
-			//还需要修改，这里是错误的代码
-			part_type.attr("Type",dict_part_type["用户"]);
+			console.log(dict_part_type[this.type]);
+			part_type.attr("Type",dict_part_type[this.type]);
 			part_type.appendTo(temp_part);
 			if(!this.Description){
 			   //暂时不知道这里应该写什么？
@@ -42,7 +42,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 					arr_names.push($(e).attr("id"));
 				});
 				var str=arr_names.join(",");
-				this.Description.find("Task").attr("name",str);
+				this.Description.find("Task").attr("_name",str);
 				this.Description.appendTo(temp_part);
 			}						
 			//console.log(this.parent);
@@ -82,10 +82,10 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.getXml=function(){
 			if(this.connecting){
 				var value=dict_extendattr.participant+"="+this.participant+",TSEGBPM_GRAPH_CONNECTING_ACTIVITY="+this.connecting+
-						",TSEGBPM_GRAPH_OFFSET_X:"+this.x+",TSEGBPM_GRAPH_OFFSET_Y:"+this.y;
+						",TSEGBPM_GRAPH_OFFSET_X="+this.x+",TSEGBPM_GRAPH_OFFSET_Y="+this.y;
 			}else{
 				var value=dict_extendattr.participant+"="+this.participant+
-						",TSEGBPM_GRAPH_OFFSET_X:"+this.x+",TSEGBPM_GRAPH_OFFSET_Y:"+this.y;
+						",TSEGBPM_GRAPH_OFFSET_X="+this.x+",TSEGBPM_GRAPH_OFFSET_Y="+this.y;
 			}
 			
 			var tmp=new extended_attribute(this.show_name,value,"");
@@ -349,8 +349,8 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		}
 	};
 	var transition=function(from,to){
-		this.Id="";
 		this.Name="";
+		this.show_name="";
 		this.from=from;
 		this.to=to;
 		this.condition="";
@@ -358,16 +358,18 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.actualParameter="";
 		this.getXml=function(){
 			var tmp_tran=$("<Transition>");
-			tmp_tran.attr("Id",this.Id);
-			tmp_tran.attr("Name",this.name);
+			tmp_tran.attr("Id",this.Name);
+			tmp_tran.attr("Name",this.show_name);
 			tmp_tran.attr("From",this.from);
 			tmp_tran.attr("To",this.to);
 			tmp_tran.appendTo(this.parent);
 			//<Condition Type="CONDITION">jybyj==1</Condition>
-			var con=$("<Condition>");
-			con.attr("Type","CONDITION");
-			con.html(this.condition);
-			con.appendTo(tmp_tran);
+			if(this.condition){
+				var con=$("<Condition>");
+				con.attr("Type","CONDITION");
+				con.html(this.condition);
+				con.appendTo(tmp_tran);
+			}			
 		}
 	};
 	var arr_app=["Type","BusinessType","ClassPath"];
