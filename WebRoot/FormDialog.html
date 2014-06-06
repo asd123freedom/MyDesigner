@@ -417,7 +417,7 @@
   		});
   		$("select.Module").bind("change",function(e,callbacks){
     			var index=$(this).find("option:selected").data("id");
-          console.log(index);
+          //console.log(index);
           $("input.RecordListName").val("");
           var RecordListName=$("input.RecordListName").data(index+"");
           if(RecordListName){
