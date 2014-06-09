@@ -1,6 +1,6 @@
 MyDesigner
 ==========
-# 基于JavaScript，Html，CSS的流程设计器
+# 基于JavaScript，Html的流程设计器
 
 
 基于JavaScript，Html，CSS借鉴了原先基于ActionScript实现的流程设计器的实现思路，采用基于对象的思想，依赖jquery，jqueryUI,jsPlumb和Bootstrap，实现了流程定义文件的生成和解析。本文档主要用于后来者对于设计器进行功能的补充和扩展扩展。
