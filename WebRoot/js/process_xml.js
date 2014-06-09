@@ -7,6 +7,7 @@
 	var packageheader=$("<Package_Header>");
 	$("<XPDLVersion>").html("2.1").appendTo(packageheader);
 	$("<Vendor>").html("TSEG").appendTo(packageheader);
+	//关于包的创建时间这里有一个bug需要修改
 	var d=new Date();
 	var raw_date=d.toString().split(" ");
 	raw_date[6]=raw_date[3];
@@ -19,12 +20,16 @@
 	//得在页面中new一下，放到数组里，存到某一个对象上
 	//processHeader里面事件用toDateString方法
 	workflowprocess.getXml=function(obj){
+		var d=new Date();
+		var package=$("#container").data("p");
+		package.attr("Id",this.package || "newPackage");
+		var raw_date=d.toString().split(" ");
+		raw_date[6]=raw_date[3];
+		raw_date[3]="";
+		var str=raw_date.join(" ");
+		package.find("created").html(str);
 		var xml=$("<Workflow_Process>");
-		if(!c.data("process_id")){
-			xml.attr("Id","test");
-		}else{
-			xml.attr("Id",c.data("process_id"));
-		}
+		xml.attr("Id",this.workflow || "workflowProcess1");
 		//应用的xml(应该写在packge标签下)
 		var p=$("#container").data("p");
 		var applications=workflowprocess["applications"]|| [];
@@ -36,19 +41,24 @@
 		//xml.appendTo(obj);
 		//形参xml(暂时没有实现)
 		//数据域xml(暂时没有实现)
-		//参与者xml		
+		//参与者xml
+		var processHeader=$("<Process_Header>");
+		
+		$("<Created>").html(d.toDateString()).appendTo(processHeader);
+		$("<Description>").appendTo(processHeader);	
+		processHeader.appendTo(xml);
 		var par_xml=$("<Participants>");
 		//要在页面中存储参与者数组
 		var participants=workflowprocess["participants"] || [];
 		console.log(participants);
-		//var participants=c.data("participants");
-		//先把参与者的drop方法实现
 		var participants_name_arr=[];
+		//参与者XML
 		if(participants.length>0){
 				for(var i=0;i<participants.length;i++){
 					//console.log(participants[i]);
-					participants[i].parent=xml;
+					participants[i].parent=par_xml;
 					if(participants[i].name=='default_participant'){
+						participants_name_arr.push(participants[i].name);
 						continue;
 					}
 					participants_name_arr.push(participants[i].name);
@@ -59,6 +69,7 @@
 				//temp_part.parent=xml;
 				//temp_part.getXml();
 		}
+		par_xml.appendTo(xml);
 		//活动XML
 		var temp_activities=$("<Activities>");
 		var activities=workflowprocess["activities"] || [];
@@ -82,12 +93,17 @@
 			this.end.parent=es;
 			this.end.getXml();
 		}
-		var e1=new extended_attribute("IsReferenceRecordList","true");
+		if(this.isTerminationImplicit===undefined){
+			this.isTerminationImplicit=true;
+		}
+		var e2=new extended_attribute("TSEGBPM_GRAPH_PARTICIPANT_ORDER",participants_name_arr.join(","));
+		e2.parent=es;
+		e2.getXml();
+		var e1=new extended_attribute("isTerminationImplicit",this.isTerminationImplicit+"");
 		e1.parent=es;
 		e1.getXml();
 		//<ExtendedAttribute Name="TSEGBPM_GRAPH_PARTICIPANT_ORDER" Value="default_participant,participant2"/>
     	//<ExtendedAttribute Name="isTerminationImplicit" Value="true"/>
-		//console.log(xml);
 		es.appendTo(xml);
 		return xml;
 	};

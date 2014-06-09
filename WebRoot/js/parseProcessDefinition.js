@@ -342,7 +342,7 @@ var parseParticipants=function(data,addElement){
 				addElementForParse(container,str,src,0,0,item);
 				var part=arr_participant[arr_participant.length-1];
 				if(item!="default_participant"){
-					var element=$(data).find("#"+item);
+					var element=$(data).find("Participant[Id='"+item+"']");
 					var raw_type=$(element).find("ParticipantType").attr("Type");
 					if(raw_type=="HUMAN"){
 						part.type="user";
@@ -354,7 +354,7 @@ var parseParticipants=function(data,addElement){
 						part.type="area";
 					}
 				}
-				part.Description=element.find("Description");
+				part.Description=$(element).find("Description");
 			}
 		}
 	}

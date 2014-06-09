@@ -31,7 +31,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			temp_part.attr("name",this.show_name+"");
 			var part_type=$("<Participant_Type>");
 			console.log(dict_part_type[this.type]);
-			part_type.attr("Type",dict_part_type[this.type]);
+			part_type.attr("Type",dict_part_type[this.type] || "null");
 			part_type.appendTo(temp_part);
 			if(!this.Description){
 			   //暂时不知道这里应该写什么？

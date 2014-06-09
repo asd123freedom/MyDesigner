@@ -105,7 +105,6 @@
             url: "http://127.0.0.1:8080/HiServiceCRM/findAllGroups.action",
             type: "POST",
             success:function(data){
-                console.log(data);
                 dtd.resolve(data || []);
                
             }             
@@ -144,6 +143,7 @@
     }
     getAllGroups().done(function(data){
       fillInTable(data || []);
+      showParticipant();
     }).done(function(){
       $("table.groupList > tbody").find("tr:not(.temple)").bind("click",function(){
           $(".btn.add").removeClass("disabled");
@@ -159,6 +159,29 @@
         var lines=$("table.groupSelected tr.filled");
         lines.each(function(index,e){
           $(e).find("td.id").text(index+1);
+        });
+    }
+    var showParticipant=function(){
+      var obj=$("#new_course_dialog").data("obj");
+        var arr=$("#container").data("w").participants || [];
+        $(arr).each(function(index,e){
+            if(e.name==obj.attr("id")){
+              if(!e.type){
+                return;
+              }else{
+                var groups=e.Description.find("Group");
+                console.log(groups);
+                $(groups).each(function(index,element){
+                  var data={};
+                  data.id=$(element).attr("Id");
+                  data.name=$(element).attr("Name");
+                  console.log(data);
+                   $(".btn.add").removeClass("disabled");
+                   $(".btn.add").data("val",data);
+                   $(".btn.add").trigger("click");
+                });
+              }
+            }
         });
     }
      //点击加号的事件
@@ -201,19 +224,20 @@
           if(e.name==obj.attr("id")){
              $Description=$("<Description>");
              //Task的name属性填写的是当前泳道的人工任务节点的ID
-             $Task=$("<Task>").attr("name","").attr("assignType","group").attr("reAssign","false");
-             $Groups=$("Groups");
+             $Task=$("<Task>").attr("_name","").attr("_assign_Type","group").attr("_re_Assign","false");
+             $Groups=$("<Groups>");
              var trs=$("table.groupSelected tr.filled");
              for(var i=0;i<trs.length;i++){
-                $Actor=$("<Group>");
-                $Actor.attr("Id",trs[i].find("td.num").text());
-                $Actor.attr("Name",trs[i].find("td.name").text());
-                $Actor.appendTo($DirectActors);
+                $Group=$("<Group>");
+                $Group.attr("Id",$(trs[i]).find("td.num").text());
+                $Group.attr("Name",$(trs[i]).find("td.name").text());
+                $Group.appendTo($Groups);
              }
-             $DirectActors.appendTo($Task);
+             $Groups.appendTo($Task);
              $("<SubTasks>").appendTo($Task);
              $Task.appendTo($Description);
              e.Description=$Description;
+             e.type="group";
           }
         });
         console.log("submit");

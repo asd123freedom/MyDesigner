@@ -114,6 +114,7 @@
     }
     //页面的相关的初始化代码，还需要添加表格的初始化代码
     getAllRoles().done(function(){
+       showParticipant();
        $(".left span").bind("click",function(){
           $(".btn.add").removeClass("disabled");
           $(".left span").removeClass("chosen");
@@ -155,6 +156,28 @@
         freshTableIndex();
         $(this).addClass("disabled");
     });
+    var showParticipant=function(){
+        var obj=$("#new_course_dialog").data("obj");
+        var arr=$("#container").data("w").participants || [];
+        $(arr).each(function(index,e){
+            if(e.name==obj.attr("id")){
+              if(!e.type){
+                return;
+              }else{
+                var actors=e.Description.find("Role");
+                $(actors).each(function(index,element){
+                  var data={};
+                  data.id=$(element).attr("Id");
+                  data.name=$(element).attr("Name");
+                  console.log(data);
+                   $(".btn.add").removeClass("disabled");
+                   $(".btn.add").data("val",data);
+                   $(".btn.add").trigger("click");
+                });
+              }
+            }
+        });
+    }
     //提交编辑结果用的代码
     $(".role.submit").unbind("click");
     $(".role.submit").bind("click",function(){
@@ -164,19 +187,20 @@
           if(e.name==obj.attr("id")){
              $Description=$("<Description>");
              //Task的name属性填写的是当前泳道的人工任务节点的ID
-             $Task=$("<Task>").attr("name","").attr("assignType","direct").attr("reAssign","false");
-             $DirectActors=$("Roles");
+             $Task=$("<Task>").attr("_name","").attr("_assign_Type","role").attr("_re_Assign","false");
+             $DirectActors=$("<Roles>");
              var trs=$("table.finalList tr.filled");
              for(var i=0;i<trs.length;i++){
                 $Actor=$("<Role>");
-                $Actor.attr("Id",trs[i].find("td.num").text());
-                $Actor.attr("Name",trs[i].find("td.name").text());
+                $Actor.attr("Id",$(trs[i]).find("td.num").text());
+                $Actor.attr("Name",$(trs[i]).find("td.name").text());
                 $Actor.appendTo($DirectActors);
              }
              $DirectActors.appendTo($Task);
              $("<SubTasks>").appendTo($Task);
              $Task.appendTo($Description);
              e.Description=$Description;
+             e.type="role";
           }
         });
         console.log("submit");

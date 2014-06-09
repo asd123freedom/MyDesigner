@@ -71,6 +71,45 @@
 		  <div class="modal-footer">
 		  </div>
 		</div>
+		<div class="modal hide fade" id="saveWorkFlow">
+		  <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		    <h3>流程定义</h3>
+		  </div>
+		  <div class="modal-body">
+		    <form class="form-horizontal">
+			  <div class="control-group">
+			    <label class="control-label">类型</label>
+			    <div class="controls">
+			      <input type="text" class="package" placeholder="类型">
+			    </div>
+			  </div>
+			  <div class="control-group">
+			    <label class="control-label" for="inputPassword">名称</label>
+			    <div class="controls">
+			      <input type="text"  class="workflow" placeholder="名称">
+			    </div>
+			  </div>
+			  <div class="control-group">
+			    <label class="control-label" for="inputPassword">创建者</label>
+			    <div class="controls">
+			      <input type="text"  class="creator" placeholder="创建者">
+			    </div>
+			  </div>
+			  <div class="control-group">
+			    <div class="controls">
+			      <label class="checkbox">
+			        <input type="checkbox" checked> 是否绝对终止
+			      </label>
+			    </div>
+			  </div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+		    <a href="#" class="btn">关闭</a>
+		    <a href="#" class="btn btn-primary saveProcess">确定</a>
+		  </div>
+		</div>
 </body>
 <script language="javascript" type="text/javascript" src="jquery/jquery-1.9.1.js"></script>
 <script src="jquery-ui/jquery-ui.js"></script>
@@ -323,14 +362,53 @@ $(document).keydown(function(e){
 		return str;
 	}
 	$(".save").bind("click",function(){
-		//将图标的位置填写到各个对象中
+		$('#saveWorkFlow').modal('show');
+	});
+	$("#saveWorkFlow .btn.saveProcess").bind("click",function(){
+		var tmp=$("#container").data("w");
+		tmp.package=$('#saveWorkFlow').find("input.package").val();
+		tmp.workflow=$('#saveWorkFlow').find("input.workflow").val();
+		tmp.creator=$('#saveWorkFlow').find("input.creator").val();
+		tmp.isTerminationImplicit=$("#saveWorkFlow").find("input[type='checkbox']").prop("checked");
+		//$(".save").trigger("save");
+		var obj=getProcessDefinition();
+		var data1=obj['data1'];
+		$.ajax({
+			//url: "http://127.0.0.1:8080/HiServiceCRM/checkProcessDefinition.action",
+			url:"http://127.0.0.1:8080/struts2_demo/XmlString.action",
+     		type: "POST",
+     		//data: {"json":JSON.stringify(data1)},
+     		data:{"xml":data1.processdefinition},
+     		success:function(data){
+     			console.log(data);
+     		},
+        });
+		$("#saveWorkFlow").modal('hide');
+	});
+	$(".menu .checkOrder").bind("click",function(){
+		var obj=getProcessDefinition();
+		var data1=obj['data1'];
+		$.ajax({
+			url: "http://127.0.0.1:8080/HiServiceCRM/checkProcessDefinition.action",
+			//url:"http://127.0.0.1:8080/struts2_demo/XmlString.action",
+     		type: "POST",
+     		data: {"json":JSON.stringify(data1)},
+     		//data:{"xml":data1.processdefinition},
+     		success:function(data){
+     			console.log(data);
+     		},
+         });
+	});
+	function getProcessDefinition(){
 		setPosition();
 		var tmp=$("#container").data("w").getXml();
 		//console.log(tmp[0]);
 		var pac=$("#container").data("p");
 		//对package对象进行初始化，清空已经添加的workflow对象
 		pac.find("Workflow_Process").remove();
-		tmp.appendTo(pac);
+		var processes=$("<Workflow_Processes>");
+		tmp.appendTo(processes);
+		processes.appendTo(pac);
 		var test=$("<test>");
 		pac.appendTo(test);
 		//$("<test>").append($("#container").data("w").getXml());
@@ -366,6 +444,62 @@ $(document).keydown(function(e){
 		})
 		console.log(str);
 		var data1={"processdefinition":str};
+		var data2={
+			'creator':tmp.creator,
+			'typeName':tmp.package,
+			'processDefinition':str,
+			'name':tmp.workflow,
+			'mode':'new'
+		};
+		return {'data1':data1,'data2':data2};
+	}
+	$(".save").bind("save",function(){
+		//将图标的位置填写到各个对象中
+		// setPosition();
+		// var tmp=$("#container").data("w").getXml();
+		// //console.log(tmp[0]);
+		// var pac=$("#container").data("p");
+		// //对package对象进行初始化，清空已经添加的workflow对象
+		// pac.find("Workflow_Process").remove();
+		// var processes=$("<Workflow_Processes>");
+		// tmp.appendTo(processes);
+		// processes.appendTo(pac);
+		// var test=$("<test>");
+		// pac.appendTo(test);
+		// //$("<test>").append($("#container").data("w").getXml());
+		// //console.log(pac[0]);
+		// var str=test.html();
+		// //标签首字母大写
+		// str = str.replace(/[ <\/]\w/g,function(s){
+		// 	//console.log(s.toLocaleUpperCase());
+		// 	//var c=str.match(/\w/);
+		// 	//console.log(c[0]);
+		// 	return s.toLocaleUpperCase();
+		// });
+		// //某一些不需要大写的属性保持原样
+		// str =str.replace(/ _\w/g,function(s){
+		// 	//console.log(s);
+		// 	return s.replace(/_/g,"");
+		// });
+		// //恢复驼峰是命名的大小写情况
+		// str =str.replace(/\w_(\w)/g,function(s,b){
+		// 	if(b < 'a'){
+		// 		return s;
+		// 	}else{
+		// 		return s.substring(0,1)+b.toUpperCase();
+		// 	}
+		// });
+		// //针对默认参与者的特殊情况
+		// str =str.replace(/defaultParticipant/g,function(){
+		// 	return 'default_participant';
+		// })
+		// //XPDLVersion标签的特殊情况
+		// str =str.replace(/Xpdlv/g,function(s){
+		// 	return s.toUpperCase();
+		// })
+		// console.log(str);
+		var obj=getProcessDefinition();
+		var data1=obj['data1'];
 		$.ajax({
 			//url: "http://127.0.0.1:8080/HiServiceCRM/checkProcessDefinition.action",
 			url:"http://127.0.0.1:8080/struts2_demo/XmlString.action",
@@ -376,6 +510,17 @@ $(document).keydown(function(e){
      			console.log(data);
      		},
          });
+		var data2=obj['data2'];
+		// $.ajax({
+		// 	//url: "http://127.0.0.1:8080/HiServiceCRM/checkProcessDefinition.action",
+		// 	url:"http://127.0.0.1:8080/HiServiceCRM/savePackageDefinition.action",
+  //    		type: "POST",
+  //    		//data: {"json":JSON.stringify(data1)},
+  //    		data:{"xml":data1.processdefinition},
+  //    		success:function(data){
+  //    			console.log(data);
+  //    		},
+  //        });
 	});
 });
 

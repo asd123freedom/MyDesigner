@@ -66,9 +66,14 @@
     </ExtendedAttributes>
   </Application>
   <WorkflowProcess Id="test">
-    <Participant Id="participant2" Name="participant2">
-      <Participanttype/>
-    </Participant>
+     <Participant Id="participant2" Name="participant2">
+          <ParticipantType Type="RESOURCE_SET"/>
+          <Description>
+            <Task name="humantaskactivity1" assignType="deffered" reAssign="false">
+              <Variable>user:cpjl</Variable>
+            </Task>
+          </Description>
+     </Participant>
     <Activity Id="businessactivity1" Name="">
       <Implementation>
         <Task>
