@@ -1,4 +1,6 @@
-var getProcessDefinition=function(){
+$(function(){
+
+var parseProcessDefinition=function(){
 	$.ajax({
 		url: "http://127.0.0.1:8080/MyDesigner/MyDesigner.json",
 		type: "POST",
@@ -20,7 +22,10 @@ var getProcessDefinition=function(){
 		}
 	});
 }
-function createTransitionForParse(from,to,stateMachineConnector,show_name){
+$(".menu .importOrder").bind("click",function(){
+	parseProcessDefinition();
+});
+function createTransitionForParse(from,to,stateMachineConnector,show_name,name){
 	//stateMachineConnector=$("#toolBar").data("option");
 	var come=from;
 	var go=to;
@@ -40,7 +45,7 @@ function createTransitionForParse(from,to,stateMachineConnector,show_name){
 	//console.log(show_name);
 	connect.setLabel({ cssClass:"component label",label:show_name+"", location:0.5 });
 	if(from.indexOf("start")<0 && to.indexOf("end")<0){					
-			$("#container").trigger("transition",[from,to]);
+			$("#container").trigger("transition",[from,to,name,show_name]);
 	}else if(from.indexOf("start")>=0){
 		$("#container").data("w").start.connecting=to;
 	}else if(to.indexOf("end")>=0){
@@ -206,6 +211,7 @@ var parseActivities=function(parent,data,addElement,obj){
 			var temp_len=$("#container").data("w").activities.length;
 			var activity=$("#container").data("w").activities[temp_len-1];
 			activity.name=name;
+			activity.show_name=$(e).attr("Name");
 			//活动图标的显示
 			var str=name.replace(/\d+/,"");
 			var src=$("#toolBar").find("#"+name.replace(/\d+/,"")).attr('src');
@@ -304,6 +310,7 @@ var parseActivities=function(parent,data,addElement,obj){
 			var temp_len=$("#container").data("w").activities.length;
 			var activity=$("#container").data("w").activities[temp_len-1];
 			activity.name=name;
+			activity.show_name=$(e).attr("Name");
 			activity.taskApplicationId=$(e).find("TaskApplication").attr("Id");
 			//活动图标的显示
 			var str=name.replace(/\d+/,"");
@@ -325,6 +332,52 @@ var parseActivities=function(parent,data,addElement,obj){
 			activity.loopcounter=$(e).find("LoopCounter").html();
 			activity.task_type="Task";
 			activity.signalmode=$(e).find("ExtendedAttribute[Name='SIGNALMODE']").attr("Value");
+		}else if($(e).attr("Id").indexOf("join")>=0){
+			var name=$(e).attr("Id");
+			var performer=$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_PATICIPANT_ID']").attr("Value");
+			//$("#container").trigger("activity",[name,performer]);
+			triggerForParse($("#container"),name.replace(/\d+/,""),performer);
+			var temp_len=$("#container").data("w").activities.length;
+			var activity=$("#container").data("w").activities[temp_len-1];
+			activity.name=name;
+			activity.show_name=$(e).attr("Name");
+			//活动图标的显示
+			var str=name.replace(/\d+/,"");
+			var src=$("#toolBar").find("#"+name.replace(/\d+/,"")).attr('src');
+			var offset=$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_OFFSET']").attr("Value");
+			var x=offset.split(",")[0];
+			var y=offset.split(",")[1];
+			//console.log(obj[performer]);
+			var container=$("#"+obj[performer]);
+			addElementForParse(container,str,src,x,y,name);
+			var tranRefs=[];
+	        var tran_arr=$(e).find("TransitionRef");
+	        for(var i=0;i<tran_arr.length;i++){
+	            tranRefs.push($(tran_arr[i]).attr("Id"));
+	        }
+            activity.TransitionRefs=tranRefs;
+            activity.split_type=$(e).find("Split").attr("Type");
+            activity.OutgoingCondition=$(e).find("Split").attr("OutgoingCondition");
+		}else if($(e).attr("Id").indexOf("join")>=0){
+			var name=$(e).attr("Id");
+			var performer=$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_PATICIPANT_ID']").attr("Value");
+			//$("#container").trigger("activity",[name,performer]);
+			triggerForParse($("#container"),name.replace(/\d+/,""),performer);
+			var temp_len=$("#container").data("w").activities.length;
+			var activity=$("#container").data("w").activities[temp_len-1];
+			activity.name=name;
+			activity.show_name=$(e).attr("Name");
+			//活动图标的显示
+			var str=name.replace(/\d+/,"");
+			var src=$("#toolBar").find("#"+name.replace(/\d+/,"")).attr('src');
+			var offset=$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_OFFSET']").attr("Value");
+			var x=offset.split(",")[0];
+			var y=offset.split(",")[1];
+			//console.log(obj[performer]);
+			var container=$("#"+obj[performer]);
+			addElementForParse(container,str,src,x,y,name);
+            activity.join_type=$(e).find("Join").attr("Type");
+            activity.IncomingCondition=$(e).find("Join").attr("IncomingCondition");
 		}
 	});
 }
@@ -343,6 +396,7 @@ var parseParticipants=function(data,addElement){
 				var part=arr_participant[arr_participant.length-1];
 				if(item!="default_participant"){
 					var element=$(data).find("Participant[Id='"+item+"']");
+					part.show_name=$(element).attr("Name");
 					var raw_type=$(element).find("ParticipantType").attr("Type");
 					if(raw_type=="HUMAN"){
 						part.type="user";
@@ -405,9 +459,11 @@ var parseTransitions=function(data){
 		var from=$(e).attr("From");
 		var to=$(e).attr("To");
 		var info=$(e).attr("Id").replace(/[a-zA-Z]+/g,"");
-		createTransitionForParse(from,to,$("#toolBar").data("option"),info);
+		createTransitionForParse(from,to,$("#toolBar").data("option"),info,$(e).attr("Id"));
 		var arr=$("#container").data("w").transitions;
 		var tran=arr[arr.length-1];
 		tran.condition=$(e).find("Condition").html();
 	});
 }
+
+});

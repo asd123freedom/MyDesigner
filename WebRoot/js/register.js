@@ -24,15 +24,15 @@
 		//console.log(w1);
 		$("#container").data("w",w1);
 	});
-	$("#container").on("transition",function(e,from,to){
+	$("#container").on("transition",function(e,from,to,name,show_name){
 		//console.log(to);
 		var w1=$("#container").data("w") || {};
 		var arr=w1.transitions || [];
 		//console.log(w1.activities);
 		var n1="transition"+$("#container").data("transition");
 		var a1=new transition(from,to);
-		a1.Name=n1;
-		a1.show_name=$("#container").data("transition");
+		a1.name=name || n1;
+		a1.show_name=show_name || $("#container").data("transition");
 		arr.push(a1);
 		w1.transitions=arr;
 		//console.log(arr);

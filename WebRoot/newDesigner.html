@@ -36,7 +36,7 @@
 	        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">文件 <span class="caret"></span></button>
 	        <ul class="dropdown-menu">
 	          <li><a href="#" class="checkOrder">检验</a></li>
-	          <li><a href="#" class="saveOreder">保存</a></li>
+	          <li><a href="#" class="saveOrder">保存</a></li>
 	          <li><a href="#" class="importOrder">导入</a></li>
 	          <li><a href="#" class="quit">退出</a></li>
 	        </ul>
@@ -302,8 +302,8 @@ $(document).keydown(function(e){
 			 $(el).bind("click",function(){
 			 	//$(icons).removeClass("selected");
 			 	//$(icons).addClass("unselected");
-			 	$(this).siblings().find(".icon").removeClass("selected");
-			 	$(this).siblings().find(".icon").addClass("unselected");
+			 	$(this).siblings(".icon").removeClass("selected");
+			 	$(this).siblings(".icon").addClass("unselected");
 			 	if($(this).hasClass("selected")){
 			 		$(this).removeClass("selected");
 			 		$(this).addClass("unselected");			
@@ -380,7 +380,7 @@ $(document).keydown(function(e){
      		//data: {"json":JSON.stringify(data1)},
      		data:{"xml":data1.processdefinition},
      		success:function(data){
-     			console.log(data);
+     			//console.log(data);
      		},
         });
 		$("#saveWorkFlow").modal('hide');
@@ -390,10 +390,22 @@ $(document).keydown(function(e){
 		var data1=obj['data1'];
 		$.ajax({
 			url: "http://127.0.0.1:8080/HiServiceCRM/checkProcessDefinition.action",
-			//url:"http://127.0.0.1:8080/struts2_demo/XmlString.action",
      		type: "POST",
      		data: {"json":JSON.stringify(data1)},
-     		//data:{"xml":data1.processdefinition},
+     		success:function(data){
+     			console.log(data);
+     		},
+         });
+	});
+	$(".menu .saveOrder").bind("click",function(){
+		var obj=getProcessDefinition();
+		var data2=obj['data2'];
+		console.log(data2);
+		$.ajax({
+			url:"http://127.0.0.1:8080/HiServiceCRM/savePackageDefinition.action",
+     		type: "POST",
+     		data: {"json":JSON.stringify(data2)},
+     		//data:data2,
      		success:function(data){
      			console.log(data);
      		},
@@ -442,86 +454,17 @@ $(document).keydown(function(e){
 		str =str.replace(/Xpdlv/g,function(s){
 			return s.toUpperCase();
 		})
-		console.log(str);
+		//console.log(str);
 		var data1={"processdefinition":str};
 		var data2={
-			'creator':tmp.creator,
-			'typeName':tmp.package,
+			'creator':$("#container").data("w").creator,
+			'typeName':$("#container").data("w").package,
 			'processDefinition':str,
-			'name':tmp.workflow,
+			'name':$("#container").data("w").workflow,
 			'mode':'new'
 		};
 		return {'data1':data1,'data2':data2};
 	}
-	$(".save").bind("save",function(){
-		//将图标的位置填写到各个对象中
-		// setPosition();
-		// var tmp=$("#container").data("w").getXml();
-		// //console.log(tmp[0]);
-		// var pac=$("#container").data("p");
-		// //对package对象进行初始化，清空已经添加的workflow对象
-		// pac.find("Workflow_Process").remove();
-		// var processes=$("<Workflow_Processes>");
-		// tmp.appendTo(processes);
-		// processes.appendTo(pac);
-		// var test=$("<test>");
-		// pac.appendTo(test);
-		// //$("<test>").append($("#container").data("w").getXml());
-		// //console.log(pac[0]);
-		// var str=test.html();
-		// //标签首字母大写
-		// str = str.replace(/[ <\/]\w/g,function(s){
-		// 	//console.log(s.toLocaleUpperCase());
-		// 	//var c=str.match(/\w/);
-		// 	//console.log(c[0]);
-		// 	return s.toLocaleUpperCase();
-		// });
-		// //某一些不需要大写的属性保持原样
-		// str =str.replace(/ _\w/g,function(s){
-		// 	//console.log(s);
-		// 	return s.replace(/_/g,"");
-		// });
-		// //恢复驼峰是命名的大小写情况
-		// str =str.replace(/\w_(\w)/g,function(s,b){
-		// 	if(b < 'a'){
-		// 		return s;
-		// 	}else{
-		// 		return s.substring(0,1)+b.toUpperCase();
-		// 	}
-		// });
-		// //针对默认参与者的特殊情况
-		// str =str.replace(/defaultParticipant/g,function(){
-		// 	return 'default_participant';
-		// })
-		// //XPDLVersion标签的特殊情况
-		// str =str.replace(/Xpdlv/g,function(s){
-		// 	return s.toUpperCase();
-		// })
-		// console.log(str);
-		var obj=getProcessDefinition();
-		var data1=obj['data1'];
-		$.ajax({
-			//url: "http://127.0.0.1:8080/HiServiceCRM/checkProcessDefinition.action",
-			url:"http://127.0.0.1:8080/struts2_demo/XmlString.action",
-     		type: "POST",
-     		//data: {"json":JSON.stringify(data1)},
-     		data:{"xml":data1.processdefinition},
-     		success:function(data){
-     			console.log(data);
-     		},
-         });
-		var data2=obj['data2'];
-		// $.ajax({
-		// 	//url: "http://127.0.0.1:8080/HiServiceCRM/checkProcessDefinition.action",
-		// 	url:"http://127.0.0.1:8080/HiServiceCRM/savePackageDefinition.action",
-  //    		type: "POST",
-  //    		//data: {"json":JSON.stringify(data1)},
-  //    		data:{"xml":data1.processdefinition},
-  //    		success:function(data){
-  //    			console.log(data);
-  //    		},
-  //        });
-	});
 });
 
 </script>

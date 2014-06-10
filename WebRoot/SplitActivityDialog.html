@@ -136,7 +136,7 @@
               var tran_arr=$("#container").data("w").transitions || [];
               for(var i=0;i<tran_arr.length;i++){
                 if(tran_arr[i].from==e.name){
-                  tranRefs.push(tran_arr[i].Id);
+                  tranRefs.push(tran_arr[i].name);
                 }
               }
               var condition=$("input.conditionForOr").val();

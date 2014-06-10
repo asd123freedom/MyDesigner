@@ -92,8 +92,21 @@ $(function(){
 			return;
 		}
 		//console.log($(this).find("#name").val());
+		var show_name=$(this).find("#name").val();
 		if(obj){
-			obj.find("span").text($(this).find("#name").val()).css("display","block");
+			var arr=[];
+			if(obj.attr("id").indexOf("participant")>=0){
+				arr=$("#container").data("w").participants;
+			}else{
+				arr=$("#container").data("w").activities;
+			}
+			$(arr).each(function(index,e){
+				if(obj.attr("id")==e.name){
+					e.show_name=show_name;
+				}
+			});
+			console.log(arr);
+			obj.find("span").text(show_name).css("display","block");
 			$(this).data("obj",null);
 			return;
 		}

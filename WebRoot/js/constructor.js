@@ -349,7 +349,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		}
 	};
 	var transition=function(from,to){
-		this.Name="";
+		this.name="";
 		this.show_name="";
 		this.from=from;
 		this.to=to;
@@ -358,7 +358,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.actualParameter="";
 		this.getXml=function(){
 			var tmp_tran=$("<Transition>");
-			tmp_tran.attr("Id",this.Name);
+			tmp_tran.attr("Id",this.name);
 			tmp_tran.attr("Name",this.show_name);
 			tmp_tran.attr("From",this.from);
 			tmp_tran.attr("To",this.to);
@@ -472,20 +472,24 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			var TransitionRefs=$("<Transition_Refs>");
 			for(var i=0;i<this.TransitionRefs.length;i++){
 				var tranName=this.TransitionRefs[i];
-				$("Transition_Ref").attr("Id",tranName).appendTo(TransitionRefs);
+				$("<Transition_Ref>").attr("Id",tranName).appendTo(TransitionRefs);
 			}
 			TransitionRefs.appendTo(split);
 			split.appendTo(TransitionRestriction);
 			TransitionRestriction.appendTo(TransitionRestrictions);
-			$("<Performer>").html(this.performer).appendTo(activity);
+			TransitionRestrictions.appendTo(activity);
+			if(this.performer!="default_participant"){
+				$("<Performer>").html(this.performer).appendTo(activity);
+			}
 			var es=$("<Extended_Attributes>");
-			var e1=new extended_attribute(dict_extendattr.participant,this.performer);
-			e1.parent=es;
-			e1.getXml();
 			var e4=new extended_attribute(dict_extendattr.offset,this.x+","+this.y);
 			e4.parent=es;
 			e4.getXml();
+			var e1=new extended_attribute(dict_extendattr.participant,this.performer);
+			e1.parent=es;
+			e1.getXml();
 			es.appendTo(activity);
+			activity.appendTo(this.parent);
 		}
 	};
 	var routejoinactivity=function(performer){
@@ -495,9 +499,9 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.show_name="";
 		this.performer=performer || "default_participant";
 		this.parent=null;
-		this.TransitionRefs=[];
+		//this.TransitionRefs=[];
 		this.join_type="";
-		this.IncomingCondtion="";
+		this.IncomingCondition="";
 		this.x="";
 		this.y="";
 		this.getXml=function(){
@@ -508,21 +512,25 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			route.appendTo(activity);
 			var TransitionRestrictions=$("<Transition_Restrictions>");
 			var TransitionRestriction=$("<Transition_Restriction>");
-			var join=$("<Join>").attr("Type",this.split_type);
+			var join=$("<Join>").attr("Type",this.join_type);
 			if(this.IncomingCondition){
-				join.attr("Incoming_Condition",this.OutgoingCondition);
+				join.attr("Incoming_Condition",this.IncomingCondition);
 			}
 			join.appendTo(TransitionRestriction);
 			TransitionRestriction.appendTo(TransitionRestrictions);
-			$("<Performer>").html(this.performer).appendTo(activity);
+			TransitionRestrictions.appendTo(activity);
+			if(this.performer!="default_participant"){
+				$("<Performer>").html(this.performer).appendTo(activity);
+			}
 			var es=$("<Extended_Attributes>");
-			var e1=new extended_attribute(dict_extendattr.participant,this.performer);
-			e1.parent=es;
-			e1.getXml();
 			var e4=new extended_attribute(dict_extendattr.offset,this.x+","+this.y);
 			e4.parent=es;
 			e4.getXml();
+			var e1=new extended_attribute(dict_extendattr.participant,this.performer);
+			e1.parent=es;
+			e1.getXml();
 			es.appendTo(activity);
+			activity.appendTo(this.parent);
 		}
 	};
 	
