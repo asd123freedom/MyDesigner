@@ -224,7 +224,8 @@ var Model=(function(){
 							line.find("td.module").text(arr[i].module);
 							line.find("td.fieldID").text(arr[i].fieldID);
 							line.find("td.field").text(arr[i].field);
-							line.find("td.ActualParam").val(arr[i].ActualParam);
+							console.log(arr[i].ActualParam);
+							line.find("td.actualParam").text(arr[i].ActualParam);
 							line.find("td.recordID").text(arr[i].recordID);
 							line.find(".btn-danger").bind("click",function(){
 								$(this).parents("tr:eq(0)").remove();

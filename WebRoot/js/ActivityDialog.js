@@ -20,6 +20,10 @@
 	$("#new_course_dialog").on("show_save",function(){
 			Model.showSaveOptionFilled(dict_appname);
 	});
+	$("#new_course_dialog").on("show_edit",function(){
+			//修改数据业务和存数据业务公用代码
+			Model.showSaveOptionFilled(dict_appname);
+	});
 	$("#new_course_dialog").on("init",function(){
 			$("select.app_type").trigger("change");			
 	});
@@ -79,7 +83,7 @@
 				app.Name=$("select.app_type").val()+""+arr.length;
 				app.Type="Class";
 				app.BusinessType=$("select.app_type").val();
-				app.ClassPath=dict_classpath[app.Type];
+				app.ClassPath=dict_classpath["SaveBusinessFormData"];
 				var parent=e;
 				var actual=[];
 				$("table.save").find("tr.actual").each(function(index,e){
@@ -89,11 +93,47 @@
 						a.moduleID=$(e).find("td.moduleID").text();
 						a.fieldID=$(e).find("td.fieldID").text();
 						a.field=$(e).find("td.field").text();
-						a.ActualParam=$(e).find("td.ActualParam").text();
+						a.ActualParam=$(e).find("td.actualParam").text();
 						a.recordID=$(e).find("td.recordID").text();
 						a.content=a.ID+";"+a.moduleID+";"+a.fieldID+";"+
-								  a.ActualParam.substring(0,a.ActualParam.indexOf(":"))+";"+a.recordID;
-						console.log(a);
+								  a.ActualParam+";"+a.recordID;
+						actual.push(a);
+				});
+				e.taskApplicationId=app.Name;
+				e.taskApplicationType="save";
+				e.actualParameters=actual;
+				$(e).data("app",app);
+			}
+		});
+	});
+	$("#new_course_dialog").on("edit",function(){
+		var obj=$(this).data("obj");
+		var arr=$("#container").data("w").activities || [];
+		console.log(arr);
+		$(arr).each(function(index,e){
+			if(obj.attr("id")==e.name){
+				//将设置好的参数传给相应的activity对象
+				$("#container").trigger("application");
+				var arr=$("#container").data("w").applications;  					
+				var app=arr[arr.length-1];
+				app.Name=$("select.app_type").val()+""+arr.length;
+				app.Type="Class";
+				app.BusinessType=$("select.app_type").val();
+				app.ClassPath=dict_classpath["EditBusinessFormData"];
+				var parent=e;
+				var actual=[];
+				$("table.save").find("tr.actual").each(function(index,e){
+						var a=new ActualParameter();
+						a.ID=$(e).find("td.id").text();
+						a.module=$(e).find("td.module").text();
+						a.moduleID=$(e).find("td.moduleID").text();
+						a.fieldID=$(e).find("td.fieldID").text();
+						a.field=$(e).find("td.field").text();
+						a.ActualParam=$(e).find("td.actualParam").text();
+						a.recordID=$(e).find("td.recordID").text();
+						a.content=a.moduleID+";"+a.recordID+";"+a.fieldID+";"+
+								  a.ActualParam;
+						console.log(a.content);
 						actual.push(a);
 				});
 				e.taskApplicationId=app.Name;
@@ -159,6 +199,9 @@
 			}
 			if($("select.app_type").val().toLocaleLowerCase().indexOf("save")>=0){
 				$('#new_course_dialog').trigger("save");
+			}
+			if($("select.app_type").val().toLocaleLowerCase().indexOf("edit")>=0){
+				$('#new_course_dialog').trigger("edit");
 			}
 		}			
 	});

@@ -113,7 +113,10 @@
 								</select></label>
 				    	<div class="controls">
 				    			<input type="text" class="hide ActualParam" placeholder="流程变量"/>
-								<select class="span2 ActualParam">							  
+								<select class="span2 ActualParam user">							  
+								  <option class="hide temple"></option>
+								</select>
+								<select class="span3 ActualParam participant">							  
 								  <option class="hide temple"></option>
 								</select>
 								<input type="text" class="recordID" placeholder="记录ID" style="width:106px;margin-left:40px"/>
@@ -165,7 +168,7 @@
 		                  <td class="module" style="vertical-align:middle"><span style="">Mushi</span></td>
 		                  <td class="fieldID" style="vertical-align:middle">3ice</td>
 		                  <td class="field" style="vertical-align:middle">3ice</td>
-		                  <td class="ActualParam" style="vertical-align:middle">LaNm</td>
+		                  <td class="actualParam" style="vertical-align:middle">LaNm</td>
 		                  <td class="recordID" style="vertical-align:middle">attend</td>
 		                  <td class="oper" style="vertical-align:middle"><button class="btn btn-danger btn-mini">删除</button></td>
 		                </tr>
@@ -252,7 +255,10 @@
 			}else{
 				var str=$(".save .ActualParam:not(.hide)").val();
 			}
-			line.find("td.ActualParam").text(str);
+			if(str.indexOf(":")>=0){
+				str=str.substring(0,str.indexOf(":"));
+			}
+			line.find("td.actualParam").text(str);
 			line.find("td.recordID").text($("div.save .recordID").val());
 			line.find(".btn-danger").bind("click",function(){
 				$(this).parents("tr:eq(0)").remove();
@@ -262,12 +268,27 @@
 			});
 			line.appendTo($("table.save"));
 		});
+		//取业务中的实参类型选择
 		$("select.ActualParamType").bind("change",function(e){
 			var s=$(this).val();
 			if(s=="user"){
+				$(".save .ActualParam").addClass("hide");
+				$(".save select.ActualParam.user").removeClass("hide");
 				Model.findAllUsers().done(function(data){
-					Model.fillInUsers(data,$(".save select.ActualParam"));
+					Model.fillInUsers(data,$(".save select.ActualParam.user"));
 				});
+			}else if(s=="humantask"){
+				$(".save .ActualParam").addClass("hide");
+				$(".save select.ActualParam.participant").removeClass("hide");
+				var parent=$(".save select.ActualParam.participant");
+				var participants=$("#new_course_dialog").data("obj").parent().find("div[id*='humantask']");
+				$(participants).each(function(index,e){
+					var name=$(e).attr("id");
+					$("<option>").attr("value",name).html(name).appendTo(parent);
+				});
+			}else{
+				$(".save .ActualParam").addClass("hide");
+				$(".save input.ActualParam").removeClass("hide");
 			}
 		});
 		//确定显示什么应用的界面并填写已经填写过的数据
@@ -283,12 +304,11 @@
 			}
 			if(s.toLocaleLowerCase().indexOf("get")>=0){
 				$(".get").removeClass("hide");
-				//$(".get").find("option").addClass("hide");
 				Model.findAllDynamicModuleMetaData().done(Model.fillInAllDynamicModuleMetaData).done(function(){
 					callbacks.fire();
 				});
 			}
-			if(s.toLocaleLowerCase().indexOf("save")>=0){
+			if(s.toLocaleLowerCase().indexOf("save")>=0 || s.toLocaleLowerCase().indexOf("edit")>=0){
 				$(".save").removeClass("hide");
 				$("select.ActualParamType").trigger("change");
 				Model.findAllDynamicModuleMetaData().done(Model.fillInAllDynamicModuleMetaData).done(function(){

@@ -270,7 +270,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			taskapp.attr("Id",this.taskApplicationId);
 			//$("<Description>").html(this.description).appendTo(activity);
 			//$("<Performer>").html(this.performer).appendTo(activity);
-			if(this.name.indexOf("humantaskactivity")>=0){
+			if(this.name.indexOf("humantaskactivity")>=0 || this.name.indexOf("autoactivity")>=0){
 				if(this.description){
 					$("<Description>").html(this.description).appendTo(activity);
 				}
@@ -447,6 +447,14 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			app.appendTo(this.parent);
 		}
 	};
+	var scriptapplication=function(){
+		this.id="";
+		this.type="script";
+		this.expression="";
+		this.getXml=function(){
+			
+		}
+	}
 	var routesplitactivity=function(performer){
 		this.id="";
 		this.description="";

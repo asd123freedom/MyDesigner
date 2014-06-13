@@ -41,7 +41,7 @@
 	          <li><a href="#" class="quit">退出</a></li>
 	        </ul>
          </div>
-         <div class="btn-group application">
+         <div class="btn-group addapplication">
             <button class="btn dropdown-toggle" data-toggle="dropdown">绑定应用<span class="caret"></span></button>
             <ul class="dropdown-menu">
               <li><a href="#" class="formApp">Form</a></li>
@@ -159,11 +159,6 @@ function appendNewElement(container,ui){
 		}else{
 			name=incoming;
 		}
-		//name_index=name.indexOf('activity');
-		// if(name_index>=0){
-		// 	//name=name.substr(name_index);
-		// }
-		// //span.html(name);
 		if(incoming!="participant" && incoming!="default_participant"){
 				parent=$('<div>').css({
 					position:'absolute',
@@ -190,7 +185,7 @@ function appendNewElement(container,ui){
 		}
 		new_element.attr("title",name);
 		new_element.appendTo(parent);
-		span.appendTo(parent);//要想修改它的位置要在append操作之后修改
+		span.appendTo(parent);
 		parent.attr("id",name).addClass("dropped");
 		//双击图标事件
 		parent.bind("dblclick",function(){
@@ -410,6 +405,14 @@ $(document).keydown(function(e){
      			console.log(data);
      		},
          });
+	});
+	$(".addapplication .formApp").bind("click",function(){
+		$("#container").data("apptype","form");
+		$('#new_course_dialog').modal("show");
+	});
+	$(".addapplication .scriptApp").bind("click",function(){
+		$("#container").data("apptype","script");
+		$('#new_course_dialog').modal("show");
 	});
 	function getProcessDefinition(){
 		setPosition();

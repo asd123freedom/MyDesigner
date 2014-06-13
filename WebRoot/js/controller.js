@@ -52,6 +52,12 @@ $(function(){
 		  				}
 		  		});
 		  		console.log(type);
+		  		if(type=="autoactivity"){
+		  			$('#new_course_dialog').load("AutoActivityDialog.html?num="+d.getTime(),function(){
+						//show();
+					});
+					return;
+		  		}
 		  		if(type=="businessactivity"){
 		  			$('#new_course_dialog').load("ActivityDialog.html?num="+d.getTime(),function(){
 						//show();
@@ -80,10 +86,17 @@ $(function(){
 					return;
 		  		}
 			}
-			//什么图标都没点，那么显示添加表单应用的对话框，在此之上的代码都是对点击图标有反应的
-			$('#new_course_dialog').load("FormDialog.html?num="+d.getTime(),function(){
-				$("#new_course_dialog").trigger("show_form");
-			});
+			if($("#container").data("apptype")=="form"){
+				//什么图标都没点，那么显示添加表单应用的对话框，在此之上的代码都是对点击图标有反应的
+				$('#new_course_dialog').load("FormDialog.html?num="+d.getTime(),function(){
+					$("#new_course_dialog").trigger("show_form");
+				});
+			}else{
+				$('#new_course_dialog').load("ScriptDialog.html?num="+d.getTime(),function(){
+					//$("#new_course_dialog").trigger("show_form");
+				});
+			}
+			
 	});
 	$("#new_course_dialog").on("hide",function(e,o){
 		var obj=$(this).data("obj");
