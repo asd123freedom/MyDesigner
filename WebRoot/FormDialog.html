@@ -290,7 +290,7 @@
         $("input.RecordListName").data(key+"",value+"");
       });
   		//将形参数据填到表格中
-  		$(".btn.addActualParam").bind("click",function(){
+  		$("#content1 .btn.addActualParam").bind("click",function(){
   			var temp=$("a.formAppName span:eq(0)").text();
   			if(temp=="选择应用"){
   				alert("先选择应用");
@@ -304,6 +304,9 @@
   			data.fieldID=selectField.find("option:selected").data("id");
   			data.field=selectField.find("option:selected").html().split(":")[1];
   			var table=$(this).parents(".content:eq(0)").find("table");
+        if(!data.moduleID || !data.fieldID){
+          return;
+        }
   			fillFormParametersTable(data,table);
   			table.find("tr.warning").removeClass("warning");
   		});

@@ -439,6 +439,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.id="";
 		this.type="form";
 		this.Form=new Form();
+		this.parent=null;
 		this.getXml=function(){
 			var app=$("<application>");
 			app.attr("Id",this.id);
@@ -451,8 +452,13 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.id="";
 		this.type="script";
 		this.expression="";
+		this.parent=null;
 		this.getXml=function(){
-			
+			var app=$("<application>");
+			app.attr("Id",this.id);
+			var script=$("<script>");
+			$("<expression>").html(this.expression).appendTo(script);
+			app.appendTo(this.parent);
 		}
 	}
 	var routesplitactivity=function(performer){

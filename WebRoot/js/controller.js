@@ -93,7 +93,7 @@ $(function(){
 				});
 			}else{
 				$('#new_course_dialog').load("ScriptDialog.html?num="+d.getTime(),function(){
-					//$("#new_course_dialog").trigger("show_form");
+					$("#new_course_dialog").trigger("show_script");
 				});
 			}
 			

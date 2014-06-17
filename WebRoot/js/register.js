@@ -75,6 +75,17 @@
 		$("#container").data("w",w1);
 		callbacks.fire();
 	});
+	$("#container").on("scriptapplication",function(e,n,callbacks){
+		var callbacks=callbacks || $.Callbacks();
+		var w1=$("#container").data("w") || {};
+		var arr=w1.applications||[];
+		var a1=new scriptapplication();
+		a1.id=n;
+		arr.push(a1);
+		w1.applications=arr;
+		$("#container").data("w",w1);
+		callbacks.fire();
+	});
 	//其实是可以合并的。。。。但是。。。就这样吧，后来人优化吧
 	$("#container").on("routesplitactivity",function(e,name,performer){
 		var w1=$("#container").data("w") || {};

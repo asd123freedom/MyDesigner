@@ -1,5 +1,5 @@
 <style>
-    div.addFormApp{
+    div.addScriptApp{
       margin-left: 20px;
     }
     .addScriptApp li{
@@ -25,13 +25,13 @@
           <div class="control-group">
               <div class="addScriptApp">
                   <input type="text" class="inputId" value="" placeholder="application1" autocomplete="off" />
-                  <button class="btn btn-primary addFormApp">添加</button>
+                  <button class="btn btn-primary addScriptApp">添加</button>
                   <div class="btn-group">
-                      <a class="btn dropdown-toggle formAppName" data-toggle="dropdown" href="#">
+                      <a class="btn dropdown-toggle scriptAppName" data-toggle="dropdown" href="#">
                         <span>选择应用</span>
                         <span class="caret"></span>
                       </a>
-                      <ul class="dropdown-menu selectFormApp">
+                      <ul class="dropdown-menu selectScriptApp">
                         <!-- dropdown menu links -->
                         <li class="hide temple"><a href="#"></a></li>
                       </ul>
@@ -40,14 +40,18 @@
           </div>
           <div class="control-group scriptForAdd">
               <label class="control-label"  style="padding:0px;margin-left:20px">
-                  <select class="span3 isntance">               
-                  <option class="hide temple"></option>
+                  <select class="span3 instance">               
+                    <option class="hide temple"></option>
+                    <option value="executionContext">executionContext</option>
+                    <option value="token">token</option>
+                    <option value="task">task</option>
+                    <option value="taskInstance">taskInstance</option>
                 </select></label>
               <div class="controls" style="margin-left:260px">
-                <select class="span3 method">                
-                  <option class="hide"></option>
-                </select>
-                <a href="#" class="btn btn-primary addActualParam" style="margin-left:20px">确定</a>
+                  <select class="span3 method" style="max-height:30px">                
+                    <option class="hide temple"></option>
+                  </select>
+                  <a href="#" class="btn btn-primary addActualParam" style="margin-left:20px">确定</a>
               </div>
           </div>
           <textarea rows="5" class="basic_info" style="width:300px;margin-left:20px">...
@@ -57,47 +61,120 @@
     </div>
     <div class="modal-footer">
       <a href="#" data-dismiss="modal" class="btn">取消</a>
-      <a href="#" class="btn btn-primary formapp submit" data-loading-text="正在添加">确定</a>
+      <a href="#" class="btn btn-primary scriptapp submit" data-loading-text="正在添加">确定</a>
     </div>
 <script type="text/javascript">
     $(function(){
+      var arr_exec=[
+        "getNode():Node",
+        "getProcessDefinition():ProcessDefinition",
+        "setAction(Action action)",
+        "getProcessInstance():ProcessInstance",
+        "toString():String",
+        "setVariable(String name, Object value)",
+        "getVariable(String name):Object",
+        "leaveNode()",
+        "leaveNode(String transitionName)",
+        "leaveNode(Transition transition)",
+        "getDefinition(Class clazz):ModuleDefinition",
+        "getInstance(Class clazz):ModuleInstance",
+        "getContextInstance():ContextInstance",
+        "getTaskMgmtInstance():TaskMgmtInstance",
+        "getBpmContext():BpmContext",
+        "getContext():BpmContext",
+        "setTaskInstance(TaskInstance taskInstance)",
+        "getToken():Token",
+        "getAction():Action",
+        "getEvent():Event"
+      ];
+      for(var i=0;i<arr_exec.length;i++){
+        var opt=$("select.method").find("option.temple").clone();
+        opt.removeClass("hide temple");
+        opt.val(arr_exec[i]).html(arr_exec[i]);
+        opt.appendTo($("select.method"));
+      }
       //填写应用Id的输入框获得焦点的事件
       $("input.inputId").bind("focus",function(){
         $(this).val($(this).attr("placeholder"));
       });
+      //选择应用的事件
+      var bindSelectAppEvent=function(parent,data){
+        parent.find("a").bind("click",function(){
+          var str=$(this).text();
+          $(this).parent().parent().parent().find("a.scriptAppName").find("span:eq(0)").text(str);
+          var arr=$("#container").data("w").applications || [];
+          for(var i=0;i<arr.length;i++){
+            if(arr[i].type=="script" && arr[i].id==str){
+              //arr[i].expression=$("textarea").val().replace(/\s+/,"");
+              console.log()
+              $("textarea").val(data);
+            }
+          }
+        });
+      }
       //初始化应用列表
-      var initFormAppList=function(){
+      var initScriptAppList=function(){
         var arr=$("#container").data("w").applications || [];
         console.log(arr);
-        $(".selectFormApp").find("li:not(.temple)").remove();
+        $("ul.selectScriptApp").find("li:not(.temple)").remove();
         for(var i=0;i<arr.length;i++){
-          if(arr[i].type=="form"){
-            var $li=$(".selectFormApp").find("li.temple").clone();
+          console.log(arr[i].type);
+          if(arr[i].type=="script"){
+            var $li=$(".selectScriptApp").find("li.temple").clone();
             $li.removeClass("hide temple");
             $li.find("a").text(arr[i].id);
-            $li.appendTo($("ul.selectFormApp"));
-            bindSelectAppEvent($li,arr[i].Form);
+            $li.appendTo($("ul.selectScriptApp"));
+            bindSelectAppEvent($li,arr[i].expression);
             //$li.find("a").trigger("click");
           }
         }
       };
+      //确定对话框初始的显示
+      $("#new_course_dialog").unbind("show_script");
+      $("#new_course_dialog").bind("show_script",function(){
+        initScriptAppList();  
+      });
       //添加一个应用
-      $(".btn.addFormApp").bind("click",function(e){
-        e.preventDefault();
-        var arr=$("#container").data("w").applications || [];
-        var name=$(this).parent().find("input").val() || $(this).parent().find("input").attr("placeholder");
-        for(var i=0;i<arr.length;i++){
-          if(arr[i].id==name){
-            alert("该ID已经存在");
+      $(".btn.addScriptApp").bind("click",function(e){
+          e.preventDefault();
+          var arr=$("#container").data("w").applications || [];
+          var name=$(this).parent().find("input").val() || $(this).parent().find("input").attr("placeholder");
+          for(var i=0;i<arr.length;i++){
+            if(arr[i].id==name){
+              alert("该ID已经存在");
+              return;
+            }
+          }
+          //var cb=$.Callbacks();
+          //cb.add(function(){
+            //initScriptAppList();
+          //});
+          $("#container").trigger("scriptapplication",[name]);
+          initScriptAppList();
+          alert("添加成功！");
+      });
+      //添加脚本内容
+      $(".btn.addActualParam").bind("click",function(e){
+          $("textarea").val("");
+          var temp=$("a.scriptAppName span:eq(0)").text();
+          if(temp=="选择应用"){
+            alert("先选择应用");
             return;
           }
-        }
-        var cb=$.Callbacks();
-        cb.add(function(){
-          initFormAppList();
-        });
-        $("#container").trigger("formapplication",[name,cb]);
-        alert("添加成功！");
+          var instance=$("select.instance").val();
+          var method=$("select.method").val().split(":")[0];
+          $("textarea").val(instance+"."+method);
+      });
+      //提交编辑结果
+      $(".scriptapp.submit").bind("click",function(e){
+          var name=$("a.scriptAppName span:eq(0)").text();
+          var arr=$("#container").data("w").applications || [];
+          for(var i=0;i<arr.length;i++){
+            if(arr[i].type=="script" && arr[i].id==name){
+              arr[i].expression=$("textarea").val().replace(/\s+/,"");
+            }
+          }
+          $("#new_course_dialog").modal("hide");
       });
     $( "input.inputId" ).keypress(function(e) {
       console.log(e.which);
