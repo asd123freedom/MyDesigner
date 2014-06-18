@@ -171,7 +171,7 @@
           var arr=$("#container").data("w").applications || [];
           for(var i=0;i<arr.length;i++){
             if(arr[i].type=="script" && arr[i].id==name){
-              arr[i].expression=$("textarea").val().replace(/\s+/,"");
+              arr[i].expression="![CDATA["+$("textarea").val().replace(/\s+/,"")+";]]";
             }
           }
           $("#new_course_dialog").modal("hide");

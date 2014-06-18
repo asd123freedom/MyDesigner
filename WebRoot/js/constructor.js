@@ -268,13 +268,13 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			task.appendTo(impl);
 			impl.appendTo(activity);
 			taskapp.attr("Id",this.taskApplicationId);
-			//$("<Description>").html(this.description).appendTo(activity);
-			//$("<Performer>").html(this.performer).appendTo(activity);
-			if(this.name.indexOf("humantaskactivity")>=0 || this.name.indexOf("autoactivity")>=0){
-				if(this.description){
-					$("<Description>").html(this.description).appendTo(activity);
-				}
+			if(this.performer!="default_participant"){
 				$("<Performer>").html(this.performer).appendTo(activity);
+			}
+			if(this.description){
+				$("<Description>").html(this.description).appendTo(activity);
+			}
+			if(this.name.indexOf("humantaskactivity")>=0){	
 				$("<Start_Mode>").append($("<Manual/>")).appendTo(activity);
 			}else{				
 				$("<Start_Mode>").append($("<Automatic/>")).appendTo(activity);
@@ -458,6 +458,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			app.attr("Id",this.id);
 			var script=$("<script>");
 			$("<expression>").html(this.expression).appendTo(script);
+			script.appendTo(app);
 			app.appendTo(this.parent);
 		}
 	}
@@ -527,7 +528,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			var TransitionRestrictions=$("<Transition_Restrictions>");
 			var TransitionRestriction=$("<Transition_Restriction>");
 			var join=$("<Join>").attr("Type",this.join_type);
-			if(this.IncomingCondition){
+			if(this.IncomingCondition || this.join_type=="COMPLEX"){
 				join.attr("Incoming_Condition",this.IncomingCondition);
 			}
 			join.appendTo(TransitionRestriction);

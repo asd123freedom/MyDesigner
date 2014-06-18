@@ -2,7 +2,7 @@ $(function(){
 
 var parseProcessDefinition=function(){
 	$.ajax({
-		url: "http://127.0.0.1:8080/MyDesigner/MyDesigner.json",
+		url: "http://127.0.0.1:8080/MyDesigner/testScript",
 		type: "POST",
 		dataType:"xml",
 		success:function(data){
@@ -19,6 +19,7 @@ var parseProcessDefinition=function(){
 			parseStart(data,addElementForParse,obj);
 			parseEnd(data,addElementForParse,obj);
 			parseTransitions(data);
+			parseWorkflow(data);
 		}
 	});
 }
@@ -147,12 +148,17 @@ function addElementForParse(container,str,src,x,y,name){
 		}
 	});
 };
+var parseWorkflow=function(data){
+	var tmp=$("#container").data("w");
+	tmp.package=$(data).find("Package ").attr("Id");
+	tmp.workflow=$(data).find("WorkflowProcess").attr("Id");
+}
 var parseApplication=function(data){
 	$(data).each(function(index,e){
 		var name=$(e).attr("Id");
-		if(name.indexOf("application")==0){
+		if(name.indexOf("application")==0 && $(e).find("Script").length==0){
 			//表单应用
-			//console.log(name);
+			console.log($(e).find("script").length);
 			$("#container").trigger("formapplication",[name]);
 			var arr_apps=$("#container").data("w").applications;
 			var app=arr_apps[arr_apps.length-1];
@@ -191,8 +197,15 @@ var parseApplication=function(data){
 					formalParam.Mode=$(arr_formalParam[i]).attr("Mode");
 				}
 			}
-		}else{
+		}else if(name.indexOf("application")==0 && $(e).find("Script").length>0){
 			//业务活动用到的应用的解析要和业务活动的解析一起
+			$("#container").trigger("scriptapplication",[name]);
+			var str=$(e).find("Expression").html();
+			console.log(str);
+			var arr_script=str.match(/\!\[CDATA\[(.*)\]\]/);
+			var arr_apps=$("#container").data("w").applications;
+			var app=arr_apps[arr_apps.length-1];
+			app.expression=arr_script[1];
 		}
 	});
 }
@@ -264,6 +277,9 @@ var parseActivities=function(parent,data,addElement,obj){
 			});
 			//业务活动的应用的解析
 			var app_name=$(e).find("TaskApplication").attr("Id");
+			if(!app_name){
+				return;
+			}
 			$("#container").trigger("application");			
 			var arr_apps=$("#container").data("w").applications;
 			var app=arr_apps[arr_apps.length-1];
@@ -332,7 +348,7 @@ var parseActivities=function(parent,data,addElement,obj){
 			activity.loopcounter=$(e).find("LoopCounter").html();
 			activity.task_type="Task";
 			activity.signalmode=$(e).find("ExtendedAttribute[Name='SIGNALMODE']").attr("Value");
-		}else if($(e).attr("Id").indexOf("join")>=0){
+		}else if($(e).attr("Id").indexOf("split")>=0){
 			var name=$(e).attr("Id");
 			var performer=$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_PATICIPANT_ID']").attr("Value");
 			//$("#container").trigger("activity",[name,performer]);
@@ -378,6 +394,35 @@ var parseActivities=function(parent,data,addElement,obj){
 			addElementForParse(container,str,src,x,y,name);
             activity.join_type=$(e).find("Join").attr("Type");
             activity.IncomingCondition=$(e).find("Join").attr("IncomingCondition");
+		}else if($(e).attr("Id").indexOf("auto")>=0){
+			//自动任务节点
+			var name=$(e).attr("Id");
+			var performer=$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_PATICIPANT_ID']").attr("Value");
+			triggerForParse($("#container"),name.replace(/\d+/,""),performer);
+			var temp_len=$("#container").data("w").activities.length;
+			var activity=$("#container").data("w").activities[temp_len-1];
+			activity.name=name;
+			activity.show_name=$(e).attr("Name");
+			activity.taskApplicationId=$(e).find("TaskApplication").attr("Id");
+			//活动图标的显示
+			var str=name.replace(/\d+/,"");
+			var src=$("#toolBar").find("#"+name.replace(/\d+/,"")).attr('src');
+			var offset=$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_OFFSET']").attr("Value");
+			var x=offset.split(",")[0];
+			var y=offset.split(",")[1];
+			//console.log(obj[performer]);
+			var container=$("#"+obj[performer]);
+			addElementForParse(container,str,src,x,y,name);
+			//实参的解析
+			var actual=[];
+			activity.actualParameters=actual;
+			$(e).find("ActualParameter").each(function(index,ele){
+				var a=new ActualParameter();
+                a.content=$(ele).html();
+                actual.push(a);
+			});
+			activity.task_type="Task";
+			activity.signalmode=$(e).find("ExtendedAttribute[Name='SIGNALMODE']").attr("Value");
 		}
 	});
 }
@@ -430,6 +475,9 @@ var selectContainer=function(data){
 }
 var parseStart=function(data,addElement,obj){
 	var str=$(data).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_START_ACTIVITY']").attr("Value");
+	if(!str){
+		return;
+	}
 	str=str.split(",");
 	var incoming='start';
 	var src=$("#toolBar").find("#start").attr('src');
@@ -443,6 +491,9 @@ var parseStart=function(data,addElement,obj){
 }
 var parseEnd=function(data,addElement,obj){
 	var str=$(data).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_END_ACTIVITY']").attr("Value");
+	if(!str){
+		return;
+	}
 	str=str.split(",");
 	var incoming='start';
 	var src=$("#toolBar").find("#end").attr('src');

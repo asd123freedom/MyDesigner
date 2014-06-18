@@ -1,5 +1,5 @@
 <style>
-    .selectFormAppForHumanTask li{
+    .selectScriptAppForAutoTask li{
     	font-size: 100%;
     }
     table.actualFormParam{
@@ -31,7 +31,7 @@
             <div class="control-group">
               <label class="control-label">参与者</label>
               <div class="controls">
-                  <input type="text" class="participant_name">
+                  <input type="text" class="participant_name" disabled>
               </div>
             </div>
             <div class="control-group">
@@ -49,10 +49,10 @@
               <label class="control-label"></label>
               <div class="controls">
                   <div class="btn-group">
-                        <button class="btn dropdown-toggle formAppName" data-toggle="dropdown">
+                        <button class="btn dropdown-toggle scriptAppName" data-toggle="dropdown">
                           <span>选择应用</span>
                           <span class="caret"></span></button>
-                        <ul class="dropdown-menu selectFormAppForHumanTask">
+                        <ul class="dropdown-menu selectScriptAppForAutoTask">
                           <li class="hide temple"><a href="#"></a></li>
                         </ul>
                   </div>
@@ -77,7 +77,7 @@
             <thead>
               <tr class="head">
                 <th width="50%">#</th>
-                <th width="50%">模块ID</th>
+                <th width="50%">实参名</th>
               </tr>
             </thead>
             <tbody>
@@ -102,31 +102,6 @@
 		</div>
 <script type="text/javascript">
   	$(function(){
-  		//填写形参表格
-  		var fillFormParametersTable=function(data,table){
-  			var $tr=table.find("tr.temple").clone();
-  			$tr.removeClass("hide temple");
-  			$tr.find("td.moduleID").text(data.moduleID);
-  			$tr.find("td.module").text(data.module);
-  			$tr.find("td.fieldID").text(data.fieldID);
-  			$tr.find("td.field").text(data.field);
-  			if(data.type){
-  				$tr.find("td.type").text(data.type);
-  			}
-  			if(data.model){
-  				$tr.find("td.model").text(data.model);
-  			}
-  			$tr.appendTo(table);
-  			$tr.bind("click",function(){
-  				if($(this).hasClass("warning")){
-  					$(this).removeClass("warning");
-  				}else{
-  					table.find("tr.warning").removeClass("warning");
-  					$(this).addClass("warning");
-  				}
-  			});
-  			initTableIndex(table);
-  		};
   		//调整表格的index
   		var initTableIndex=function(table){
   			var $trs=table.find("tbody tr:not(.temple)");
@@ -134,65 +109,29 @@
   				$(e).find("td.id").text(index+1);
   			});
   		};
-      var bindSelectAppEvent=function(parent,data){
+      var bindSelectAppEvent=function(parent){
         parent.find("a").bind("click",function(){
           var str=$(this).text();
           //console.log(data);
-          $(this).parent().parent().parent().find("button.formAppName").find("span:eq(0)").text(str);
-          if(data.Modules){
-            var arr=data.Modules;
-            for(var i=0;i<arr.length;i++){
-              var moduleID=arr[i].ModuleId;
-              var module=arr[i].ModuleName;
-              for(var j=0;j<arr[i].FormalParameters.length;j++){
-                var f_data={};
-                f_data.moduleID=moduleID;
-                f_data.module=module;
-                f_data.fieldID=arr[i].FormalParameters[j].Id.split("_")[0];
-                f_data.field=arr[i].FormalParameters[j].Id.split("_")[1];
-                f_data.type=arr[i].FormalParameters[j].BasicType;
-                f_data.model=arr[i].FormalParameters[j].Mode;
-                fillFormParametersTable(f_data,$("#content2 table"));
-              }
-            }
-          }
-          if(data.ChildModules){
-            var arr=data.ChildModules;
-            for(var i=0;i<arr.length;i++){
-              var moduleID=arr[i].ModuleId;
-              var module=arr[i].ModuleName;
-              for(var j=0;j<arr[i].FormalParameters.length;j++){
-                var f_data={};
-                f_data.moduleID=moduleID;
-                f_data.module=module;
-                f_data.fieldID=arr[i].FormalParameters[j].Id.split("_")[0];
-                f_data.field=arr[i].FormalParameters[j].Id.split("_")[1];
-                f_data.type=arr[i].FormalParameters[j].BasicType;
-                f_data.model=arr[i].FormalParameters[j].Mode;
-                fillFormParametersTable(f_data,$("#content2 table"));
-              }
-            }
-          }
+          $(this).parent().parent().parent().find("button.scriptAppName").find("span:eq(0)").text(str);
         });
       }
       //显示应用列表
-      var showAllFormApps=function(){
+      var showAllScriptApps=function(){
         var arr=$("#container").data("w").applications || [];
         //console.log(arr);
-        $(".selectFormAppForHumanTask").find("li:not(.temple)").remove();
+        $(".selectScriptAppForAutoTask").find("li:not(.temple)").remove();
         for(var i=0;i<arr.length;i++){
           //console.log(arr[i]);
-          if(arr[i].type=="form"){
-            var $li=$(".selectFormAppForHumanTask").find("li.temple").clone();
+          if(arr[i].type=="script"){
+            var $li=$(".selectScriptAppForAutoTask").find("li.temple").clone();
             $li.removeClass("hide temple");
             $li.find("a").text(arr[i].id);
-            $li.appendTo($("ul.selectFormAppForHumanTask"));
-            bindSelectAppEvent($li,arr[i].Form);
+            $li.appendTo($("ul.selectScriptAppForAutoTask"));
+            bindSelectAppEvent($li);
           }
         }
       };
-      //加载页面的时候初始化应用列表
-      //showAllFormApps();
       //使用事件代理减少代码量
       $("table.actualFormParam").delegate("tbody tr","click",function(){
         $(this).parent().find("tr").removeClass("warning");
@@ -227,33 +166,28 @@
           if(obj.attr("id")==e.name){
             //将设置好的参数传给相应的activity对象           
             var actual=[];
-            var appName=$("#content2").find("button.formAppName").find("span:eq(0)").text();
+            var appName=$("#content2").find("button.scriptAppName").find("span:eq(0)").text();
             $("table.actualFormParam").find("tbody tr:not(.temple)").each(function(index,e){
                 var a=new ActualParameter();
                 a.content=$(e).find("td.actualFormParamName").text();
                 actual.push(a);
             });
-            e.loopcounter=$("input.multiple").val();
             e.taskApplicationId=appName;
             e.task_type="Task";
-            e.signalmode=$("#content2").find("input:checked").val();
             e.actualParameters=actual;
           }
         });
   			$("#new_course_dialog").modal("hide");
   		});
   		//确定对话框初始的显示
-  		$("#new_course_dialog").unbind("show_humanactivity");
-  		$("#new_course_dialog").bind("show_humanactivity",function(){
-            showAllFormApps();
+  		$("#new_course_dialog").unbind("show_autoactivity");
+  		$("#new_course_dialog").bind("show_autoactivity",function(){
+            showAllScriptApps();
             var obj=$("#new_course_dialog").data("obj");
           	var arr=$("#container").data("w").activities || [];
             $(arr).each(function(index,e){
                 if(obj.attr("id")==e.name){
                    $("input.participant_name").val(e.performer);
-                   $("input.multiple").val(e.loopcounter);
-                   $("#content2").find("input[type='radio']");
-                   $("#content2").find("input[type='radio'][value='"+e.signalmode+"']").trigger("click");
                    var actual=e.actualParameters;
                    for(var i=0;i<actual.length;i++){
                      var $tr=$("table.actualFormParam").find("tr.temple").clone();
@@ -262,7 +196,7 @@
                      $tr.appendTo($("table.actualFormParam"));
                      initTableIndex($("table.actualFormParam"));
                    }
-                   $(".selectFormAppForHumanTask").find("a").each(function(index,element){
+                   $(".selectScriptAppForAutoTask").find("a").each(function(index,element){
                      if($(element).text()==e.taskApplicationId){
                         $(element).trigger("click");
                      }

@@ -32,9 +32,11 @@
 		xml.attr("Id",this.workflow || "workflowProcess1");
 		//应用的xml(应该写在packge标签下)
 		var p=$("#container").data("p");
+		var applications_label=$("<applications>");
+		applications_label.appendTo(p);
 		var applications=workflowprocess["applications"]|| [];
 		for(var i=0;i<applications.length;i++){
-			applications[i].parent=p;
+			applications[i].parent=applications_label;
 			applications[i].getXml();
 		}
 		$("#container").data("p",p);

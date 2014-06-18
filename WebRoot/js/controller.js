@@ -54,7 +54,7 @@ $(function(){
 		  		console.log(type);
 		  		if(type=="autoactivity"){
 		  			$('#new_course_dialog').load("AutoActivityDialog.html?num="+d.getTime(),function(){
-						//show();
+						$('#new_course_dialog').trigger("show_autoactivity");
 					});
 					return;
 		  		}
