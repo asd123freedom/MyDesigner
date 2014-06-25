@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Struts2Diagram version="2.0">
+  <package name="struts2" location="170,815" size="280,245">
+    <action name="login" location="65,57" size="150,41">
+      <result name="error">
+        <resourceEdge source="error" routing="0" target="error.jsp" />
+      </result>
+    </action>
+    <action name="Test" location="65,152" size="150,62">
+      <result name="success" />
+      <result name="login">
+        <resourceEdge source="login" routing="0" target="login.jsp" />
+      </result>
+    </action>
+  </package>
+  <package name="default" location="10,9" size="670,701">
+    <action name="jsontest" location="15,27" size="150,104">
+      <result name="message" />
+      <result name="userInfo" />
+      <result name="list" />
+      <result name="map" />
+    </action>
+    <action name="graphtest" location="260,23" size="150,41">
+      <result name="info" />
+    </action>
+    <action name="uploadFile" location="505,23" size="150,41">
+      <result name="success" />
+    </action>
+    <action name="download" location="15,198" size="150,41">
+      <result name="success" />
+    </action>
+    <action name="delete" location="260,198" size="150,41">
+      <result name="success" />
+    </action>
+    <action name="Monitor" location="505,198" size="150,41">
+      <result name="success" />
+    </action>
+    <action name="Save" location="15,338" size="150,41">
+      <result name="success" />
+    </action>
+    <action name="Console" location="260,338" size="150,41">
+      <result name="success" />
+    </action>
+    <action name="XmlString" location="505,338" size="150,41">
+      <result name="success" />
+    </action>
+    <action name="Tree" location="15,478" size="150,41">
+      <result name="success" />
+    </action>
+    <action name="FileList" location="260,478" size="150,41">
+      <result name="success" />
+    </action>
+    <action name="GetBlocks" location="505,478" size="150,41">
+      <result name="success" />
+    </action>
+    <action name="Assemble" location="15,618" size="150,41">
+      <result name="success" />
+    </action>
+  </package>
+  <webResource name="error.jsp" path="/error.jsp" location="15,835" size="150,55" />
+  <webResource name="login.jsp" path="/login.jsp" location="505,940" size="150,55" />
+</Struts2Diagram>
+

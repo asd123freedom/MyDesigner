@@ -158,13 +158,22 @@
       })
   		//提交所有编辑结果
   		$(".humantask.submit").bind("click",function(){
+        var flag=false;//标记是否删除此标签
+        if($("#new_course_dialog").find(".btn-danger").hasClass("disabled")){
+          flag=true;
+        }
   			var name=$("button.formAppName span:eq(0)").text();
         var obj=$("#new_course_dialog").data("obj");
         var arr=$("#container").data("w").activities || [];
         //console.log(obj.attr("id"));
         $(arr).each(function(index,e){
           if(obj.attr("id")==e.name){
-            //将设置好的参数传给相应的activity对象           
+            //将设置好的参数传给相应的activity对象 
+            if(flag){
+                arr.splice(index,1);//删除
+                $("#new_course_dialog").modal("hide");
+                return; 
+            }
             var actual=[];
             var appName=$("#content2").find("button.scriptAppName").find("span:eq(0)").text();
             $("table.actualFormParam").find("tbody tr:not(.temple)").each(function(index,e){

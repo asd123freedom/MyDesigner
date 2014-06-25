@@ -104,6 +104,12 @@ $(function(){
 		if(!obj && !tran){
 			return;
 		}
+		if($(this).find(".btn-danger").hasClass("disabled")){
+			var temp_tran=obj.data("tran");
+			jsPlumb.detach(temp_tran);
+			obj.remove();
+			obj=null;
+		}
 		//console.log($(this).find("#name").val());
 		var show_name=$(this).find("#name").val();
 		if(obj){
@@ -118,7 +124,7 @@ $(function(){
 					e.show_name=show_name;
 				}
 			});
-			console.log(arr);
+			//console.log(arr);
 			obj.find("span").text(show_name).css("display","block");
 			$(this).data("obj",null);
 			return;
@@ -126,7 +132,7 @@ $(function(){
 		if(tran){
 			//设置连线上需要显示的话
 			var info=$(this).find("#name").val();
-			console.log(info);
+			//console.log(info);
 			setTransitionLabel(tran,info);
 			$(this).data("tran",null);
 			return;

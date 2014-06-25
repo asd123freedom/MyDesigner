@@ -65,13 +65,24 @@
   			$(this).addClass("disabled");
   			$(".btn-danger").removeClass("disabled");
   		});
+      $("#new_course_dialog").bind("delete_tran",function(e,tran){
+          jsPlumb.detach(tran);
+          var arr_tran=$("#container").data("w").transitions || [];
+            $(arr_tran).each(function(index,e){
+              if(tran.sourceId==e.from && tran.targetId==e.to){
+                 arr_tran.splice(index,1);
+                 $("#new_course_dialog").data("tran",null);
+              }
+          });
+      });
   		$(".transition.submit").bind("click",function(){
-    			if($(".btn-danger").hasClass("disabled")){
-    				var conn=$("#new_course_dialog").data("tran");
-    				jsPlumb.detach(conn);
-            $("#new_course_dialog").data("tran",null);
-    			}
+          var flag=false;//标记是否删除
     			var tran=$("#new_course_dialog").data("tran");
+          if($("#new_course_dialog .btn-danger").hasClass("disabled")){
+    			   	  $("#new_course_dialog").trigger("delete_tran",[tran]);
+                $("#new_course_dialog").modal('hide');
+                return;
+    			}
     			if(tran){
     				var arr_tran=$("#container").data("w").transitions || [];
     				$(arr_tran).each(function(index,e){

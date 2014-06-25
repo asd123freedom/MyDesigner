@@ -7,13 +7,7 @@ var parseProcessDefinition=function(){
 		dataType:"xml",
 		success:function(data){
 			var obj=selectContainer(data);
-			//console.log(obj);
-			//console.log($(data).find("Application"));
 			parseApplication($(data).find("Application"));
-			//var obj=$("#container").data("parseFun").appendNewElement;
-			//parseActivities($(data).find("Activity"),obj);
-			//selectContainer(data);
-			//console.log($(data).find("ActualParameter"));
 			parseParticipants(data,addElementForParse);
 			parseActivities(data,$(data).find("Activity"),addElementForParse,obj);
 			parseStart(data,addElementForParse,obj);
@@ -308,6 +302,7 @@ var parseActivities=function(parent,data,addElement,obj){
 				app.Name=app_name;
 				app.Type="Class";
 				app.BusinessType=$(pojo_app).find("ExtendedAttribute[Name='BusinessType']").attr("Value");
+				app.ClassPath=$(pojo_app).find("ExtendedAttribute[Name='ClassPath']").attr("Value");
 				activity.taskApplicationId=app.Name;
 				if(app.BusinessType.indexOf('Get')==0){
 					activity.taskApplicationType="get";

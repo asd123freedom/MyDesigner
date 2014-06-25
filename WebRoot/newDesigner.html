@@ -30,14 +30,15 @@
 		 <img id="unCondition_transition" class="icon unselected" src="images/transition.png" style="left:150px"></img>
 		 <!--img id="zoomout" class="icon unselected" src="images/zoomout.png" style="left:200px"></img-->
 		 <!--div class="move unselected" style="background-image:url(images/zoomout.png)"-->
-		 <button class="btn save btn-primary"  data-loading-text="正在保存">保存</button>
-		 <button class="btn dialog btn-primary"  data-loading-text="正在打开">绑定表单</button>
+		 <button class="btn save btn-primary"  data-loading-text="正在保存">Package</button>
+		 <button class="btn hide dialog btn-primary"  data-loading-text="正在打开">绑定表单</button>
 		 <div class="btn-group menu">
 	        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">文件 <span class="caret"></span></button>
 	        <ul class="dropdown-menu">
 	          <li><a href="#" class="checkOrder">检验</a></li>
 	          <li><a href="#" class="saveOrder">保存</a></li>
 	          <li><a href="#" class="importOrder">导入</a></li>
+	          <li><a href="#" class="outputOrder">导出</a></li>
 	          <li><a href="#" class="quit">退出</a></li>
 	        </ul>
          </div>
@@ -110,6 +111,7 @@
 		    <a href="#" class="btn btn-primary saveProcess">确定</a>
 		  </div>
 		</div>
+		<a class="hide download">点击下载</a>
 </body>
 <script language="javascript" type="text/javascript" src="jquery/jquery-1.9.1.js"></script>
 <script src="jquery-ui/jquery-ui.js"></script>
@@ -249,6 +251,8 @@ function createTransition(from,to,stateMachineConnector){
 			$('#new_course_dialog').modal('show');
 			//jsPlumb.detach(conn);
 	});
+	$("#"+from).data("tran",connect);
+	$("#"+to).data("tran",connect);
 	return connect;
 }
 function trigger(container,str,performer){
@@ -285,7 +289,7 @@ function addNewLine(current,incoming){
 }
 $(document).keydown(function(e){
 	if(e.which==46){
-		//console.log("删除节点了啊");
+		//console.log("删除节点");
 	}    
 });  
 	jsPlumb.bind("ready", function() {
@@ -365,22 +369,52 @@ $(document).keydown(function(e){
 		tmp.workflow=$('#saveWorkFlow').find("input.workflow").val();
 		tmp.creator=$('#saveWorkFlow').find("input.creator").val();
 		tmp.isTerminationImplicit=$("#saveWorkFlow").find("input[type='checkbox']").prop("checked");
-		//$(".save").trigger("save");
+		var obj=getProcessDefinition();
+		var data1=obj['data1'];
+		// $.ajax({
+		// 	url:"http://127.0.0.1:8080/struts2_demo/XmlString.action",
+  //    		type: "POST",
+  //    		//data: {"json":JSON.stringify(data1)},
+  //    		data:{"xml":data1.processdefinition},
+  //    		success:function(data){
+
+  //    		},
+  //       });
+		$("#saveWorkFlow").modal('hide');
+	});
+	$(".menu .outputOrder").bind("click",function(){
+		var tmp=$("#container").data("w");
+		if(!tmp.package){
+			alert("先点击Package按钮");
+			return;
+		}
 		var obj=getProcessDefinition();
 		var data1=obj['data1'];
 		$.ajax({
-			//url: "http://127.0.0.1:8080/HiServiceCRM/checkProcessDefinition.action",
-			url:"http://127.0.0.1:8080/struts2_demo/XmlString.action",
+			url:"http://127.0.0.1:8080/MyDesigner/XmlString.action",
      		type: "POST",
      		//data: {"json":JSON.stringify(data1)},
      		data:{"xml":data1.processdefinition},
      		success:function(data){
-     			//console.log(data);
+     			//console.log(data.format_xml);
+     			var tmp=[];
+				tmp.push(data.format_xml);
+				var blob = new Blob(tmp, { type: "text/plain" });
+				var ObjectURL=window.URL.createObjectURL(blob);
+				//console.log(ObjectURL);
+				//location.href=ObjectURL;
+				$("a.download").attr("href",ObjectURL);
+				$("a.download").attr("download","testfordown.xml");
+				$("a.download").trigger("click");
      		},
         });
-		$("#saveWorkFlow").modal('hide');
 	});
 	$(".menu .checkOrder").bind("click",function(){
+		var tmp=$("#container").data("w");
+		if(!tmp.package){
+			alert("先点击Package按钮");
+			return;
+		}
 		var obj=getProcessDefinition();
 		var data1=obj['data1'];
 		$.ajax({
@@ -393,6 +427,11 @@ $(document).keydown(function(e){
          });
 	});
 	$(".menu .saveOrder").bind("click",function(){
+		var tmp=$("#container").data("w");
+		if(!tmp.package){
+			alert("先点击Package按钮");
+			return;
+		}
 		var obj=getProcessDefinition();
 		var data2=obj['data2'];
 		console.log(data2);
@@ -469,6 +508,5 @@ $(document).keydown(function(e){
 		return {'data1':data1,'data2':data2};
 	}
 });
-
 </script>
 </html>

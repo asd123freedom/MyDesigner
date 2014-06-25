@@ -42,7 +42,7 @@
 					app.Type="Class";
 					app.BusinessType=$("select.app_type").val();
 					app.ClassPath=dict_classpath[$("select.app_type").val()];
-					app.ModuleID=$(".Module").val();
+					//app.ModuleID=$(".Module").val();
 					var patrnt=e;
 					var actual=[];
 					$("table.get").find("tr.actual").each(function(index,e){
@@ -59,10 +59,10 @@
 						console.log(a);
 						actual.push(a);
 					});
-					var w1=$("#container").data("w") || {};
-					w1.actualParameters=w1.actualParameters || [];
-					w1.actualParameters=w1.actualParameters.concat(actual);
-					$("#container").data("w",w1);
+					//var w1=$("#container").data("w") || {};
+					//w1.actualParameters=w1.actualParameters || [];
+					//w1.actualParameters=w1.actualParameters.concat(actual);
+					//$("#container").data("w",w1);
 					e.taskApplicationId=app.Name;
 					e.taskApplicationType="get";
 					e.actualParameters=actual;
@@ -191,6 +191,13 @@
 	$('#new_course_dialog').on('submit', function (e,name) {
 		console.log(name);
 		if(name=="pojo"){
+			var obj=$(this).data("obj");
+			var arr=$("#container").data("w").activities || [];
+			//console.log(arr);
+			if($("#new_course_dialog").find(".btn-danger").hasClass("disabled")){
+				$("#new_course_dialog").trigger("delete");
+				return;
+			}	
 			if($("select.app_type").val().toLocaleLowerCase().indexOf("send")>=0){
 				$('#new_course_dialog').trigger("send");
 			}
