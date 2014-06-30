@@ -22,7 +22,7 @@
 	workflowprocess.getXml=function(obj){
 		var d=new Date();
 		var package=$("#container").data("p");
-		package.attr("Id",this.package || "newPackage");
+		package.attr("Id",this.workflow || "newPackage");
 		var raw_date=d.toString().split(" ");
 		raw_date[6]=raw_date[3];
 		raw_date[3]="";
@@ -32,13 +32,14 @@
 		xml.attr("Id",this.workflow || "workflowProcess1");
 		//应用的xml(应该写在packge标签下)
 		var p=$("#container").data("p");
-		var applications_label=$("<applications>");
-		applications_label.appendTo(p);
+		p.children().remove();
+		var applications_label=$("<applications>");		
 		var applications=workflowprocess["applications"]|| [];
 		for(var i=0;i<applications.length;i++){
 			applications[i].parent=applications_label;
 			applications[i].getXml();
 		}
+		applications_label.appendTo(p);
 		$("#container").data("p",p);
 		//xml.appendTo(obj);
 		//形参xml(暂时没有实现)
@@ -77,24 +78,19 @@
 		var activities=workflowprocess["activities"] || [];
 		for(var i=0;i<activities.length;i++){
 				//console.log(activities[i]);
-				activities[i].parent=xml;
+				activities[i].parent=temp_activities;
 				activities[i].getXml();
 		}
+		temp_activities.appendTo(xml);
+		var temp_transitions=$("<Transitions>");
 		var transitions=workflowprocess["transitions"] || [];
 		for(var i=0;i<transitions.length;i++){
 				//console.log(activities[i]);
-				transitions[i].parent=xml;
+				transitions[i].parent=temp_transitions;
 				transitions[i].getXml();
 		}
+		temp_transitions.appendTo(xml);
 		var es=$("<Extended_Attributes>");
-		if($("#container").data("w").start){
-			this.start.parent=es;
-			this.start.getXml();
-		}
-		if($("#container").data("w").end){
-			this.end.parent=es;
-			this.end.getXml();
-		}
 		if(this.isTerminationImplicit===undefined){
 			this.isTerminationImplicit=true;
 		}
@@ -104,6 +100,14 @@
 		var e1=new extended_attribute("isTerminationImplicit",this.isTerminationImplicit+"");
 		e1.parent=es;
 		e1.getXml();
+		if($("#container").data("w").start){
+			this.start.parent=es;
+			this.start.getXml();
+		}
+		if($("#container").data("w").end){
+			this.end.parent=es;
+			this.end.getXml();
+		}
 		//<ExtendedAttribute Name="TSEGBPM_GRAPH_PARTICIPANT_ORDER" Value="default_participant,participant2"/>
     	//<ExtendedAttribute Name="isTerminationImplicit" Value="true"/>
 		es.appendTo(xml);

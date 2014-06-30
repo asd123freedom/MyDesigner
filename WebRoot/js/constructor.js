@@ -60,10 +60,10 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.getXml=function(){
 			if(this.connecting){
 				var value=dict_extendattr.participant+"="+this.participant+",TSEGBPM_GRAPH_CONNECTING_ACTIVITY="+this.connecting+
-						",TSEGBPM_GRAPH_OFFSET_X:"+this.x+",TSEGBPM_GRAPH_OFFSET_Y:"+this.y;
+						",TSEGBPM_GRAPH_OFFSET_X="+this.x+",TSEGBPM_GRAPH_OFFSET_Y="+this.y;
 			}else{
 				var value=dict_extendattr.participant+"="+this.participant+
-						",TSEGBPM_GRAPH_OFFSET_X:"+this.x+",TSEGBPM_GRAPH_OFFSET_Y:"+this.y;
+						",TSEGBPM_GRAPH_OFFSET_X="+this.x+",TSEGBPM_GRAPH_OFFSET_Y="+this.y;
 			}
 			
 			var tmp=new extended_attribute(this.show_name,value,"");
@@ -384,6 +384,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.IsFormular="false";//公式的功能暂时未实现
 		this.parent=null;
 		this.getXml=function(){
+			console.log("asd");
 			var app=$("<application>");
 			app.attr("Id",this.Name);
 			$("<Pojo/>").appendTo(app);

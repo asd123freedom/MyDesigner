@@ -25,6 +25,13 @@
 			Model.showSaveOptionFilled(dict_appname);
 	});
 	$("#new_course_dialog").on("init",function(){
+			var obj=$("#new_course_dialog").data("obj");
+	  		var arr=$("#container").data("w").activities || [];
+	  		$(arr).each(function(index,e){
+	  			if(obj.attr("id")==e.name){
+	  				$("input.participant_name").val(e.performer);
+	  			}
+	  		});
 			$("select.app_type").trigger("change");			
 	});
 	$("#new_course_dialog").on("get",function(){
@@ -161,6 +168,10 @@
 				app.ReceiverType_index=$("select.receive_type").prop("selectedIndex");
 				app.ReceiverId_val=$("select.receive_id").val() || $("input.receive_actual").val();
 				var id="";
+				if(!$("input.receive_actual").val() && !$("select.receive_id").val()){
+					alert("填写接收人");
+					return;
+				}
 				if($("input.receive_actual").val()){
 				    app.ReceiverType="user";
 				    id="1"+":"+$("input.receive_actual").val();

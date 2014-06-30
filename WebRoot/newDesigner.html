@@ -219,6 +219,7 @@ function appendNewElement(container,ui){
 function createTransition(from,to,stateMachineConnector){
 	var come=from;
 	var go=to;
+	console.log(come+":"+go);
 	if(come===go){
 		setFrom(null);
 		setTo(null);
@@ -271,7 +272,7 @@ function trigger(container,str,performer){
 function addNewLine(current,incoming){
 	if($("#container").data("w").participants.length>1 && (incoming=="participant" || incoming=="default_participant")){
 		var line=$(current).clone();
-		line.find("div.dropped").remove();
+		line.children().remove();
 		var opt=$(current).droppable("option");
 		var index=$("#container").data(incoming);
 		line.attr("id","container"+index);
@@ -405,7 +406,8 @@ $(document).keydown(function(e){
 				//location.href=ObjectURL;
 				$("a.download").attr("href",ObjectURL);
 				$("a.download").attr("download","testfordown.xml");
-				$("a.download").trigger("click");
+				//$("a.download").trigger("click");
+				$("a.download")[0].click();
      		},
         });
 	});
@@ -456,13 +458,14 @@ $(document).keydown(function(e){
 	function getProcessDefinition(){
 		setPosition();
 		var tmp=$("#container").data("w").getXml();
-		//console.log(tmp[0]);
+		console.log(tmp[0]);
 		var pac=$("#container").data("p");
 		//对package对象进行初始化，清空已经添加的workflow对象
 		pac.find("Workflow_Process").remove();
 		var processes=$("<Workflow_Processes>");
 		tmp.appendTo(processes);
 		processes.appendTo(pac);
+		console.log(pac[0])
 		var test=$("<test>");
 		pac.appendTo(test);
 		//$("<test>").append($("#container").data("w").getXml());
