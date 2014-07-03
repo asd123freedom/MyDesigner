@@ -163,7 +163,12 @@
 				var app=arr[arr.length-1];
 				app.Name=$("select.app_type").val()+""+arr.length;
 				app.Type=$("select.app_type").val();
-				app.ClassPath=dict_classpath[app.Type];
+				if($("input.title").val() && !$("input.title").parent().parent().hasClass("hide")){
+					app.Title=$("input.title").val();
+				}else{
+					app.Title="";
+				}
+				app.ClassPath=dict_classpath[app.Type] || dict_classpath["SendRemindMessage"];
 				app.ReceiverType=$("select.receive_type").val();
 				app.ReceiverType_index=$("select.receive_type").prop("selectedIndex");
 				app.ReceiverId_val=$("select.receive_id").val() || $("input.receive_actual").val();

@@ -252,11 +252,6 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			if(this.actualParameters.length){				
 				param.appendTo(taskapp);
 			}
-			// <Loop>
-			//     <LoopStandard>
-			//       <LoopCounter>32</LoopCounter>
-			//     </LoopStandard>
-			// </Loop>
 			if(this.loopcounter){
 				var loop=$("<Loop>");
 				var loopstandard=$("<Loop_Standard>");
@@ -373,7 +368,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		}
 	};
 	var arr_app=["Type","BusinessType","ClassPath"];
-	var arr_sendApp=["Type","ClassPath","ReceiverType","ReceiverId","Content","IsFormular"];
+	var arr_sendApp=["Type","ClassPath","ReceiverType","ReceiverId","Content","IsFormular","Title"];
 	var pojoapplication=function(){
 		this.Name="";
 		this.Type="";
@@ -381,6 +376,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 		this.ReceiverType="";
 		this.ReceiverId="";
 		this.Content="";
+		this.Title="";
 		this.IsFormular="false";//公式的功能暂时未实现
 		this.parent=null;
 		this.getXml=function(){

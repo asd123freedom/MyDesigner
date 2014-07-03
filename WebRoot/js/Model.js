@@ -150,6 +150,9 @@ var Model=(function(){
 		  						}else{
 		  							$("input.receive_actual").val(app.ReceiverId_val);
 		  						}
+		  						if(app.Title){
+		  							$("input.title").val(app.Title);
+		  						}
 		  					});
 		  					$("select.receive_type").trigger("change",[cbForReceiveType]);
 		  				});

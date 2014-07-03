@@ -44,6 +44,7 @@
     					<div class="controls">
 							 <select class="app_type">
 								<option value="SendRemindMessage">发送提醒</option>
+								<option value="SendEmail">发送邮件</option>
 							  	<option value="SaveBusinessFormData">存业务数据</option>
 							  	<option value="GetBusinessFormData">取业务数据</option>
 							  	<option value="EditBusinessFormData">修改业务数据</option>
@@ -72,6 +73,12 @@
 				   		<label class="control-label">收件人(实参)</label>
 				    	<div class="controls">
 							<input type="text" class="receive_actual" placeholder="name">
+				    	</div>
+				  	</div>
+				  	<div class="hide control-group sendemail app">
+				   		<label class="control-label">标题</label>
+				    	<div class="controls">
+							<input type="text" class="title" placeholder="title">
 				    	</div>
 				  	</div>
 				  	<div class="hide control-group send app">
@@ -301,6 +308,9 @@
 				Model.findAllUsers().done(Model.fillInUsers).done(function(){
 					callbacks.fire();
 				});
+				if(s.toLocaleLowerCase().indexOf("mail")>=0){
+					$(".sendemail").removeClass("hide");
+				}
 			}
 			if(s.toLocaleLowerCase().indexOf("get")>=0){
 				$(".get").removeClass("hide");

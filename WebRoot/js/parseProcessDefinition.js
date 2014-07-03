@@ -2,7 +2,7 @@ $(function(){
 
 var parseProcessDefinition=function(){
 	$.ajax({
-		url: "http://127.0.0.1:8080/MyDesigner/testScript",
+		url: "http://127.0.0.1:8080/MyDesigner/testfordown.xml",
 		type: "POST",
 		dataType:"xml",
 		success:function(data){
@@ -280,11 +280,12 @@ var parseActivities=function(parent,data,addElement,obj){
 			$(activity).data("app",app);
 			var pojo_app=$(parent).find("Application[Id='"+app_name+"']");
 			if(app_name.indexOf("Send")==0){
-				//发送消息的任务
+				//发送消息的任务或者是发送邮件业务
 				app.Name=app_name;
 				app.Type=$(pojo_app).find("ExtendedAttribute[Name='Type']").attr("Value");
 				app.ClassPath=$(pojo_app).find("ExtendedAttribute[Name='ClassPath']").attr("Value");
 				app.ReceiverType=$(pojo_app).find("ExtendedAttribute[Name='ReceiverType']").attr("Value");
+				app.Title=$(pojo_app).find("ExtendedAttribute[Name='Title']").attr("Value");
 				if(app.ReceiverType=='user'){
 					app.ReceiverType_index=0;
 				}else if(app.ReceiverType=='role'){
