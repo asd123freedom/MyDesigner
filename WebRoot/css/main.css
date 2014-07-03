@@ -63,12 +63,29 @@
 	    	display:inline-block;
 	    	background-image: url(../images/select.gif);
 		}
-		#sideBar{
-			//margin-top: 50px;
-			//float:left;
-			//width:0px;
-			//border-right: 1px solid #06c;
-		}
 		.dropped span{
 			font-size: 4px;
 		}
+		.sideBar ul {
+	      list-style: none;
+	      width:250px;
+	      padding-left: 20px;
+	      margin-left: 0px;
+	    }
+	    .sideBar li {
+	      cursor : default;
+	      margin: 4px;
+	      font-size: 14px;
+	    }
+	    .sideBar li span:hover{
+	      color:orange;
+	    }
+	    .monitor{
+	    	-ms-box-shadow:2px 2px 5px #FF0000;
+    		-moz-box-shadow:2px 2px 5px #FF0000;
+    		-webkit-box-shadow:2px 2px 5px #FF0000;
+    		box-shadow:2px 2px 5px #FF0000;
+	    }
+	    .editOrShow li{
+	    	font-size: 100%;
+	    }

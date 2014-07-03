@@ -8,24 +8,21 @@
     <link href="css/main.css" rel="stylesheet" media="screen">
  </head>
     <body>
-    <div id="sideBar"></div>
-	<div id="toolBar" class="section_header" style="margin-top:50px;margin-left:20px;width:1000px;height:50px;">
+	<div id="toolBar" class="section_header" style="margin-top:50px;margin-left:200px;width:1000px;height:50px;">
 		 <div class="userSelect icon"></div>
 		 <!--img id="select" class="icon unselected" src="images/select.gif" style=""></img-->
 		 <img id="participant" title="参与者" class="icon unselected" src="images/participantrole.png"></img>
 		 <img id="default_participant" title="任意参与者" class="icon unselected" src="images/freetextparticipant.png"></img>
 		 <img id="start" title="开始" class="icon unselected" src="images/start.png"></img>
 		 <img id="end" title="结束" class="icon unselected" src="images/end.png"></img>
-		 <img id="voidnode" title="空活动" class="icon unselected" src="images/genericactivity.png"></img>
-		 
+		 <img id="voidnode" title="空活动" class="icon unselected" src="images/genericactivity.png"></img>		 
 		 <img id="autoactivity" title="自动活动" class="icon unselected" src="images/autoactivity.png"></img>
 		 <img id="humantaskactivity" title="人工活动" class="icon unselected" src="images/humantaskactivity.png"></img>
 		 <img id="businessactivity" title="业务活动" class="icon unselected" src="images/activitytask.png"></img>
 		 <img id="blockactivity" class="icon unselected" src="images/blockactivity.png"></img>
 		 <img id="routesplitactivity" class="icon unselected" src="images/route_split_activity.png"></img>
 		 <img id="routejoinactivity" class="icon unselected" src="images/route_join_activity.png"></img>
-		 <img id="redo" class="icon unselected" src="images/redo.png"></img>
-		 
+		 <img id="redo" class="icon unselected" src="images/redo.png"></img>		 
 		 <img id="undo" class="icon unselected" src="images/undo.png" style="left:100px"></img>
 		 <img id="unCondition_transition" class="icon unselected" src="images/transition.png" style="left:150px"></img>
 		 <!--img id="zoomout" class="icon unselected" src="images/zoomout.png" style="left:200px"></img-->
@@ -50,7 +47,27 @@
             </ul>
           </div>
 	</div>
-	<div id="container" class="box" style="margin-top:0px;margin-left:20px;width:1000px;height:255px;">
+	<ul class="nav nav-pills editOrShow" style="margin-top:-50px;float:left;margin-left:20px;height:35px;margin-bottom:0px">
+              <li class="active"><a href="#">流程图</a></li>
+              <li><a href="#">XPDL</a></li>
+    </ul>
+	<div class="sideBar" style="margin-left:10px;clear:left;float:left;width:180px;margin-top:0px;min-height:255px;border-top: 10px solid #06C;">
+ 		<ul>
+ 			<li class="activities_tree"><i class="icon-minus"></i> <span>流程定义</span>
+ 				<ul>
+ 					<li class="hide temple"><span data-val="3"></span>
+ 					</li>
+ 				</ul>
+ 			</li>
+ 		</ul>
+    </div>
+	<div class="hide showXML" style="margin-top:0px;margin-left:200px;width:1000px;height:900px;border-top: 0px solid #06C;">
+		<input type="text" class="span3 finder" style="margin-bottom:5px">
+		<button type="button" class="btn btn-warning finder" style="margin-bottom:5px">查找</button>
+		<textarea style="width:900px;min-height:600px">
+		</textarea>
+	</div>
+	<div id="container" class="box" style="margin-top:0px;margin-left:200px;width:1000px;height:255px;">
 	</div>
 		<!-- 容器结束，对话框开始 -->
 		<div class="modal hide fade in" id="new_course_dialog" style="width:700px;margin-left:-350px">
@@ -161,6 +178,8 @@ function appendNewElement(container,ui){
 		}else{
 			name=incoming;
 		}
+		var left_participant=parseInt($("#container").css("margin-left").replace(/px/,""))-20;
+		//var top_participant=parseInt($("#container").css("margin-top").replace(/px/,""));
 		if(incoming!="participant" && incoming!="default_participant"){
 				parent=$('<div>').css({
 					position:'absolute',
@@ -168,21 +187,23 @@ function appendNewElement(container,ui){
 					top:ui.offset.top
 				})
 				span.css({
-					left:0,
+					left:-8,
 					top:32,
-					width:50
+					width:50,
+					'text-align':'center'
 				});
 		}else{
 				parent=$('<div>').css({
 					position:'absolute',
-					left:27,
-					top:off_y,
+					left:27+left_participant,
+					top:off_y
 				});
 				
 				span.css({
-					left:0,
+					left:-8,
 					top:32,
-					width:50
+					width:50,
+					'text-align':'center'
 				});
 		}
 		new_element.attr("title",name);
@@ -268,6 +289,18 @@ function trigger(container,str,performer){
 	}else{
 		_this.trigger(str);
 	}
+	//刷新左面的的sidebar
+	freshsideBar();
+}
+function freshsideBar(){
+	$("div.sideBar").find("ul:eq(1) li:not(.temple)").remove();
+	var li=$("div.sideBar").find("ul:eq(1) li.temple");
+	var arr=$("#container").data("w").activities || [];
+	for(var i=0;i<arr.length;i++){
+		var new_li=li.clone().removeClass("hide temple");
+		new_li.find("span").text(arr[i].name);
+		new_li.appendTo($("div.sideBar").find("ul:eq(1)"));	
+	}
 }
 function addNewLine(current,incoming){
 	if($("#container").data("w").participants.length>1 && (incoming=="participant" || incoming=="default_participant")){
@@ -288,79 +321,72 @@ function addNewLine(current,incoming){
 		return null;
 	}
 }
+//想实现按delete键删除节点的功能，交给后来人实现了
 $(document).keydown(function(e){
 	if(e.which==46){
 		//console.log("删除节点");
 	}    
 });  
-	jsPlumb.bind("ready", function() {
-		document.onselectstart = function () { return false; };	
-		jsPlumbDemo.init();
-		var icons=$("#toolBar").find(".icon");
-		var stateMachineConnector=$("#toolBar").data("option");
-		icons.each(function(index,el){
-			 $(el).bind("click",function(){
-			 	//$(icons).removeClass("selected");
-			 	//$(icons).addClass("unselected");
-			 	$(this).siblings(".icon").removeClass("selected");
-			 	$(this).siblings(".icon").addClass("unselected");
-			 	if($(this).hasClass("selected")){
-			 		$(this).removeClass("selected");
-			 		$(this).addClass("unselected");			
-			 	}else{
-			 		$(this).removeClass("unselected");
-			 		$(this).addClass("selected");		
-			 	}
-			 	//针对连接操作做特殊设置
-			 	if($(this).attr("id")=="unCondition_transition"){
-			 		setFrom(null);
-					setTo(null);
-					if($(this).hasClass("selected")){
-						$("div[id*='container']").find("div.dropped").draggable("disable");
-					}else{
-						$("div[id*='container']").find("div.dropped").draggable("enable");
-					}					
-			 	}					 	
-		 	 });
-		});
-		$(".dialog").bind("click",function(e,obj){
-			$('#new_course_dialog').data("obj",obj);
-			$('#new_course_dialog').modal("show");
-		});
-		$("#participant").draggable({helper:"clone"});
-		$("#default_participant").draggable({helper:"clone"});
-		$("#container").droppable({
-			drop:function(event,ui){
-				var incoming=ui.helper.context.id;
-				if(!$("#container").data("w").participants || $("#container").data("w").participants.length==0){
-					if(incoming!="participant" && incoming!="default_participant"){
-						return;
-					}else{
-						$( ".icon" ).draggable({helper:"clone"});
-					}
-				}
-				var str=ui.helper.context.className;
-				if(str.indexOf("dropped")>=0){
+jsPlumb.bind("ready", function(){
+	document.onselectstart = function () { return false; };	
+	jsPlumbDemo.init();
+	var icons=$("#toolBar").find(".icon");
+	var stateMachineConnector=$("#toolBar").data("option");
+	icons.each(function(index,el){
+		 $(el).bind("click",function(){
+		 	//$(icons).removeClass("selected");
+		 	//$(icons).addClass("unselected");
+		 	$(this).siblings(".icon").removeClass("selected");
+		 	$(this).siblings(".icon").addClass("unselected");
+		 	if($(this).hasClass("selected")){
+		 		$(this).removeClass("selected");
+		 		$(this).addClass("unselected");			
+		 	}else{
+		 		$(this).removeClass("unselected");
+		 		$(this).addClass("selected");		
+		 	}
+		 	//针对连接操作做特殊设置
+		 	if($(this).attr("id")=="unCondition_transition"){
+		 		setFrom(null);
+				setTo(null);
+				if($(this).hasClass("selected")){
+					$("div[id*='container']").find("div.dropped").draggable("disable");
+				}else{
+					$("div[id*='container']").find("div.dropped").draggable("enable");
+				}					
+		 	}					 	
+	 	 });
+	});
+	//这里的.dialog的是一个按钮，在界面上已经隐藏了
+	$(".dialog").bind("click",function(e,obj){
+		//开始节点和结束节点不显示编辑页面
+		if(obj.attr("id").indexOf("end")>=0 || obj.attr("id").indexOf("start")>=0){
+			return;
+		}
+		$('#new_course_dialog').data("obj",obj);
+		$('#new_course_dialog').modal("show");
+	});
+	$("#participant").draggable({helper:"clone"});
+	$("#default_participant").draggable({helper:"clone"});
+	$("#container").droppable({
+		drop:function(event,ui){
+			var incoming=ui.helper.context.id;
+			if(!$("#container").data("w").participants || $("#container").data("w").participants.length==0){
+				if(incoming!="participant" && incoming!="default_participant"){
 					return;
+				}else{
+					$( ".icon" ).draggable({helper:"clone"});
 				}
-				var performer=$(this).find("div[id*='participant']").attr("id");
-				trigger($("#container"),incoming,performer);
-				appendNewElement($(this),ui);
-			},
-		});
-	function formatXml(str){
-		str = str.replace(/[ <\/]\w/g,function(s){
-			//console.log(s.toLocaleUpperCase());
-			//var c=str.match(/\w/);
-			//console.log(c[0]);
-			return s.toLocaleUpperCase();
-		});
-		str =str.replace(/ _\w/g,function(s){
-			//console.log(s);
-			return s.substring(1,2);
-		});
-		return str;
-	}
+			}
+			var str=ui.helper.context.className;
+			if(str.indexOf("dropped")>=0){
+				return;
+			}
+			var performer=$(this).find("div[id*='participant']").attr("id");
+			trigger($("#container"),incoming,performer);
+			appendNewElement($(this),ui);
+		},
+	});
 	$(".save").bind("click",function(){
 		$('#saveWorkFlow').modal('show');
 	});
@@ -370,8 +396,8 @@ $(document).keydown(function(e){
 		tmp.workflow=$('#saveWorkFlow').find("input.workflow").val();
 		tmp.creator=$('#saveWorkFlow').find("input.creator").val();
 		tmp.isTerminationImplicit=$("#saveWorkFlow").find("input[type='checkbox']").prop("checked");
-		var obj=getProcessDefinition();
-		var data1=obj['data1'];
+		//var obj=getProcessDefinition();
+		//var data1=obj['data1'];
 		// $.ajax({
 		// 	url:"http://127.0.0.1:8080/struts2_demo/XmlString.action",
   //    		type: "POST",
@@ -410,6 +436,58 @@ $(document).keydown(function(e){
 				$("a.download")[0].click();
      		},
         });
+	});
+	$(".sideBar").bind("click",function(e){
+		var target=e.target.tagName.toLowerCase();
+        if(target!="span"){
+          return;
+        }
+		var jsonstr="";
+		var name=$(e.target).text();
+		console.log(name);
+		if(name=="流程定义"){
+			var obj=getProcessDefinition();
+			var data1=obj['data1'];
+			jsonstr=data1.processdefinition;
+		}else{
+			var arr=$("#container").data("w").activities ||[];
+			for(var i=0;i<arr.length;i++){
+				if(arr[i].name=name){
+					var test=$("<test>");
+					test.children().remove();
+					arr[i].parent=test;
+					arr[i].getXml();
+					jsonstr=test.html();
+				}
+			}
+		}
+		//console.log(jsonstr);
+		$.ajax({
+			url:"http://127.0.0.1:8080/MyDesigner/XmlString.action",
+     		type: "POST",
+     		data:{"xml":jsonstr},
+     		success:function(data){
+				//tmp.push(data.format_xml);
+				$(".showXML textarea").val(data.format_xml);
+     		},
+        });
+	});
+	$(".sideBar ul:eq(0)").bind("click",function(e){
+		var target=e.target.tagName.toLowerCase();
+        if(target!="i"){
+          return;
+        }
+        var ul=$(e.target).siblings("ul:eq(0)");
+        ul=ul[0];
+        //console.log(ul);
+        if(ul){
+          ul.style.display=ul.style.display=="none"?"block":"none";
+        }
+        if(ul.style.display=="none"){
+          $(e.target).removeClass("icon-minus").addClass("icon-plus");
+        }else{
+          $(e.target).removeClass("icon-plus").addClass("icon-minus");
+        }          
 	});
 	$(".menu .checkOrder").bind("click",function(){
 		var tmp=$("#container").data("w");
@@ -509,7 +587,68 @@ $(document).keydown(function(e){
 			'mode':'new'
 		};
 		return {'data1':data1,'data2':data2};
-	}
+	};
+	$("ul.editOrShow li").bind("click",function(){
+		$(this).siblings().removeClass("active");
+		$(this).addClass("active");
+		if($(this).find("a").text()=="流程图"){
+			$(".showXML").slideUp();
+			$("div[id*=container]").slideDown();
+		}
+		if($(this).find("a").text()=="XPDL"){
+			$("div[id*=container]").slideUp();
+			$(".showXML").slideDown();
+		}
+	});
+	//查找相应的字符，并高亮显示
+	$(".btn.finder").bind("click",function(){
+		//估算的每一行所占的大小约为20px
+		var str=$(".showXML textarea").val();
+		var search=$("input.finder").val();
+		//console.log(search);
+		if(!$(".showXML textarea").data("keyword") || $(".showXML textarea").data("keyword")==search){
+			var index = $(".showXML textarea").data("index") || 0;
+			index=str.indexOf(search,index);
+			//console.log(index);
+			$(".showXML textarea")[0].selectionStart=index;
+			$(".showXML textarea")[0].selectionEnd=index+search.length;
+			$(".showXML textarea").data("index",index+search.length);
+			$(".showXML textarea").data("keyword",search);
+		}else{
+			$(".showXML textarea").data("index",0);
+			var index = $(".showXML textarea").data("index");
+			index=str.indexOf(search,index);
+			//console.log(index);
+			$(".showXML textarea")[0].selectionStart=index;
+			$(".showXML textarea")[0].selectionEnd=index+search.length;
+			$(".showXML textarea").data("index",index+search.length);
+			$(".showXML textarea").data("keyword",search);
+		}
+		var sub_str=str.substring(0,$(".showXML textarea")[0].selectionStart);
+		var counter=0;
+		for(var i=0;i<sub_str.length;i++){
+			if (sub_str.substr(i,1)=="\n"){
+				counter++;
+			}
+		}
+		console.log((counter+1)*20);
+		//counter++;
+		var need_scroll=(counter*20-$(".showXML textarea")[0].scrollTop);
+		//这里的600是指textarea的高度
+		if(need_scroll>=600){
+			$(".showXML textarea")[0].scrollTop+=(need_scroll-20);
+			//console.log("需要滚动");
+		}
+	});
+	// $.ajax({
+	// 	url: "http://127.0.0.1:8080/MyDesigner/MyDesigner.json",
+	// 	type: "POST",
+	// 	//dataType:"xml",
+	// 	success:function(data){
+	// 		$(".showXML textarea").val(data);
+	// 		//console.log(data);
+	// 	}
+	// });
 });
 </script>
 </html>

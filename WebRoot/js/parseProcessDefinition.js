@@ -101,7 +101,7 @@ function addElementForParse(container,str,src,x,y,name){
 	}else{
 			parent=$('<div>').css({
 				position:'absolute',
-				left:27,
+				left:207,
 				top:off_y,
 			});
 			

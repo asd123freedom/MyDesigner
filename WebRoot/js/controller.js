@@ -106,9 +106,11 @@ $(function(){
 		}
 		if($(this).find(".btn-danger").hasClass("disabled")){
 			var temp_tran=obj.data("tran");
-			jsPlumb.detach(temp_tran);
+			if(temp_tran){
+				jsPlumb.detach(temp_tran);
+			}			
 			obj.remove();
-			obj=null;
+			//obj=null;
 		}
 		//console.log($(this).find("#name").val());
 		var show_name=$(this).find("#name").val();
@@ -127,6 +129,7 @@ $(function(){
 			//console.log(arr);
 			obj.find("span").text(show_name).css("display","block");
 			$(this).data("obj",null);
+			freshsideBar();
 			return;
 		}
 		if(tran){
