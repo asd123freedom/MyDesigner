@@ -44,17 +44,17 @@
       $("#new_course_dialog").unbind("show_transition");
       $("#new_course_dialog").bind("show_transition",function(){
         var tran=$("#new_course_dialog").data("tran");
-          if(tran){
-            var arr_tran=$("#container").data("w").transitions || [];
-            $(arr_tran).each(function(index,e){
-              if(tran.sourceId==e.from && tran.targetId==e.to){
-                $("input.start").val(e.from);
-                $("input.end").val(e.to);
-                if(e.condition){
-                  $("input.condition").val(e.condition);
-                }
+        if(tran){
+          var arr_tran=$("#container").data("w").transitions || [];
+          $(arr_tran).each(function(index,e){
+            if(tran.sourceId==e.from && tran.targetId==e.to){
+              $("input.start").val(e.from);
+              $("input.end").val(e.to);
+              if(e.condition){
+                $("input.condition").val(e.condition);
               }
-            });
+            }
+          });
         }
       });
   		$(".btn-danger").bind("click",function(){
@@ -65,25 +65,26 @@
   			$(this).addClass("disabled");
   			$(".btn-danger").removeClass("disabled");
   		});
-      $("#new_course_dialog").bind("delete_tran",function(e,tran){
-          jsPlumb.detach(tran);
-          var arr_tran=$("#container").data("w").transitions || [];
-            $(arr_tran).each(function(index,e){
-              if(tran.sourceId==e.from && tran.targetId==e.to){
-                 arr_tran.splice(index,1);
-                 $("#new_course_dialog").data("tran",null);
-              }
-          });
-      });
   		$(".transition.submit").bind("click",function(){
+          console.log(1);
           var flag=false;//标记是否删除
     			var tran=$("#new_course_dialog").data("tran");
+          //console.log(tran.endpoints);
           if($("#new_course_dialog .btn-danger").hasClass("disabled")){
-    			   	  $("#new_course_dialog").trigger("delete_tran",[tran]);
+                jsPlumb.detach(tran);
+                var arr_tran=$("#container").data("w").transitions || [];
+                  $(arr_tran).each(function(index,e){
+                    if(tran.sourceId==e.from && tran.targetId==e.to){
+                       arr_tran.splice(index,1);
+                       //$("#new_course_dialog").data("tran",null);
+                    }
+                });
+                $("#new_course_dialog").data("tran",null);
                 $("#new_course_dialog").modal('hide');
                 return;
     			}
     			if(tran){
+            //console.log(tran);
     				var arr_tran=$("#container").data("w").transitions || [];
     				$(arr_tran).each(function(index,e){
     					if(tran.sourceId==e.from && tran.targetId==e.to){

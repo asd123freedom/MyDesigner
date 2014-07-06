@@ -284,10 +284,21 @@
        $("#content2 .btn.addActualParam").bind("click",function(){
         var key=$("#content2 select.Module").find("option:selected").data("id");
         var value=$("#content2 input.RecordListName").val();
-        if(!value){
+
+        $("input.RecordListName").data(key+"",value+"");
+        var data={};
+        var selectModule=$(this).parents(".content:eq(0)").find("select.Module");
+        var selectField=$(this).parents(".content:eq(0)").find("select.Field");
+        data.moduleID=selectModule.find("option:selected").data("id");
+        data.module=selectModule.find("option:selected").val();
+        data.fieldID=selectField.find("option:selected").data("id");
+        data.field=selectField.find("option:selected").html().split(":")[1];
+        var table=$(this).parents(".content:eq(0)").find("table");
+        if(!data.moduleID || !data.fieldID){
           return;
         }
-        $("input.RecordListName").data(key+"",value+"");
+        fillFormParametersTable(data,table);
+        table.find("tr.warning").removeClass("warning");
       });
   		//将形参数据填到表格中
   		$("#content1 .btn.addActualParam").bind("click",function(){

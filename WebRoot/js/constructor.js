@@ -121,19 +121,24 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 				var tmp=this.Modules[i];
 				tmp.parent=Modules;
 				tmp.getXml(false);
-				//tmp.appendTo(Modules);
 			}
 			Modules.appendTo(Form);
 			var ChildModules=$("<Child_Modules>");
+			var ModulesForChild=$("<Modules>");
 			var Description=$("<Description>");
+			for(var i=0;i<this.ChildModules.length;i++){
+				var tmp=this.ChildModules[i];
+				tmp.parent=Description;
+				tmp.getXml(true);
+			}
+			ChildModules.appendTo(Form);
+			Description.appendTo(ChildModules);
 			for(var i=0;i<this.ChildModules.length;i++){
 				var tmp=this.ChildModules[i];
 				tmp.parent=ChildModules;
 				tmp.getXml(true);
-				//tmp.appendTo(ChildModules);
 			}
-			ChildModules.appendTo(Form);
-			Description.appendTo(ChildModules);
+			//ModulesForChild.appendTo(ChildModules);
 			Form.appendTo(this.parent);
 		};
 	};
@@ -454,7 +459,10 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			var app=$("<application>");
 			app.attr("Id",this.id);
 			var script=$("<script>");
-			$("<expression>").html(this.expression).appendTo(script);
+			var str="![CDATA["+this.expression+";\n]]";
+			//var str=this.expression+";";
+			console.log(str);
+			$("<expression>").html(str).appendTo(script);
 			script.appendTo(app);
 			app.appendTo(this.parent);
 		}

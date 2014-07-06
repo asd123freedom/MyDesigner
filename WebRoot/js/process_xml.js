@@ -78,9 +78,20 @@
 		//活动XML
 		var temp_activities=$("<Activities>");
 		var activities=workflowprocess["activities"] || [];
+		console.log(activities);
 		for(var i=0;i<activities.length;i++){
-				//console.log(activities[i]);
+				console.log(activities[i]);
 				activities[i].parent=temp_activities;
+				if(activities[i].name.indexOf("split")>=0){
+					var tranRefs=[];
+	             	var tran_arr=$("#container").data("w").transitions || [];
+	             	for(var k=0;k<tran_arr.length;k++){
+		                if(tran_arr[k].from==activities[i].name){
+		                  tranRefs.push(tran_arr[k].name);
+		                }
+	              	}
+	              	activities[i].TransitionRefs=tranRefs;
+				}
 				activities[i].getXml();
 		}
 		temp_activities.appendTo(xml);

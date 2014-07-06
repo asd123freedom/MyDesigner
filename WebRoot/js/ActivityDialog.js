@@ -41,16 +41,25 @@
   			console.log(arr);
   			$(arr).each(function(index,e){
   				if(obj.attr("id")==e.name){
-  					//将设置好的参数传给相应的activity对象
-  					$("#container").trigger("application");
-  					var arr=$("#container").data("w").applications;  					
-  					var app=arr[arr.length-1];
-  					app.Name=$("select.app_type").val()+""+arr.length;
-					app.Type="Class";
-					app.BusinessType=$("select.app_type").val();
-					app.ClassPath=dict_classpath[$("select.app_type").val()];
+  					//将设置好的参数传给相应的activity对象  					
+  					var arr=$("#container").data("w").applications || [];  					
+  					var app=null;
+  					for(var i=0;i<arr.length;i++){
+  						if(arr[i].Name && arr[i].Name.indexOf("Get")>=0){
+  							app=arr[i];
+  						}
+  					}
+  					if(!app){
+  						$("#container").trigger("application");
+  						arr=$("#container").data("w").applications;
+  						console.log("tirgger");
+  						app=arr[arr.length-1];
+  						app.Name=$("select.app_type").val()+"Application";
+						app.Type="Class";
+						app.BusinessType=$("select.app_type").val();
+						app.ClassPath=dict_classpath[$("select.app_type").val()];
+  					}
 					//app.ModuleID=$(".Module").val();
-					var patrnt=e;
 					var actual=[];
 					$("table.get").find("tr.actual").each(function(index,e){
 						var a=new ActualParameter();
@@ -84,14 +93,23 @@
 		$(arr).each(function(index,e){
 			if(obj.attr("id")==e.name){
 				//将设置好的参数传给相应的activity对象
-				$("#container").trigger("application");
-				var arr=$("#container").data("w").applications;  					
-				var app=arr[arr.length-1];
-				app.Name=$("select.app_type").val()+""+arr.length;
-				app.Type="Class";
-				app.BusinessType=$("select.app_type").val();
-				app.ClassPath=dict_classpath["SaveBusinessFormData"];
-				var parent=e;
+				//$("#container").trigger("application");
+				var arr=$("#container").data("w").applications || [];  					
+				var app=null;
+				for(var i=0;i<arr.length;i++){
+					if(arr[i].Name && arr[i].Name.indexOf("Save")>=0){
+						app=arr[i];
+					}
+				}
+				if(!app){
+					$("#container").trigger("application");
+					arr=$("#container").data("w").applications;
+					app=arr[arr.length-1];
+					app.Name=$("select.app_type").val()+"Application";
+					app.Type="Class";
+					app.BusinessType=$("select.app_type").val();
+					app.ClassPath=dict_classpath[$("select.app_type").val()];
+				}
 				var actual=[];
 				$("table.save").find("tr.actual").each(function(index,e){
 						var a=new ActualParameter();
@@ -120,14 +138,23 @@
 		$(arr).each(function(index,e){
 			if(obj.attr("id")==e.name){
 				//将设置好的参数传给相应的activity对象
-				$("#container").trigger("application");
-				var arr=$("#container").data("w").applications;  					
-				var app=arr[arr.length-1];
-				app.Name=$("select.app_type").val()+""+arr.length;
-				app.Type="Class";
-				app.BusinessType=$("select.app_type").val();
-				app.ClassPath=dict_classpath["EditBusinessFormData"];
-				var parent=e;
+				//$("#container").trigger("application");
+				var arr=$("#container").data("w").applications || [];  					
+				var app=null;
+				for(var i=0;i<arr.length;i++){
+					if(arr[i].Name && arr[i].Name.indexOf("Edit")>=0){
+						app=arr[i];
+					}
+				}
+				if(!app){
+					$("#container").trigger("application");
+					arr=$("#container").data("w").applications
+					app=arr[arr.length-1];
+					app.Name=$("select.app_type").val()+"Application";
+					app.Type="Class";
+					app.BusinessType=$("select.app_type").val();
+					app.ClassPath=dict_classpath[$("select.app_type").val()];
+				}
 				var actual=[];
 				$("table.save").find("tr.actual").each(function(index,e){
 						var a=new ActualParameter();
@@ -161,7 +188,14 @@
 				$("#container").trigger("application");
 				var arr=$("#container").data("w").applications;  					
 				var app=arr[arr.length-1];
-				app.Name=$("select.app_type").val()+""+arr.length;
+				var count=1;
+				for(var i=0;i<arr.length;i++){
+					if(arr[i].Name && arr[i].Name.indexOf("Send")>=0){
+						count++;
+					}
+				}
+				count=count+"";
+				app.Name=$("select.app_type").val()+"Application"+""+count;
 				app.Type=$("select.app_type").val();
 				if($("input.title").val() && !$("input.title").parent().parent().hasClass("hide")){
 					app.Title=$("input.title").val();

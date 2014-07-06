@@ -187,22 +187,23 @@ function appendNewElement(container,ui){
 					top:ui.offset.top
 				})
 				span.css({
-					left:-8,
+					left:-15,
 					top:32,
-					width:50,
+					width:64,
 					'text-align':'center'
 				});
 		}else{
 				parent=$('<div>').css({
 					position:'absolute',
-					left:27+left_participant,
+					left:37+left_participant,
+					//left:17,
 					top:off_y
 				});
 				
 				span.css({
-					left:-8,
+					left:-15,
 					top:32,
-					width:50,
+					width:64,
 					'text-align':'center'
 				});
 		}
@@ -273,8 +274,8 @@ function createTransition(from,to,stateMachineConnector){
 			$('#new_course_dialog').modal('show');
 			//jsPlumb.detach(conn);
 	});
-	$("#"+from).data("tran",connect);
-	$("#"+to).data("tran",connect);
+	//$("#"+from).data("tran",connect);
+	//$("#"+to).data("tran",connect);
 	return connect;
 }
 function trigger(container,str,performer){

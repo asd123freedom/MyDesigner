@@ -55,7 +55,7 @@
                   <a href="#" class="btn btn-primary addActualParam" style="margin-left:20px">确定</a>
               </div>
           </div>
-          <textarea rows="5" class="basic_info" style="width:300px;margin-left:20px">...
+          <textarea rows="5" class="script" style="width:500px;margin-left:20px">...
                   </textarea>
         </form>
       </div>
@@ -351,8 +351,7 @@
           for(var i=0;i<arr.length;i++){
             if(arr[i].type=="script" && arr[i].id==str){
               //arr[i].expression=$("textarea").val().replace(/\s+/,"");
-              console.log()
-              $("textarea").val(data);
+              $("textarea.script").val(data);
             }
           }
         });
@@ -360,10 +359,10 @@
       //初始化应用列表
       var initScriptAppList=function(){
         var arr=$("#container").data("w").applications || [];
-        console.log(arr);
+        //console.log(arr);
         $("ul.selectScriptApp").find("li:not(.temple)").remove();
         for(var i=0;i<arr.length;i++){
-          console.log(arr[i].type);
+          //console.log(arr[i].type);
           if(arr[i].type=="script"){
             var $li=$(".selectScriptApp").find("li.temple").clone();
             $li.removeClass("hide temple");
@@ -400,7 +399,7 @@
       });
       //添加脚本内容
       $(".btn.addActualParam").bind("click",function(e){
-          $("textarea").val("");
+          $("textarea.script").val("");
           var temp=$("a.scriptAppName span:eq(0)").text();
           if(temp=="选择应用"){
             alert("先选择应用");
@@ -408,7 +407,7 @@
           }
           var instance=$("select.instance").val();
           var method=$("select.method").val().split(":")[0];
-          $("textarea").val(instance+"."+method);
+          $("textarea.script").val(instance+"."+method);
       });
       //提交编辑结果
       $(".scriptapp.submit").bind("click",function(e){
@@ -416,7 +415,8 @@
           var arr=$("#container").data("w").applications || [];
           for(var i=0;i<arr.length;i++){
             if(arr[i].type=="script" && arr[i].id==name){
-              arr[i].expression="![CDATA["+$("textarea").val().replace(/\s+/,"")+";]]";
+              //arr[i].expression="![CDATA["+$("textarea").val().trim()+";]]";
+              arr[i].expression=$("textarea.script").val().trim();
             }
           }
           $("#new_course_dialog").modal("hide");

@@ -128,6 +128,7 @@ var Model=(function(){
 	  				if(obj.attr("id")==e.name){
 	  					var app=$(e).data("app");
 	  					$("input.participant_name").val(e.performer);
+	  					$("#name").val(e.show_name);
 	  					$("select.app_type").val(app.Type);
   						//$("select.receive_type").data("TypeIndex",app.ReceiverType_index);
 	  					//$("select.receive_id").data("IdVal",app.ReceiverId_val);
@@ -170,6 +171,7 @@ var Model=(function(){
 	  				console.log(app.Type);
 	  				$("select.app_type").val(app.BusinessType);
 	  				$("input.participant_name").val(e.performer);
+	  				$("#name").val(e.show_name);
 	  				//$("select.Module").data("ModuleID",app.ModuleID);
 	  				//console.log($("select.Module").data("ModuleID"));
 	  				//$("select.Module").data("arr",e.actualParameters)
@@ -212,6 +214,7 @@ var Model=(function(){
 	  				console.log(app.Type);
 	  				$("select.app_type").val(app.BusinessType);
 	  				$("input.participant_name").val(e.performer);
+	  				$("#name").val(e.show_name);
 	  				//$("select.Module").data("ModuleID",app.ModuleID);
 	  				//console.log($("select.Module").data("ModuleID"));
 	  				//$("select.Module").data("arr",e.actualParameters)

@@ -12,6 +12,7 @@ $(function(){
 			var d=new Date();
 			if(tran){
 				$('#new_course_dialog').load("Transition.html?num="+d.getTime(),function(){
+					//console.log(tran);
 					$("#new_course_dialog").trigger("show_transition");
 				});
 				//var arr_actual=$("#container").data("w").actualParameters || [];
@@ -104,14 +105,15 @@ $(function(){
 		if(!obj && !tran){
 			return;
 		}
-		if($(this).find(".btn-danger").hasClass("disabled")){
-			var temp_tran=obj.data("tran");
-			if(temp_tran){
-				jsPlumb.detach(temp_tran);
-			}			
-			obj.remove();
-			//obj=null;
-		}
+		// if($(this).find(".btn-danger").hasClass("disabled")){
+		// 		if(obj){
+		// 			var temp_tran=obj.data("tran");
+		// 			if(temp_tran){
+		// 				jsPlumb.detach(temp_tran);
+		// 			}	
+		// 			obj.remove();
+		// 		}
+		// }
 		//console.log($(this).find("#name").val());
 		var show_name=$(this).find("#name").val();
 		if(obj){
