@@ -67,7 +67,7 @@
 		<textarea style="width:900px;min-height:600px">
 		</textarea>
 	</div>
-	<div id="container" class="box" style="margin-top:0px;margin-left:200px;width:1000px;height:255px;">
+	<div id="container" class="box" style="resize:both;overflow:auto;margin-top:0px;margin-left:200px;width:1000px;height:255px;">
 	</div>
 		<!-- 容器结束，对话框开始 -->
 		<div class="modal hide fade in" id="new_course_dialog" style="width:700px;margin-left:-350px">
@@ -143,6 +143,7 @@
 <script src="js/controller.js"></script>
 <script src="js/setPosition.js"></script>
 <script src="js/parseProcessDefinition.js"></script>
+<script src="js/resize.js"></script>
 <script type="text/javascript">
 //这些函数都是全局的，需要改进
 function getFrom(){
@@ -161,11 +162,19 @@ function appendNewElement(container,ui){
 		var incoming=ui.helper.context.id;
 		var new_element=$('<img>').attr("src",ui.helper.context.src).addClass("dropped").addClass("unselected");
 		var num_y=$(container).css("height").match(/\d*/);
+		var prev=$("div[id*='container']:last");
+		//console.log(prev.offset().top+prev.height()+37);
+		//var num_y=prev.offset().top+prev.height()+37;
+		if($("div[id*='participant']").length==0){
+			var off_y=119;
+		}else{
+			var off_y=prev.offset().top+prev.height()+27;
+		}
 		var parent=null;
 		var arr=$("#container").data("w").participants || [];
 		var name="";
 		var new_container=null;
-		var off_y=(num_y[0])*(arr.length-1)+119+10*(arr.length-1);
+		//var off_y=(num_y[0])*(arr.length-1)+119+10*(arr.length-1);
 		var index=0;
 		//var name_index=0;
 		var span=$("<span>").css({
@@ -192,7 +201,7 @@ function appendNewElement(container,ui){
 					width:64,
 					'text-align':'center'
 				});
-		}else{
+		}else{	
 				parent=$('<div>').css({
 					position:'absolute',
 					left:37+left_participant,
@@ -223,6 +232,19 @@ function appendNewElement(container,ui){
 		jsPlumb.draggable(parent,{revert: "invalid",
 			stop:function(e){
 				//console.log($(e.target).attr("id"));
+			},
+			drag:function(e){
+				var p=$(e.target).parent();
+				var bottom=p.offset().top+10+p.height();
+				if(($(e.target).offset().top+$(e.target).height())>=bottom){
+					var h=p.height();
+					p.height(h+30);
+					p.nextAll("div[id*='container']").children().each(function(index,e){
+						var delta=$(e).offset().top;
+						delta+=30;
+						$(e).css({'top':delta});
+					});
+				}
 			}
 		});
 		var stateMachineConnector=$("#toolBar").data("option");
@@ -450,6 +472,7 @@ jsPlumb.bind("ready", function(){
 			var obj=getProcessDefinition();
 			var data1=obj['data1'];
 			jsonstr=data1.processdefinition;
+			//单个节点的情况
 		}else{
 			var arr=$("#container").data("w").activities ||[];
 			for(var i=0;i<arr.length;i++){
@@ -459,8 +482,36 @@ jsPlumb.bind("ready", function(){
 					arr[i].parent=test;
 					arr[i].getXml();
 					jsonstr=test.html();
-				}
-			}
+					//标签首字母大写
+					jsonstr = jsonstr.replace(/[ <\/]\w/g,function(s){
+						//console.log(s.toLocaleUpperCase());
+						//var c=str.match(/\w/);
+						//console.log(c[0]);
+						return s.toLocaleUpperCase();
+					});
+					//某一些不需要大写的属性保持原样
+					jsonstr =jsonstr.replace(/ _\w/g,function(s){
+						//console.log(s);
+						return s.replace(/_/g,"");
+					});
+					//恢复驼峰是命名的大小写情况
+					jsonstr =jsonstr.replace(/\w_(\w)/g,function(s,b){
+						if(b < 'a'){
+							return s;
+						}else{
+							return s.substring(0,1)+b.toUpperCase();
+						}
+					});
+					//针对默认参与者的特殊情况
+					jsonstr =jsonstr.replace(/defaultParticipant/g,function(){
+						return 'default_participant';
+					});
+					//XPDLVersion标签的特殊情况
+					jsonstr =jsonstr.replace(/Xpdlv/g,function(s){
+						return s.toUpperCase();
+					});
+						}
+					}
 		}
 		//console.log(jsonstr);
 		$.ajax({
@@ -573,11 +624,11 @@ jsPlumb.bind("ready", function(){
 		//针对默认参与者的特殊情况
 		str =str.replace(/defaultParticipant/g,function(){
 			return 'default_participant';
-		})
+		});
 		//XPDLVersion标签的特殊情况
 		str =str.replace(/Xpdlv/g,function(s){
 			return s.toUpperCase();
-		})
+		});
 		//console.log(str);
 		var data1={"processdefinition":str};
 		var data2={
