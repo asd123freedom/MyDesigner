@@ -129,6 +129,7 @@
 		  </div>
 		</div>
 		<a class="hide download">点击下载</a>
+		<input class="hide import" type="file"/>
 </body>
 <script language="javascript" type="text/javascript" src="jquery/jquery-1.9.1.js"></script>
 <script src="jquery-ui/jquery-ui.js"></script>
@@ -143,7 +144,6 @@
 <script src="js/controller.js"></script>
 <script src="js/setPosition.js"></script>
 <script src="js/parseProcessDefinition.js"></script>
-<script src="js/resize.js"></script>
 <script type="text/javascript">
 //这些函数都是全局的，需要改进
 function getFrom(){
@@ -179,7 +179,8 @@ function appendNewElement(container,ui){
 		//var name_index=0;
 		var span=$("<span>").css({
 			position:'absolute',
-			display:'none'
+			display:'none',
+			'text-align':'center'
 		});
 		index=$("#container").data(incoming);
 		if(incoming!="default_participant"){
@@ -296,8 +297,6 @@ function createTransition(from,to,stateMachineConnector){
 			$('#new_course_dialog').modal('show');
 			//jsPlumb.detach(conn);
 	});
-	//$("#"+from).data("tran",connect);
-	//$("#"+to).data("tran",connect);
 	return connect;
 }
 function trigger(container,str,performer){
@@ -467,6 +466,8 @@ jsPlumb.bind("ready", function(){
         }
 		var jsonstr="";
 		var name=$(e.target).text();
+		$(".monitor").removeClass("monitor");
+		$("#"+name).addClass("monitor");
 		console.log(name);
 		if(name=="流程定义"){
 			var obj=getProcessDefinition();

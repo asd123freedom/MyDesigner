@@ -224,7 +224,7 @@
           if(e.name==obj.attr("id")){
              $Description=$("<Description>");
              //Task的name属性填写的是当前泳道的人工任务节点的ID
-             $Task=$("<Task>").attr("_name","").attr("_assign_Type","group").attr("_re_Assign","false");
+             var $Task=$("<Task>").attr("_name","").attr("_assign_Type","group").attr("_re_Assign","false");
              $Groups=$("<Groups>");
              var trs=$("table.groupSelected tr.filled");
              for(var i=0;i<trs.length;i++){

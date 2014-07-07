@@ -227,6 +227,7 @@
 			}
 		});
 	});
+	//删除相应的
 	$("#new_course_dialog").on("delete",function(){
 		var obj=$(this).data("obj");
 		var arr=$("#container").data("w").activities || [];
@@ -245,6 +246,20 @@
 			var arr=$("#container").data("w").activities || [];
 			//console.log(arr);
 			if($("#new_course_dialog").find(".btn-danger").hasClass("disabled")){
+				var tran_arr=$("#container").data("w").transitions || [];
+				for(var i=0;i<tran_arr.length;i++){
+					if(tran_arr[i].from==$(obj).attr("id") || tran_arr[i].to==$(obj).attr("id")){
+						$("#new_course_dialog").find(".btn-success").trigger("click");
+						alert("先删除连线再删除图标");
+						return;
+					}
+				}
+				if(($("#container").data("w").start && $("#container").data("w").start.connecting==$(obj).attr("id"))
+				 || ($("#container").data("w").end && $("#container").data("w").end.connecting==$(obj).attr("id"))){
+					$("#new_course_dialog").find(".btn-success").trigger("click");
+					alert("先删除连线再删除图标");
+					return;
+				}
 				$("#new_course_dialog").trigger("delete");
 				return;
 			}	

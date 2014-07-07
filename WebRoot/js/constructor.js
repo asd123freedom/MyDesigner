@@ -459,7 +459,7 @@ var application_array=["Name","Type","ClassPath","ReceiverType","ReceiverId","Co
 			var app=$("<application>");
 			app.attr("Id",this.id);
 			var script=$("<script>");
-			var str="![CDATA["+this.expression+";\n]]";
+			var str="![CDATA["+this.expression+"\n]]";
 			//var str=this.expression+";";
 			console.log(str);
 			$("<expression>").html(str).appendTo(script);

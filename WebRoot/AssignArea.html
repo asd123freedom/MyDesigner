@@ -67,17 +67,18 @@
             if(e.name==obj.attr("id")){
                var $Description=$("<Description>");
                //Task的name属性填写的是当前泳道的人工任务节点的ID
-               $Task=$("<Task>").attr("_name","").attr("_assign_Type","deffered").attr("_re_Assign","false");
+               var $Task=$("<Task>").attr("_name","").attr("_assign_Type","deffered").attr("_re_Assign","false");
                var str=$("input[type='checkbox']:checked").val()+":"+$("#variable").val();
                $Variable=$("<Variable>").html(str);
                $Variable.appendTo($Task);
                $Task.appendTo($Description);
-               console.log($Task.html());
+               //console.log($Task.html());
+               e.variable=str;
                e.type="area";
                e.Description=$Description;
             }
           });
-          console.log("submit");
+          //console.log("submit");
           $("#new_course_dialog").modal("hide");
       });
   });

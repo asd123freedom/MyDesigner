@@ -17,8 +17,30 @@ var parseProcessDefinition=function(){
 		}
 	});
 }
+var input=$("input[type=file]");
+input.bind("change",function(){
+	var file=this.files[0];
+	if(window.FileReader) {  
+        var fr = new FileReader();  
+        fr.onloadend = function(e) {
+        	var str=$.parseXML(e.target.result);
+        	(function(data){
+        		var obj=selectContainer(data);
+				parseApplication($(data).find("Application"));
+				parseParticipants(data,addElementForParse);
+				parseActivities(data,$(data).find("Activity"),addElementForParse,obj);
+				parseStart(data,addElementForParse,obj);
+				parseEnd(data,addElementForParse,obj);
+				parseTransitions(data);
+				parseWorkflow(data);
+        	})(str);
+        };  
+        fr.readAsText(file);  
+    } 
+});
 $(".menu .importOrder").bind("click",function(){
-	parseProcessDefinition();
+	//parseProcessDefinition();
+	$("input[type=file]").trigger("click");
 });
 function createTransitionForParse(from,to,stateMachineConnector,show_name,name){
 	//stateMachineConnector=$("#toolBar").data("option");
@@ -58,7 +80,7 @@ function createTransitionForParse(from,to,stateMachineConnector,show_name,name){
 }
 function triggerForParse(container,str,performer){
 	var _this=$(container);
-	console.log(str);
+	//console.log(str);
 	var num=$("#container").data(str)|| 0;
 	num++;
 	$("#container").data(str,num);
@@ -74,6 +96,14 @@ function addElementForParse(container,str,src,x,y,name){
 	var incoming=str;
 	var new_element=$('<img>').attr("src",src).addClass("dropped").addClass("unselected");
 	var num_y=$(container).css("height").match(/\d*/);
+	var prev=$("div[id*='container']:last");
+	//console.log(prev.offset().top+prev.height()+37);
+	//var num_y=prev.offset().top+prev.height()+37;
+	if($("div[id*='participant']").length==0){
+		var off_y=119;
+	}else{
+		var off_y=prev.offset().top+prev.height()+27;
+	}
 	var parent=null;
 	var arr=$("#container").data("w").participants || [];
 	//var name="";
@@ -83,8 +113,10 @@ function addElementForParse(container,str,src,x,y,name){
 	//var name_index=0;
 	var span=$("<span>").css({
 		position:'absolute',
-		display:'none'
+		display:'none',
+		'text-align':'center'
 	});
+	var left_participant=parseInt($("#container").css("margin-left").replace(/px/,""))-20;
 	x=parseInt(x);
 	y=parseInt(y);
 	if(incoming!="participant" && incoming!="default_participant"){
@@ -94,21 +126,21 @@ function addElementForParse(container,str,src,x,y,name){
 				top:y
 			});
 			span.css({
-				left:0,
+				left:-15,
 				top:32,
-				width:50
+				width:64
 			});
 	}else{
 			parent=$('<div>').css({
 				position:'absolute',
-				left:207,
+				left:37+left_participant,
 				top:off_y,
 			});
 			
 			span.css({
-				left:0,
+				left:-15,
 				top:32,
-				width:50
+				width:64
 			});
 	}
 	new_element.attr("title",name);
@@ -124,6 +156,20 @@ function addElementForParse(container,str,src,x,y,name){
 	}else{		
 		parent.appendTo(container);
 	}
+	//判断是否应当扩大泳道的边界
+	var p=$(parent).parent();
+	var bottom=p.offset().top+10+p.height();
+	if(($(parent).offset().top+$(parent).height())>=bottom){
+		var h=p.height();
+		//这个60是我实验出来的，道理什么的不知道
+		p.height(h+60);
+		p.nextAll("div[id*='container']").children().each(function(index,e){
+			var delta=$(e).offset().top;
+			delta+=60;
+			$(e).css({'top':delta});
+		});
+	}
+
 	jsPlumb.draggable(parent,{revert: "invalid",
 		stop:function(e){
 			//console.log($(e.target).attr("id"));
@@ -144,7 +190,8 @@ function addElementForParse(container,str,src,x,y,name){
 };
 var parseWorkflow=function(data){
 	var tmp=$("#container").data("w");
-	tmp.package=$(data).find("Package ").attr("Id");
+	//tmp.package=$(data).find("Package ").attr("Id");
+	tmp.package="";
 	tmp.workflow=$(data).find("WorkflowProcess").attr("Id");
 }
 var parseApplication=function(data){
@@ -152,7 +199,7 @@ var parseApplication=function(data){
 		var name=$(e).attr("Id");
 		if(name.indexOf("application")==0 && $(e).find("Script").length==0){
 			//表单应用
-			console.log($(e).find("script").length);
+			//console.log($(e).find("script").length);
 			$("#container").trigger("formapplication",[name]);
 			var arr_apps=$("#container").data("w").applications;
 			var app=arr_apps[arr_apps.length-1];
@@ -195,7 +242,7 @@ var parseApplication=function(data){
 			//业务活动用到的应用的解析要和业务活动的解析一起
 			$("#container").trigger("scriptapplication",[name]);
 			var str=$(e).find("Expression").html();
-			console.log(str);
+			//console.log(str);
 			var arr_script=str.match(/\!\[CDATA\[(.*)\]\]/);
 			var arr_apps=$("#container").data("w").applications;
 			var app=arr_apps[arr_apps.length-1];
@@ -227,6 +274,7 @@ var parseActivities=function(parent,data,addElement,obj){
 			var y=offset.split(",")[1];
 			var container=$("#"+obj[performer]);
 			addElementForParse(container,str,src,x,y,name);
+			$("#"+name).find("span").text(activity.show_name).css("display","block");
 			//实参的解析
 			var actual=[];
 			activity.actualParameters=actual;
@@ -245,6 +293,7 @@ var parseActivities=function(parent,data,addElement,obj){
 							a.module=data[i].modulelabel;
 							var count=$("body").data("async");
 							count++;
+							//console.log("异步"+count);
 							$("body").data("async",count);
 							if(count==async_len){
 								alert("异步调用全部完成");
@@ -274,12 +323,28 @@ var parseActivities=function(parent,data,addElement,obj){
 			if(!app_name){
 				return;
 			}
-			$("#container").trigger("application");			
-			var arr_apps=$("#container").data("w").applications;
-			var app=arr_apps[arr_apps.length-1];
+			var app=null;
+			if(app_name.indexOf("Send")>=0){
+				$("#container").trigger("application");			
+				var arr_apps=$("#container").data("w").applications;
+				app=arr_apps[arr_apps.length-1];
+			}else{
+				console.log(app_name.replace(/\d+/,""));
+				var arr_apps=$("#container").data("w").applications;
+				for(var i=0;i<arr_apps.length;i++){
+					if(arr_apps[i].Name && arr_apps[i].Name==app_name){
+  							app=arr_apps[i];
+  					}
+				}
+				if(!app){
+					$("#container").trigger("application");
+					var arr_apps=$("#container").data("w").applications;
+					app=arr_apps[arr_apps.length-1];
+				}
+			}
 			$(activity).data("app",app);
 			var pojo_app=$(parent).find("Application[Id='"+app_name+"']");
-			if(app_name.indexOf("Send")==0){
+			if(app_name.indexOf("Send")>=0){
 				//发送消息的任务或者是发送邮件业务
 				app.Name=app_name;
 				app.Type=$(pojo_app).find("ExtendedAttribute[Name='Type']").attr("Value");
@@ -333,6 +398,7 @@ var parseActivities=function(parent,data,addElement,obj){
 			//console.log(obj[performer]);
 			var container=$("#"+obj[performer]);
 			addElementForParse(container,str,src,x,y,name);
+			$("#"+name).find("span").text(activity.show_name).css("display","block");
 			//实参的解析
 			var actual=[];
 			activity.actualParameters=actual;
@@ -362,6 +428,7 @@ var parseActivities=function(parent,data,addElement,obj){
 			//console.log(obj[performer]);
 			var container=$("#"+obj[performer]);
 			addElementForParse(container,str,src,x,y,name);
+			$("#"+name).find("span").text(activity.show_name).css("display","block");
 			var tranRefs=[];
 	        var tran_arr=$(e).find("TransitionRef");
 	        for(var i=0;i<tran_arr.length;i++){
@@ -388,6 +455,7 @@ var parseActivities=function(parent,data,addElement,obj){
 			//console.log(obj[performer]);
 			var container=$("#"+obj[performer]);
 			addElementForParse(container,str,src,x,y,name);
+			$("#"+name).find("span").text(activity.show_name).css("display","block");
             activity.join_type=$(e).find("Join").attr("Type");
             activity.IncomingCondition=$(e).find("Join").attr("IncomingCondition");
 		}else if($(e).attr("Id").indexOf("auto")>=0){
@@ -409,6 +477,7 @@ var parseActivities=function(parent,data,addElement,obj){
 			//console.log(obj[performer]);
 			var container=$("#"+obj[performer]);
 			addElementForParse(container,str,src,x,y,name);
+			$("#"+name).find("span").text(activity.show_name).css("display","block");
 			//实参的解析
 			var actual=[];
 			activity.actualParameters=actual;
@@ -427,6 +496,7 @@ var parseParticipants=function(data,addElement){
 	for(item in obj){
 		if(obj.hasOwnProperty(item)){
 			//$("#container").trigger(item.replace(/\d+/,""),[item]);
+			//console.log($(data).find("Participant"+"[Id*="+item+"]").attr("Name"));
 			triggerForParse($("#container"),item.replace(/\d+/,""));
 			var arr_participant=$("#container").data('w').participants;
 			if(arr_participant.length>0){
@@ -435,6 +505,11 @@ var parseParticipants=function(data,addElement){
 				var container=$("#container");
 				addElementForParse(container,str,src,0,0,item);
 				var part=arr_participant[arr_participant.length-1];
+				part.show_name=$(data).find("Participant"+"[Id*="+item+"]").attr("Name");
+				console.log(part.show_name);
+				if(part.show_name){
+					$("#"+item).find("span").text(part.show_name).css("display","block");
+				}
 				if(item!="default_participant"){
 					var element=$(data).find("Participant[Id='"+item+"']");
 					part.show_name=$(element).attr("Name");
@@ -449,7 +524,11 @@ var parseParticipants=function(data,addElement){
 						part.type="area";
 					}
 				}
-				part.Description=$(element).find("Description");
+				var task_child=$(element).find("Description Task").children();
+				var $Task=$("<Task>").attr("_name","").attr("_assign_Type","deffered").attr("_re_Assign","false");
+				task_child.appendTo($Task);
+				//part.Description=$(element).find("Description");
+				part.Description=$("<Description>").append($Task);
 			}
 		}
 	}

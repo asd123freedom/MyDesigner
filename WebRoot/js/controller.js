@@ -34,6 +34,7 @@ $(function(){
 						if(obj.attr("id")==e.name){
 							var type=e.type;
 							$("select.type").val(e.type);
+							$("#name").val(e.show_name);
 						}
 					});
 				});
@@ -105,15 +106,12 @@ $(function(){
 		if(!obj && !tran){
 			return;
 		}
-		// if($(this).find(".btn-danger").hasClass("disabled")){
-		// 		if(obj){
-		// 			var temp_tran=obj.data("tran");
-		// 			if(temp_tran){
-		// 				jsPlumb.detach(temp_tran);
-		// 			}	
-		// 			obj.remove();
-		// 		}
-		// }
+		if($(this).find(".btn-danger").hasClass("disabled")){
+				if(obj){				
+					obj.remove();
+					return;
+				}
+		}
 		//console.log($(this).find("#name").val());
 		var show_name=$(this).find("#name").val();
 		if(obj){
