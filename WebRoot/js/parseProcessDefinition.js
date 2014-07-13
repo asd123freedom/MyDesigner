@@ -24,6 +24,10 @@ input.bind("change",function(){
         var fr = new FileReader();  
         fr.onloadend = function(e) {
         	var str=$.parseXML(e.target.result);
+        	if($(str).find("Activity:eq(0)").attr("Id").indexOf("activity")>=0){
+        		console.log("翻译");
+        		str=tranlate(e.target.result);
+        	}
         	(function(data){
         		var obj=selectContainer(data);
 				parseApplication($(data).find("Application"));
@@ -38,11 +42,146 @@ input.bind("change",function(){
         fr.readAsText(file);  
     } 
 });
-$(".menu .importOrder").bind("click",function(){
+$(".menu .importOrder").bind("click",function(e,str){
 	//parseProcessDefinition();
+	if(str){
+		(function(data){
+        		var obj=selectContainer(data);
+				parseApplication($(data).find("Application"));
+				parseParticipants(data,addElementForParse);
+				parseActivities(data,$(data).find("Activity"),addElementForParse,obj,true);
+				parseStart(data,addElementForParse,obj);
+				parseEnd(data,addElementForParse,obj);
+				parseTransitions(data);
+				parseWorkflow(data);
+        })(str);
+        return;
+	}
 	$( ".icon" ).draggable({helper:"clone"});
 	$("input[type=file]").trigger("click");
 });
+function tranlate(str){
+		str=str.replace(/&gt;/g,">");
+		str=str.replace(/&lt;/g,"<");
+		$(".showXML textarea").val(str);
+		var obj=$.parseXML(str);
+		var participant_order=$(obj).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_PARTICIPANT_ORDER']");
+		var arr_participant=participant_order.attr("Value").split(",");
+		console.log($(obj).find("Activity").length);
+		$(obj).find("Activity").each(function(index,e){
+			if($(e).find("Performer").length){
+				var participant=$(e).find("Performer").val();
+			}else{
+				var participant="default_participant";
+			}
+			for(var j=0;j<arr_participant.length;j++){
+				if(arr_participant[j]==participant){
+					var index_height=j+1;
+				}
+			}
+			//var position=$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_OFFSET']").attr("Value").split(",");
+			//position[0]=position[0]+200;
+			//position[1]=position[1]+129*index_height;
+			//$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_OFFSET']").attr("Value",position[0]+","+position[1]);
+			var app_id=$(e).find("TaskApplication").attr("Id");
+			//转换业务活动
+			if(/Get|Send|Edit|Save/.test(app_id)){
+				var num=$("#container").data("businessactivity") || 0;
+				num++;
+				$("#container").data("businessactivity",num);
+				var replace_id="businessactivity"+num;
+				//console.log(replace_id);
+				var origin_id=$(e).attr("Id");
+				//console.log(origin_id);
+				var reg=new RegExp("([,|=|\'|\"])"+origin_id+"([,|\'|\"])","g");
+				//console.log("\""+replace_id+"\"");
+				//str=str.replace(reg,"\""+replace_id+"\"");
+				str=str.replace(reg,function(s,a,b){
+					return a+replace_id+b;
+				});
+				var reg2=new RegExp("Name=[\'|\"]"+replace_id+"[\'|\"]");
+				str=str.replace(reg2,function(){
+					return 'Name=\"'+origin_id+'\"';
+				});
+				return;
+			}else if($(e).find("Automatic").length==1){
+				var num=$("#container").data("businessactivity") || 0;
+				num++;
+				$("#container").data("autoactivity",num);
+				var replace_id="autoactivity"+num;
+				//console.log(replace_id);
+				var origin_id=$(e).attr("Id");
+				//console.log(origin_id);
+				var reg=new RegExp("([,|=|\'|\"])"+origin_id+"([,|\'|\"])","g");
+				//console.log("\""+replace_id+"\"");
+				//str=str.replace(reg,"\""+replace_id+"\"");
+				str=str.replace(reg,function(s,a,b){
+					return a+replace_id+b;
+				});
+				var reg2=new RegExp("Name=[\'|\"]"+replace_id+"[\'|\"]");
+				str=str.replace(reg2,function(){
+					return 'Name=\"'+origin_id+'\"';
+				});
+				return;
+			}
+			if($(e).find("Manual").length==1){
+				var num=$("#container").data("humantaskactivity") || 0;
+				num++;
+				$("#container").data("humantaskactivity",num);
+				var replace_id="humantaskactivity"+num;
+				var origin_id=$(e).attr("Id");
+				//console.log(origin_id);
+				var reg=new RegExp("([,|=|\'|\"])"+origin_id+"([,|\'|\"])","g");
+				//console.log("\""+replace_id+"\"");
+				//str=str.replace(reg,"\""+replace_id+"\"");
+				str=str.replace(reg,function(s,a,b){
+					return a+replace_id+b;
+				});
+				var reg2=new RegExp("Name=[\'|\"]"+replace_id+"[\'|\"]");
+				str=str.replace(reg2,function(){
+					return 'Name=\"'+origin_id+'\"';
+				});
+				return;
+			}
+			if($(e).find("Split").length==1){
+				var num=$("#container").data("routesplitactivity") || 0;
+				num++;
+				$("#container").data("routesplitactivity",num);
+				var replace_id="routesplitactivity"+num;
+				var origin_id=$(e).attr("Id");
+				//console.log(origin_id);
+				var reg=new RegExp("([,|=|\'|\"]"+")"+origin_id+"("+"[,|\'|\"])","g");
+				//console.log("\""+replace_id+"\"");
+				str=str.replace(reg,function(s,a,b){
+					return a+replace_id+b;
+				});
+				var reg2=new RegExp("Name=[\'|\"]"+replace_id+"[\'|\"]");
+				str=str.replace(reg2,function(){
+					return 'Name=\"'+origin_id+'\"';
+				});
+				return;
+			}
+			if($(e).find("Join").length==1){
+				var num=$("#container").data("routesplitactivity") || 0;
+				num++;
+				$("#container").data("routejoinactivity",num);
+				var replace_id="routejoinactivity"+num;
+				var origin_id=$(e).attr("Id");
+				//console.log(origin_id);
+				var reg=new RegExp("([,|=|\'|\"]"+")"+origin_id+"("+"[,|\'|\"])","g");
+				//console.log("\""+replace_id+"\"");
+				str=str.replace(reg,function(s,a,b){
+					return a+replace_id+b;
+				});
+				var reg2=new RegExp("Name=[\'|\"]"+replace_id+"[\'|\"]");
+				str=str.replace(reg2,function(){
+					return 'Name=\"'+origin_id+'\"';
+				});
+				return;
+			}
+		});
+		return str;
+}
 function createTransitionForParse(from,to,stateMachineConnector,show_name,name){
 	//stateMachineConnector=$("#toolBar").data("option");
 	var come=from;
@@ -54,16 +193,29 @@ function createTransitionForParse(from,to,stateMachineConnector,show_name,name){
 	}
 	var connect=null;
 	var num=$("#container").data("transition")|| 0;
+	//console.log(name);
+	if(show_name){
+		var numOfName=/\d+/.exec(name)[0];
+		if(numOfName>num){
+			num=numOfName;
+		}
+		if(show_name.indexOf("transition")==0){
+			show_name=/\d+/.exec(show_name)[0];
+		}
+	}
 	num++;
 	$("#container").data("transition",num);
+	
 	connect=jsPlumb.connect({
 			source:come,
 			target:go,
 	},stateMachineConnector);
+
 	//console.log(show_name);
 	connect.setLabel({ cssClass:"component label",label:show_name+"", location:0.5 });
 	if(from.indexOf("start")<0 && to.indexOf("end")<0){					
 			$("#container").trigger("transition",[from,to,name,show_name]);
+			console.log();
 	}else if(from.indexOf("start")>=0){
 		$("#container").data("w").start.connecting=to;
 	}else if(to.indexOf("end")>=0){
@@ -77,6 +229,7 @@ function createTransitionForParse(from,to,stateMachineConnector,show_name,name){
 			$('#new_course_dialog').modal('show');
 			//jsPlumb.detach(conn);
 	});
+
 	return connect;
 }
 function triggerForParse(container,str,performer){
@@ -171,7 +324,7 @@ function addElementForParse(container,str,src,x,y,name){
 		});
 	}
 
-	jsPlumb.draggable(parent,{revert: "invalid",
+	jsPlumb.draggable(parent,{
 		stop:function(e){
 			//console.log($(e.target).attr("id"));
 		}
@@ -242,16 +395,20 @@ var parseApplication=function(data){
 		}else if(name.indexOf("application")==0 && $(e).find("Script").length>0){
 			//业务活动用到的应用的解析要和业务活动的解析一起
 			$("#container").trigger("scriptapplication",[name]);
-			var str=$(e).find("Expression").html();
+			//console.log($(e).find("Script").html());
+			//console.log($(e).find("Expression"));
+			var str=$(e).find("Script").html();
 			//console.log(str);
-			var arr_script=str.match(/\!\[CDATA\[(.*)\]\]/);
+			//console.log(/<Expression>.*CDATA.(.*);/.test(str));
+			var arr_script=str.match(/<Expression>.*CDATA.(.*);/);
+			console.log(arr_script[1]);
 			var arr_apps=$("#container").data("w").applications;
 			var app=arr_apps[arr_apps.length-1];
 			app.expression=arr_script[1];
 		}
 	});
 }
-var parseActivities=function(parent,data,addElement,obj){
+var parseActivities=function(parent,data,addElement,obj,flag){
 	var async_len=$(data).find("TaskApplication[Id*='Get']").find("ActualParameter").length;
 	async_len=async_len*2;
 	var async_count=0;
@@ -271,7 +428,7 @@ var parseActivities=function(parent,data,addElement,obj){
 			var str=name.replace(/\d+/,"");
 			var src=$("#toolBar").find("#"+name.replace(/\d+/,"")).attr('src');
 			var offset=$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_OFFSET']").attr("Value");
-			var x=offset.split(",")[0];
+			var x=offset.split(",")[0];			
 			var y=offset.split(",")[1];
 			var container=$("#"+obj[performer]);
 			addElementForParse(container,str,src,x,y,name);
@@ -585,8 +742,9 @@ var parseTransitions=function(data){
 	$(data).find("Transition").each(function(index,e){
 		var from=$(e).attr("From");
 		var to=$(e).attr("To");
-		var info=$(e).attr("Id").replace(/[a-zA-Z]+/g,"");
-		createTransitionForParse(from,to,$("#toolBar").data("option"),info,$(e).attr("Id"));
+		//var info=$(e).attr("Id").replace(/[a-zA-Z]+/g,"");
+		//console.log($(e).attr("Id"));
+		createTransitionForParse(from,to,$("#toolBar").data("option"),$(e).attr("Name"),$(e).attr("Id"));
 		var arr=$("#container").data("w").transitions;
 		var tran=arr[arr.length-1];
 		tran.condition=$(e).find("Condition").html();

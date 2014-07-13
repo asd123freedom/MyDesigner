@@ -65,6 +65,7 @@
 		<input type="text" class="span3 finder" style="margin-bottom:5px">
 		<button type="button" class="btn btn-warning finder" style="margin-bottom:5px">查找</button>
 		<button type="button" class="btn btn-primary translate" style="margin-bottom:5px">翻译</button>
+		<button type="button" class="btn drawLine" style="margin-bottom:5px">连线</button>
 		<textarea style="width:900px;min-height:600px">
 		</textarea>
 	</div>
@@ -131,6 +132,7 @@
 		</div>
 		<a class="hide download">点击下载</a>
 		<input class="hide import" type="file"/>
+		<div class="hide convert"></div>
 </body>
 <script language="javascript" type="text/javascript" src="jquery/jquery-1.9.1.js"></script>
 <script src="jquery-ui/jquery-ui.js"></script>
@@ -655,10 +657,34 @@ jsPlumb.bind("ready", function(){
 			$(".showXML").slideDown();
 		}
 	});
-	$(".btn.translate").bind("click",function(){
-		var str=$(".showXML textarea").val();
+	$(".btn.drawLine").bind("click",function(){
+		$(".menu .importOrder").trigger("click",["asd"]);
+	});
+	$(".btn.translate").bind("click",function(e,str){
+		//$(".editOrShow > li:not(.active)").trigger("click");
+		//var str=$(".showXML textarea").val();
+		str=str.replace(/&gt;/g,">");
+		str=str.replace(/&lt;/g,"<");
+		$(".showXML textarea").val(str);
 		var obj=$.parseXML(str);
+		var participant_order=$(obj).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_PARTICIPANT_ORDER']");
+		var arr_participant=participant_order.attr("Value").split(",");
+		console.log($(obj).find("Activity").length);
 		$(obj).find("Activity").each(function(index,e){
+			if($(e).find("Performer").length){
+				var participant=$(e).find("Performer").val();
+			}else{
+				var participant="default_participant";
+			}
+			for(var j=0;j<arr_participant.length;j++){
+				if(arr_participant[j]==participant){
+					var index_height=j+1;
+				}
+			}
+			//var position=$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_OFFSET']").attr("Value").split(",");
+			//position[0]=position[0]+200;
+			//position[1]=position[1]+129*index_height;
+			//$(e).find("ExtendedAttribute[Name='TSEGBPM_GRAPH_OFFSET']").attr("Value",position[0]+","+position[1]);
 			var app_id=$(e).find("TaskApplication").attr("Id");
 			//转换业务活动
 			if(/Get|Send|Edit|Save/.test(app_id)){
@@ -676,9 +702,23 @@ jsPlumb.bind("ready", function(){
 					return a+replace_id+b;
 				});
 				return;
+			}else if($(e).find("Automatic").length==1){
+				var num=$("#container").data("businessactivity") || 0;
+				num++;
+				$("#container").data("autoactivity",num);
+				var replace_id="autoactivity"+num;
+				//console.log(replace_id);
+				var origin_id=$(e).attr("Id");
+				//console.log(origin_id);
+				var reg=new RegExp("([,|=|\'|\"])"+origin_id+"([,|\'|\"])","g");
+				//console.log("\""+replace_id+"\"");
+				//str=str.replace(reg,"\""+replace_id+"\"");
+				str=str.replace(reg,function(s,a,b){
+					return a+replace_id+b;
+				});
+				return;
 			}
-			if($(e).find("Automatic").length==1){
-				console.log($(e).find("Automatic").length);
+			if($(e).find("Manual").length==1){
 				var num=$("#container").data("humantaskactivity") || 0;
 				num++;
 				$("#container").data("humantaskactivity",num);
@@ -711,7 +751,7 @@ jsPlumb.bind("ready", function(){
 				var num=$("#container").data("routesplitactivity") || 0;
 				num++;
 				$("#container").data("routejoinactivity",num);
-				var replace_id="routesplitactivity"+num;
+				var replace_id="routejoinactivity"+num;
 				var origin_id=$(e).attr("Id");
 				//console.log(origin_id);
 				var reg=new RegExp("([,|=|\'|\"]"+")"+origin_id+"("+"[,|\'|\"])","g");
@@ -723,6 +763,7 @@ jsPlumb.bind("ready", function(){
 			}
 		});
 		$(".showXML textarea").val(str);
+		$(".menu .importOrder").trigger("click",[str]);
 	});
 	//查找相应的字符，并高亮显示
 	$(".btn.finder").bind("click",function(){
