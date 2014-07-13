@@ -1,0 +1,223 @@
+<style>
+    .left ul {
+      list-style: none;
+      width:250px;
+      padding-left: 20px;
+      margin-left: 0px;
+    }
+    .left li {
+      cursor : default;
+      margin: 4px;
+      font-size: 14px;
+    }
+    .chosen{
+      color:orange;
+    }
+    .left li span:hover{
+      color:orange;
+    }
+    p.showAssign{
+      border-bottom:1px solid #ddd;
+    }
+    div.buttons{
+      float:left;
+      width: 45px;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+    .btn.add{
+      margin-bottom: 10px;
+    }
+</style>
+<p class="showAssign"><strong>直接分配模式</strong></p>
+<div class="left" style="float:left">
+
+</div>
+<div class="buttons" style="margin-bottom:20px">
+    <button class="btn disabled add"><i class="icon-plus"></i></button>
+    <button class="btn disabled remove"><i class="icon-minus"></i></button>
+</div>
+<div class="right" style="margin-left:340px">
+	<table class="table table-condensed table-hover table-striped finalList">
+      <thead>
+        <tr class="head">
+          <th>#</th>
+          <th>ID</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="unfilled">
+          <td class="id" style="vertical-align:middle">&nbsp</td>
+          <td class="num" style="vertical-align:middle"><span style="">&nbsp</span></td>
+          <td class="name" style="vertical-align:middle"><span style="">&nbsp</span></td>
+        </tr>
+        <tr class="unfilled">
+          <td class="id" style="vertical-align:middle">&nbsp</td>
+          <td class="num" style="vertical-align:middle"><span style="">&nbsp</span></td>
+          <td class="name" style="vertical-align:middle"><span style="">&nbsp</span></td>
+        </tr>
+        <tr class="unfilled">
+          <td class="id" style="vertical-align:middle">&nbsp</td>
+          <td class="num" style="vertical-align:middle"><span style="">&nbsp</span></td>
+          <td class="name" style="vertical-align:middle"><span style="">&nbsp</span></td>
+        </tr>
+         <tr class="hide temple">
+          <td class="id" style="vertical-align:middle">&nbsp</td>
+          <td class="num" style="vertical-align:middle"><span style="">&nbsp</span></td>
+          <td class="name" style="vertical-align:middle"><span style="">&nbsp</span></td>
+        </tr>
+      </tbody>
+	</table>
+  <div class="textForTree hide"></div>
+</div>
+<script>
+  $(function(){
+    $("select.method").find("option").remove();
+    $("select.method").append($("<option>").html("直接分配模式").attr("selected",true));
+    var getAllRoles=function(){
+        var dtd=$.Deferred();
+        $.ajax({
+            url: "http://127.0.0.1:8080/HiServiceCRM/findAllRoles.action",
+            type: "POST",
+            success:function(data){
+                $("div.textForTree").html(data);
+                var node=$.parseXML($("div.textForTree").text());
+                node=node.childNodes[0];
+                buildTree($(node)).appendTo($("div.left")).on("click",function(e){
+                    var target=e.target.tagName.toLowerCase();
+                    if(target!="i"){
+                      return;
+                    }
+                    var ul=$(e.target).siblings("ul:eq(0)");
+                    ul=ul[0];
+                    //console.log(ul);
+                    if(ul){
+                      ul.style.display=ul.style.display=="none"?"block":"none";
+                    }
+                    if(ul.style.display=="none"){
+                      $(e.target).removeClass("icon-minus").addClass("icon-plus");
+                    }else{
+                      $(e.target).removeClass("icon-plus").addClass("icon-minus");
+                    }           
+                });
+                dtd.resolve(); 
+            }             
+        });
+        return dtd.promise();
+    };
+    var freshTableIndex=function(){
+        var lines=$("table.finalList tr.filled");
+        lines.each(function(index,e){
+          $(e).find("td.id").text(index+1);
+        });
+    }
+    //页面的相关的初始化代码，还需要添加表格的初始化代码
+    getAllRoles().done(function(){
+       showParticipant();
+       $(".left span").bind("click",function(){
+          $(".btn.add").removeClass("disabled");
+          $(".left span").removeClass("chosen");
+          $(this).addClass("chosen");
+          var data={};
+          data.id=$(this).data("val");
+          data.name=$(this).text();
+          $(".btn.add").data("val",data);
+       });
+    });
+      //点击加号的事件
+    $(".btn.add").bind("click",function(){
+        var data=$(this).data("val");
+        $(".btn.add").data("val",null);
+        var line=$("table.finalList").find("tr.unfilled:eq(0)");
+        if(line[0]){
+            $(line[0]).find("td.num").text(data.id);
+            $(line[0]).find("td.name").text(data.name);
+            line.removeClass("unfilled").addClass("filled");
+            line.bind("click",function(){
+              $(".btn.remove").removeClass("disabled");
+              $(this).siblings().removeClass("warning");
+              $(this).addClass("warning");
+            })
+        }
+        $(this).addClass("disabled");
+        $(".left > span").removeClass("chosen");
+        freshTableIndex();
+    });
+    //点击减号的事件
+    $(".btn.remove").bind("click",function(){
+        var line=$("table.finalList").find("tr.warning");
+        line.remove();
+        //这里的3是指默认显示的行数，先硬编码写在这里了
+        if($("table.finalList > tbody").find("tr:not(.temple)").length<3){
+          $("table.finalList > tbody >tr.temple").clone().addClass("unfilled").removeClass("hide temple").insertBefore
+          ($("table.finalList > tbody >tr.temple"));
+        }
+        freshTableIndex();
+        $(this).addClass("disabled");
+    });
+    var showParticipant=function(){
+        var obj=$("#new_course_dialog").data("obj");
+        var arr=$("#container").data("w").participants || [];
+        $(arr).each(function(index,e){
+            if(e.name==obj.attr("id")){
+              if(!e.type){
+                return;
+              }else{
+                var actors=e.Description.find("Role");
+                $(actors).each(function(index,element){
+                  var data={};
+                  data.id=$(element).attr("Id");
+                  data.name=$(element).attr("Name");
+                  console.log(data);
+                   $(".btn.add").removeClass("disabled");
+                   $(".btn.add").data("val",data);
+                   $(".btn.add").trigger("click");
+                });
+              }
+            }
+        });
+    }
+    //提交编辑结果用的代码
+    $(".role.submit").unbind("click");
+    $(".role.submit").bind("click",function(){
+        var obj=$("#new_course_dialog").data("obj");
+        var arr=$("#container").data("w").participants || [];
+        $(arr).each(function(index,e){
+          if(e.name==obj.attr("id")){
+             $Description=$("<Description>");
+             //Task的name属性填写的是当前泳道的人工任务节点的ID
+             $Task=$("<Task>").attr("_name","").attr("_assign_Type","role").attr("_re_Assign","false");
+             $DirectActors=$("<Roles>");
+             var trs=$("table.finalList tr.filled");
+             for(var i=0;i<trs.length;i++){
+                $Actor=$("<Role>");
+                $Actor.attr("Id",$(trs[i]).find("td.num").text());
+                $Actor.attr("Name",$(trs[i]).find("td.name").text());
+                $Actor.appendTo($DirectActors);
+             }
+             $DirectActors.appendTo($Task);
+             $("<SubTasks>").appendTo($Task);
+             $Task.appendTo($Description);
+             e.Description=$Description;
+             e.type="role";
+          }
+        });
+        console.log("submit");
+        $("#new_course_dialog").modal("hide");
+    });
+    //构建角色树
+    function buildTree(node){
+      var parent=$("<ul>");
+      $.each(node.children(),function(index,e){
+        if($(e).children().length==0){
+          $("<li>").html("<span data-val=\'"+$(e).attr("value")+"\'>"+$(e).attr("label")+"</span>").appendTo(parent);
+        }else{
+          var p=$("<li>").html("<i class='icon-minus'></i> <span data-val=\'"+$(e).attr("value")+"\'>"+$(e).attr("label")+"</span>").appendTo(parent);
+          p.append(buildTree($(e)));
+        }
+      });
+      return parent;
+    }
+  });
+</script>

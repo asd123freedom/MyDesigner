@@ -1,81 +1,129 @@
 ;$(function(window,undefined){
-	var c=$("container");
 	//记得写初始化变量的代码
+	var c=$("#container");
 	var workflowprocess={};
 	var packagedefinition=$("<Package>");
 	packagedefinition.attr("Id","package1");
-	var packageheader=$("<PackageHeader>");
+	var packageheader=$("<Package_Header>");
 	$("<XPDLVersion>").html("2.1").appendTo(packageheader);
 	$("<Vendor>").html("TSEG").appendTo(packageheader);
+	//关于包的创建时间这里有一个bug需要修改
 	var d=new Date();
-	$("<Created>").html(d.toString()).appendTo(packageheader);
+	var raw_date=d.toString().split(" ");
+	raw_date[6]=raw_date[3];
+	raw_date[3]="";
+	var str=raw_date.join(" ");
+	$("<Created>").html(str).appendTo(packageheader);
 	packageheader.appendTo(packagedefinition);
 	$("#container").data("w",workflowprocess);
 	$("#container").data("p",packagedefinition);
 	//得在页面中new一下，放到数组里，存到某一个对象上
+	//processHeader里面事件用toDateString方法
 	workflowprocess.getXml=function(obj){
-		var xml=$("<WorkflowProcess>");
-		if(!c.data("process_id")){
-			xml.attr("Id","test");
-		}else{
-			xml.attr("Id",c.data("process_id"));
-		}
+		var d=new Date();
+		var package=$("#container").data("p");
+		package.attr("Id",this.workflow || "newPackage");
+		var raw_date=d.toString().split(" ");
+		raw_date[6]=raw_date[3];
+		raw_date[3]="";
+		var str=raw_date.join(" ");
+		package.find("created").html(str);
+		var xml=$("<Workflow_Process>");
+		xml.attr("Id",this.workflow || "workflowProcess1");
 		//应用的xml(应该写在packge标签下)
 		var p=$("#container").data("p");
+		p.children(":not('Package_Header')").remove();
+		var applications_label=$("<applications>");		
 		var applications=workflowprocess["applications"]|| [];
 		for(var i=0;i<applications.length;i++){
-			applications[i].parent=p;
+			applications[i].parent=applications_label;
 			applications[i].getXml();
+		}
+		if(applications.length>0){
+			applications_label.appendTo(p);
 		}
 		$("#container").data("p",p);
 		//xml.appendTo(obj);
 		//形参xml(暂时没有实现)
 		//数据域xml(暂时没有实现)
-		//参与者xml		
+		//参与者xml
+		var processHeader=$("<Process_Header>");
+		
+		$("<Created>").html(d.toDateString()).appendTo(processHeader);
+		$("<Description>").appendTo(processHeader);	
+		processHeader.appendTo(xml);
 		var par_xml=$("<Participants>");
 		//要在页面中存储参与者数组
-		var participants=workflowprocess["participants"];
+		var participants=workflowprocess["participants"] || [];
 		console.log(participants);
-		//var participants=c.data("participants");
-		//先把参与者的drop方法实现
+		var participants_name_arr=[];
+		//参与者XML
 		if(participants.length>0){
 				for(var i=0;i<participants.length;i++){
 					//console.log(participants[i]);
-					participants[i].parent=xml;
+					participants[i].parent=par_xml;
+					if(participants[i].name=='default_participant'){
+						participants_name_arr.push(participants[i].name);
+						continue;
+					}
+					participants_name_arr.push(participants[i].name);
 					participants[i].getXml();
 				}
-				//$(participants).each(function(index,e){
-				//	e.parent=xml;
-				//	e.getXml();
-				//});	
 		}else{
-				var temp_part=new participant("default_participant");
-				temp_part.parent=xml;
-				temp_part.getXml();
+				//var temp_part=new participant("default_participant");
+				//temp_part.parent=xml;
+				//temp_part.getXml();
 		}
+		par_xml.appendTo(xml);
 		//活动XML
 		var temp_activities=$("<Activities>");
 		var activities=workflowprocess["activities"] || [];
+		console.log(activities);
 		for(var i=0;i<activities.length;i++){
-				//console.log(activities[i]);
-				activities[i].parent=xml;
+				console.log(activities[i]);
+				activities[i].parent=temp_activities;
+				if(activities[i].name.indexOf("split")>=0){
+					var tranRefs=[];
+	             	var tran_arr=$("#container").data("w").transitions || [];
+	             	for(var k=0;k<tran_arr.length;k++){
+		                if(tran_arr[k].from==activities[i].name){
+		                  tranRefs.push(tran_arr[k].name);
+		                }
+	              	}
+	              	activities[i].TransitionRefs=tranRefs;
+				}
 				activities[i].getXml();
 		}
+		temp_activities.appendTo(xml);
+		var temp_transitions=$("<Transitions>");
 		var transitions=workflowprocess["transitions"] || [];
 		for(var i=0;i<transitions.length;i++){
 				//console.log(activities[i]);
-				transitions[i].parent=xml;
+				transitions[i].parent=temp_transitions;
 				transitions[i].getXml();
 		}
+		temp_transitions.appendTo(xml);
+		var es=$("<Extended_Attributes>");
+		if(this.isTerminationImplicit===undefined){
+			this.isTerminationImplicit=true;
+		}
+		var e2=new extended_attribute("TSEGBPM_GRAPH_PARTICIPANT_ORDER",participants_name_arr.join(","));
+		e2.parent=es;
+		e2.getXml();
+		var e1=new extended_attribute("isTerminationImplicit",this.isTerminationImplicit+"");
+		e1.parent=es;
+		e1.getXml();
 		if($("#container").data("w").start){
-			this.start.parent=xml;
+			this.start.parent=es;
 			this.start.getXml();
 		}
 		if($("#container").data("w").end){
-			this.end.parent=xml;
+			this.end.parent=es;
 			this.end.getXml();
 		}
-		//console.log(xml);
+		//<ExtendedAttribute Name="TSEGBPM_GRAPH_PARTICIPANT_ORDER" Value="default_participant,participant2"/>
+    	//<ExtendedAttribute Name="isTerminationImplicit" Value="true"/>
+		es.appendTo(xml);
 		return xml;
 	};
 });

@@ -1,0 +1,431 @@
+<style>
+    div.addScriptApp{
+      margin-left: 20px;
+    }
+    .addScriptApp li{
+      font-size: 100%;
+    }
+    textarea{
+      word-wrap:break-word; 
+      overflow:hidden;
+    }
+</style>
+<div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3>脚本应用</h3>
+    </div>
+    <div class="modal-body">
+      <ul class="nav nav-tabs">
+        <li class="temple app active">
+          <a href="#">脚本应用</a>
+        </li>
+      </ul>
+      <div id="content1" class="content">
+        <form class="form-horizontal">
+          <div class="control-group">
+              <div class="addScriptApp">
+                  <input type="text" class="inputId" value="" placeholder="application1" autocomplete="off" />
+                  <button class="btn btn-primary addScriptApp">添加</button>
+                  <div class="btn-group">
+                      <a class="btn dropdown-toggle scriptAppName" data-toggle="dropdown" href="#">
+                        <span>选择应用</span>
+                        <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu selectScriptApp">
+                        <!-- dropdown menu links -->
+                        <li class="hide temple"><a href="#"></a></li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+          <div class="control-group scriptForAdd">
+              <label class="control-label"  style="padding:0px;margin-left:20px">
+                  <select class="span3 instance">               
+                    <option class="hide temple"></option>
+                    <option value="executionContext">executionContext</option>
+                    <option value="node">node</option>
+                    <option value="token">token</option>
+                    <option value="task">task</option>
+                    <option value="taskInstance">taskInstance</option>
+                </select></label>
+              <div class="controls" style="margin-left:260px">
+                  <select class="span3 method" style="max-height:30px">                
+                    <option class="hide temple"></option>
+                  </select>
+                  <a href="#" class="btn btn-primary addActualParam" style="margin-left:20px">确定</a>
+              </div>
+          </div>
+          <textarea rows="5" class="script" style="width:500px;margin-left:20px">...
+                  </textarea>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#" data-dismiss="modal" class="btn">取消</a>
+      <a href="#" class="btn btn-primary scriptapp submit" data-loading-text="正在添加">确定</a>
+    </div>
+<script type="text/javascript">
+    $(function(){
+      var arr_exec=[
+        "getNode():Node",
+        "getProcessDefinition():ProcessDefinition",
+        "setAction(Action action)",
+        "getProcessInstance():ProcessInstance",
+        "toString():String",
+        "setVariable(String name, Object value)",
+        "getVariable(String name):Object",
+        "leaveNode()",
+        "leaveNode(String transitionName)",
+        "leaveNode(Transition transition)",
+        "getDefinition(Class clazz):ModuleDefinition",
+        "getInstance(Class clazz):ModuleInstance",
+        "getContextInstance():ContextInstance",
+        "getTaskMgmtInstance():TaskMgmtInstance",
+        "getBpmContext():BpmContext",
+        "getContext():BpmContext",
+        "setTaskInstance(TaskInstance taskInstance)",
+        "getToken():Token",
+        "getAction():Action",
+        "getEvent():Event",
+        "setEvent(Event event)",
+        "getException():Throwable",
+        "setException(Throwable exception)",
+        "getTransition():Transition",
+        "setTransition(Transition transition)",
+        "getTransitionSource():Node",
+        "setTransitionSource(Node transitionSource)",
+        "getEventSource():GraphElement",
+        "setEventSource(GraphElement eventSource)",
+        "getTask():Task",
+        "setTask(Task task)",
+        "getTaskInstance():TaskInstance",
+        "getSubProcessInstance():ProcessInstance",
+        "setSubProcessInstance(ProcessInstance subProcessInstance)",
+        "getTimer():Timer",
+        "setTimer(Timer timer)",
+        "getContextStack()",
+        "pushCurrentContext(ExecutionContext executionContext)",
+        "popCurrentContext(ExecutionContext executionContext)",
+        "currentExecutionContext():ExecutionContext"
+      ];
+      var arr_token=[
+        "addChild(Token token)",
+        "signal()",
+        "signal(String transitionName)",
+        "signal(Transition transition)",
+        "end()",
+        "end(boolean verifyParentTermination)",
+        "addComment(String message)",
+        "addComment(Comment comment)",
+        "getComments():List",
+        "hasActiveChildren():boolean",
+        "toString():String",
+        "hasEnded():boolean",
+        "isRoot():boolean",
+        "hasParent():boolean",
+        "hasChild(String name):boolean",
+        "getChild(String name):Token",
+        "getFullName():String",
+        "getChildrenAtNode(Node aNode):List",
+        "collectChildrenRecursively(List tokens)",
+        "findToken(String relativeTokenPath):Token",
+        "getActiveChildren():Map",
+        "checkImplicitTermination()",
+        "isTerminatedImplicitly():boolean",
+        "nextLogIndex():int",
+        "suspend()",
+        "resume()",
+        "equals(Object o):boolean",
+        "createSubProcessInstance(ProcessDefinition subProcessDefinition):ProcessInstance",
+        "lock()",
+        "unlock()",
+        "getId():long",
+        "getStart():Date",
+        "getEnd():Date",
+        "setStart(Date start)",
+        "setEnd(Date end)",
+        "setName(String name)",
+        "getName():String",
+        "getProcessInstance():ProcessInstance",
+        "getChildren():Map",
+        "getNode():Node",
+        "setNode(Node node)",
+        "getParent():Token",
+        "setParent(Token parent)",
+        "setProcessInstance(ProcessInstance processInstance)",
+        "getSubProcessInstance():ProcessInstance",
+        "getNodeEnter():Date",
+        "setNodeEnter(Date nodeEnter)",
+        "isAbleToReactivateParent():boolean",
+        "setAbleToReactivateParent(boolean isAbleToReactivateParent)",
+        "isTerminationImplicit():boolean",
+        "setTerminationImplicit(boolean isTerminationImplicit)",
+        "isSuspended():boolean",
+        "setSubProcessInstance(ProcessInstance subProcessInstance)",
+      ];
+      var arr_node=[
+        "read(Element nodeElement, JpdlXmlReader jpdlXmlReader)",
+        "write(Element nodeElement)",
+        "getLeavingTransitions():List",
+        "getLeavingTransitionsMap():Map",
+        "addLeavingTransition(Transition leavingTransition):Transition",
+        "removeLeavingTransition(Transition leavingTransition)",
+        "hasLeavingTransition(String transitionName):boolean",
+        "getLeavingTransition(String transitionName):Transition",
+        "hasNoLeavingTransitions():boolean",
+        "generateNextLeavingTransitionName():String",
+        "getDefaultLeavingTransition():Transition",
+        "reorderLeavingTransition( int oldIndex, int newIndex )",
+        "getLeavingTransitionsList():List",
+        "getArrivingTransitions():Set",
+        "addArrivingTransition(Transition arrivingTransition):Transition" ,
+        "removeArrivingTransition(Transition arrivingTransition)",
+        "getParent():GraphElement",
+        "enter(ExecutionContext executionContext)",
+        "updateNodeState()",
+        "execute(ExecutionContext executionContext)",
+        "leave(ExecutionContext executionContext)",
+        "leave(ExecutionContext executionContext, String transitionName)",
+        "leave(ExecutionContext executionContext, Transition transition)",
+        "getProcessDefinition():ProcessDefinition",
+        "setName(String name)",
+        "getFullyQualifiedName():String",
+        "getExecutionContext():ExecutionContext",
+        "setExecutionContext(ExecutionContext executionContext)",
+        "getSuperState():SuperState",
+        "getAction():Action",
+        "setAction(Action action)",
+        "isAsync():boolean",
+        "setAsync(boolean isAsync)",
+        "getBlockActivityId():String",
+        "setBlockActivityId(String blockActivityId)",
+        "getTransaction():Transaction",
+        "setTransaction(Transaction transaction)",
+        "getTransactionDetectId():long",
+        "setTransactionDetectId(long transactionDetectId)",
+        "_run(long endTokenId)",
+        "_compensate():boolean",
+        "findTokenById(long tokenId):Token",
+        "findTTransitionByNodeAndPd(Node toNode,ProcessDefinition processDefinition):Transition",
+        "findTokenByNode(String nodeName, ProcessInstance pi):Token",
+        "findToken(String nodeName,Token token,ProcessDefinition pd):Token"
+      ];
+      var arr_task=[
+        "parsePriority(String priorityText):int",
+        "getLoopCounter():int",
+        "setLoopCounter(int loopCounter)",
+        "getFormId():long",
+        "setFormId(long formId)",
+        "getSupportedEventTypes():String[]",
+        "setTaskNode(TaskNode taskNode)",
+        "setTaskMgmtDefinition(TaskMgmtDefinition taskMgmtDefinition)",
+        "setAssignmentDelegation(Delegation assignmentDelegation)",
+        "setActorIdExpression(String actorIdExpression)",
+        "setPooledActorsExpression(String pooledActorsExpression)",
+        "setSwimlane(Swimlane swimlane)",
+        "getParent():GraphElement",
+        "getTaskMgmtDefinition():TaskMgmtDefinition",
+        "getDescription():String",
+        "setDescription(String description)",
+        "getSwimlane():Swimlane",
+        "isBlocking():boolean",
+        "setBlocking(boolean isBlocking)",
+        "getTaskNode():TaskNode",
+        "getActorIdExpression():String",
+        "getPooledActorsExpression():String",
+        "getAssignmentDelegation():Delegation",
+        "getDueDate():String",
+        "setDueDate(String duedate)",
+        "getTaskController():TaskController",
+        "setTaskController(TaskController taskController)",
+        "getPriority():int",
+        "setPriority(int priority)",
+        "getStartState():StartState",
+        "setStartState(StartState startState)",
+        "isSignalling():boolean",
+        "setSignalling(boolean isSignalling)",
+      ];
+      var arr_taskInstance=[
+        "setTask(Task task)",
+        "create()",
+        "create(ExecutionContext executionContext)",
+        "assign(ExecutionContext executionContext)",
+        "isStartTaskInstance():boolean",
+        "copySwimlaneInstanceAssignment(SwimlaneInstance swimlaneInstance)",
+        "getPooledActors():Set",
+        "setActorId(String actorId)",
+        "setActorId(String actorId, boolean overwriteSwimlane)",
+        "setPooledActors(int isGroupOrRole,String[] actorIds)",
+        "start()",
+        "start(String actorId)",
+        "start(String actorId, boolean overwriteSwimlane)",
+        "cancel()",
+        "end()",
+        "end(String transitionName)",
+        "end(Transition transition)",
+        "hasEnded():boolean",
+        "suspend()",
+        "resume()",
+        "addComment(String message)",
+        "addComment(Comment comment)",
+        "getComments():List",
+        "isLast():boolean",
+        "getAvailableTransitions():List",
+        "equals(Object o):boolean",
+        "toString():String",
+        "setPooledActors(Set pooledActors)",
+        "getActorId():String",
+        "getDueDate():Date",
+        "setDueDate(Date dueDate)",
+        "getEnd():Date",
+        "setEnd(Date end)",
+        "setCreate(Date create)",
+        "getId():long",
+        "setId(long id)",
+        "getStart():Date",
+        "getTaskMgmtInstance():TaskMgmtInstance",
+        "setTaskMgmtInstance(TaskMgmtInstance taskMgmtInstance)",
+        "getToken():Token",
+        "setToken(Token token)",
+        "setSignalling(boolean isSignalling)",
+        "isSignalling():boolean",
+        "isCancelled():boolean",
+        "getName():String",
+        "setName(String name)",
+        "isBlocking():boolean",
+        "setBlocking(boolean isBlocking)",
+        "getCreate():Date",
+        "getTask():Task",
+        "getSwimlaneInstance():SwimlaneInstance",
+        "setSwimlaneInstance(SwimlaneInstance swimlaneInstance)",
+        "getPreviousActorId():String",
+        "getPriority():int",
+        "setPriority(int priority)",
+        "getFormInstance():FormInstance",
+        "setFormInstance(FormInstance formInstance)",
+        "isOpen():boolean",
+        "getDescription():String",
+        "setDescription(String description)",
+        "isSuspend():boolean",
+        "isDue():boolean",
+        "cancelTimer():boolean",
+        "suspendTimer():boolean",
+        "resumeTimer():boolean",
+        "deleteTimer():boolean"
+      ];
+      //填充方法下拉菜单
+      function fillInMethod(data){
+        $("select.method").find("option:not(.temple)").remove(); 
+        for(var i=0;i<data.length;i++){
+          var opt=$("select.method").find("option.temple").clone();
+          opt.removeClass("hide temple");
+          opt.val(data[i]).html(data[i]);
+          opt.appendTo($("select.method"));
+        }
+      };
+      $("select.instance").bind("change",function(){
+        var str=$(this).val();
+        console.log(str);
+        if(str=="executionContext"){
+          fillInMethod(arr_exec);
+        }else if(str=="token"){
+          fillInMethod(arr_token);
+        }else if(str=="node"){
+          fillInMethod(arr_node);
+        }else if(str="task"){
+          fillInMethod(arr_task);
+        }else if(str="taskInstance"){
+          fillInMethod(arr_taskInstance);
+        }
+      });
+      //填写应用Id的输入框获得焦点的事件
+      $("input.inputId").bind("focus",function(){
+        $(this).val($(this).attr("placeholder"));
+      });
+      //选择应用的事件
+      var bindSelectAppEvent=function(parent,data){
+        parent.find("a").bind("click",function(){
+          var str=$(this).text();
+          $(this).parent().parent().parent().find("a.scriptAppName").find("span:eq(0)").text(str);
+          var arr=$("#container").data("w").applications || [];
+          for(var i=0;i<arr.length;i++){
+            if(arr[i].type=="script" && arr[i].id==str){
+              //arr[i].expression=$("textarea").val().replace(/\s+/,"");
+              $("textarea.script").val(data);
+            }
+          }
+        });
+      }
+      //初始化应用列表
+      var initScriptAppList=function(){
+        var arr=$("#container").data("w").applications || [];
+        //console.log(arr);
+        $("ul.selectScriptApp").find("li:not(.temple)").remove();
+        for(var i=0;i<arr.length;i++){
+          //console.log(arr[i].type);
+          if(arr[i].type=="script"){
+            var $li=$(".selectScriptApp").find("li.temple").clone();
+            $li.removeClass("hide temple");
+            $li.find("a").text(arr[i].id);
+            $li.appendTo($("ul.selectScriptApp"));
+            bindSelectAppEvent($li,arr[i].expression);
+            //$li.find("a").trigger("click");
+          }
+        }
+      };
+      //确定对话框初始的显示
+      $("#new_course_dialog").unbind("show_script");
+      $("#new_course_dialog").bind("show_script",function(){
+        initScriptAppList();  
+      });
+      //添加一个应用
+      $(".btn.addScriptApp").bind("click",function(e){
+          e.preventDefault();
+          var arr=$("#container").data("w").applications || [];
+          var name=$(this).parent().find("input").val() || $(this).parent().find("input").attr("placeholder");
+          for(var i=0;i<arr.length;i++){
+            if(arr[i].id==name){
+              alert("该ID已经存在");
+              return;
+            }
+          }
+          //var cb=$.Callbacks();
+          //cb.add(function(){
+            //initScriptAppList();
+          //});
+          $("#container").trigger("scriptapplication",[name]);
+          initScriptAppList();
+          alert("添加成功！");
+      });
+      //添加脚本内容
+      $(".btn.addActualParam").bind("click",function(e){
+          $("textarea.script").val("");
+          var temp=$("a.scriptAppName span:eq(0)").text();
+          if(temp=="选择应用"){
+            alert("先选择应用");
+            return;
+          }
+          var instance=$("select.instance").val();
+          var method=$("select.method").val().split(":")[0];
+          $("textarea.script").val(instance+"."+method);
+      });
+      //提交编辑结果
+      $(".scriptapp.submit").bind("click",function(e){
+          var name=$("a.scriptAppName span:eq(0)").text();
+          var arr=$("#container").data("w").applications || [];
+          for(var i=0;i<arr.length;i++){
+            if(arr[i].type=="script" && arr[i].id==name){
+              //arr[i].expression="![CDATA["+$("textarea").val().trim()+";]]";
+              arr[i].expression=$("textarea.script").val().trim()+";";
+            }
+          }
+          $("#new_course_dialog").modal("hide");
+      });
+    $( "input.inputId" ).keypress(function(e) {
+      console.log(e.which);
+      if(e.which==13){
+        //$(this).blur();
+      }
+    });
+    });
+</script>

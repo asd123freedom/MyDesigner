@@ -1,14 +1,14 @@
 10
 
 dir
-8807
+9336
 https://221.210.83.2/svn/saas/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner
 https://221.210.83.2/svn/saas
 
 
 
-2013-10-22T06:31:12.696000Z
-8807
+2014-04-21T08:47:06.707250Z
+9006
 liucf
 
 
@@ -36,14 +36,14 @@ immediates
 
 .classpath
 file
-8808
+9338
 
 
 
-2013-10-21T01:26:02.840888Z
-faa988a70df25d1a48c195ae93b8c7bb
-2013-10-22T06:35:35.414750Z
-8808
+2014-06-24T02:18:11.578825Z
+4321cb42cf3fb2a9ed36ed5f45e276fa
+2014-07-08T09:41:57.726375Z
+9338
 liucf
 
 
@@ -66,7 +66,7 @@ liucf
 
 
 
-436
+2512
 
 WebRoot
 dir
@@ -76,7 +76,7 @@ dir
 
 .project
 file
-8808
+
 
 
 
@@ -110,7 +110,7 @@ liucf
 
 .mymetadata
 file
-8808
+
 
 
 
@@ -144,7 +144,7 @@ liucf
 
 .gitignore
 file
-8870
+
 
 
 
@@ -181,7 +181,7 @@ dir
 
 .gitattributes
 file
-8870
+
 
 
 
@@ -215,10 +215,37 @@ liucf
 
 README.md
 file
-0
+9338
 
 
-add
+
+2014-06-09T09:20:40.919029Z
+a3d9425a16c1ac8e3114cc00d56f98de
+2014-07-08T09:41:57.726375Z
+9338
+liucf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6689
 
 .settings
 dir

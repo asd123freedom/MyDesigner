@@ -1,0 +1,91 @@
+		li {font-size: 50%}
+		.menu li{
+			font-size: 100%
+		}
+		.addapplication li{
+			font-size: 100%
+		}
+		h5 {font-size: 50%}
+		.component {
+		opacity:0.8; 
+        filter:alpha(opacity=80);
+		background-color:white;
+		color:black;
+		font-family:helvetica;
+		padding:0.5em; 
+		}
+		.label {
+		border:1px solid #346789; 
+		padding:8px;
+		padding:8px;
+		}
+		.label:hover {
+		border-color:#5d94a6;
+		cursor:pointer
+		}
+		.selected{
+		background-repeat:no-repeat;
+    	border:1px solid;
+    	border-radius:10px;
+    	border-color:gray;
+    	background-color:#FFD75A;
+		}
+		.unselected{
+		background-repeat:no-repeat;
+    	border:1px solid;
+    	border-radius:10px;
+    	border-color:gray;
+    	background-color:#FFFFFF;
+		}
+		.section_header{
+		padding: 0;
+		padding-bottom:1px;
+		margin-bottom: 1px;
+		font-size: 21px;
+		line-height: 40px;
+		color: #333;
+		border: 0;
+		}
+		.box{
+		border: 1px solid #06C;
+		border-top: 10px solid #06C;
+		}
+		img{
+		display:inline-block;
+		}
+		.userSelect{
+			height:32px;width:32px;border:1px solid;
+	    	border-radius:10px;
+	    	vertical-align:middle;
+	    	border-color:gray;
+	    	background-position:center;
+	    	background-repeat:no-repeat;
+	    	display:inline-block;
+	    	background-image: url(../images/select.gif);
+		}
+		.dropped span{
+			font-size: 4px;
+		}
+		.sideBar ul {
+	      list-style: none;
+	      width:250px;
+	      padding-left: 20px;
+	      margin-left: 0px;
+	    }
+	    .sideBar li {
+	      cursor : default;
+	      margin: 4px;
+	      font-size: 14px;
+	    }
+	    .sideBar li span:hover{
+	      color:orange;
+	    }
+	    .monitor{
+	    	-ms-box-shadow:2px 2px 5px #FF0000;
+    		-moz-box-shadow:2px 2px 5px #FF0000;
+    		-webkit-box-shadow:2px 2px 5px #FF0000;
+    		box-shadow:2px 2px 5px #FF0000;
+	    }
+	    .editOrShow li{
+	    	font-size: 100%;
+	    }

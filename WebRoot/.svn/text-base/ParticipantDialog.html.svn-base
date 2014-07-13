@@ -1,0 +1,125 @@
+		<style>
+			.assignType{
+				margin-bottom: 10px;
+			}
+		</style>
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>参与者</h3>
+		</div>
+		<div class="modal-body">
+			<ul class="nav nav-tabs">
+  			<li class="temple info active">
+    			<a href="#">基本信息</a>
+  			</li>
+  			<li class="temple add">
+    			<a href="#">类型/值</a>
+  			</li>
+  			 <li class="temple extend">
+    			<a href="#">扩展属性</a>
+  			</li>
+			</ul>
+			<div id="content1" class="content">
+				<form class="form-horizontal">
+  					<div class="control-group">
+    					<label class="control-label" for="inputEmail">标识</label>
+    					<div class="controls">
+      						<input type="text" id="UUID" placeholder="ID" disabled="disabled">
+    					</div>
+ 					</div>
+				  	<div class="control-group">
+				   		<label class="control-label" for="inputPassword">名称</label>
+				    	<div class="controls">
+				   	   		<input type="text" id="name">
+				    	</div>
+				  	</div>
+				  	<div class="control-group">
+				   		<label class="control-label" for="inputPassword">描述</label>
+				    	<div class="controls">
+				   	   		<textarea rows="5" class="basic_info">...
+				   	   		</textarea>
+				    	</div>
+				  	</div>
+				</form>
+			</div>
+			<div id="content2" class="hide content">
+				<div class="assignType">
+					<label style="display:inline-block;margin:0">类型</label>
+					<select class="type"  name="" id="" style="margin:0px">
+						<option value="user">用户</option>
+						<option value="group">组</option>
+						<option value="role">角色</option>
+						<option value="area">资源域</option>
+					</select>
+					<label style="display:inline-block;margin:0">分配模式</label>
+					<select class="method" style="margin:0">
+						<option value=""></option>
+					</select>	
+				</div>
+				<div class="setAssignOption">
+					
+				</div>
+			</div>
+			<div id="content3" class="content"></div>
+			<div style="clear:both"></div>
+			<div class="btn-group" style="">
+            	<a class="btn btn-danger pull-left" style="margin-left:10px" href="#">我要删除</a>
+	            <a class="btn btn-success pull-left disabled" href="#">我不删除</a>
+            </div>
+		</div>
+		<div class="modal-footer">
+			<a href="#" data-dismiss="modal" class="btn">取消</a>
+			<a href="#" class="btn btn-primary participant submit" data-loading-text="正在添加">确定</a>
+		</div>
+<script type="text/javascript">
+  	$(function(){
+  		$(".btn-danger").bind("click",function(){
+  			$(this).addClass("disabled");
+  			$(".btn-success").removeClass("disabled");
+  		});
+  		$(".btn-success").bind("click",function(){
+  			$(this).addClass("disabled");
+  			$(".btn-danger").removeClass("disabled");
+  		});
+  		var $navs = $('#new_course_dialog .nav > li ');
+		$navs.on('click', function(){			
+			$navs.removeClass("active");
+			$(this).addClass("active");
+			//$content.html(new Date()+"");
+			$navs.each(function(index,e){
+				if($(e).hasClass("active")){
+					$(".content").addClass("hide");
+					$("#content"+(index+1)).removeClass("hide");
+					if(!$("#content2").hasClass("hide")){
+					 	$("select.type").trigger("change");
+				    }
+				}
+			});
+		});
+		$(".btn.submit").bind("click",function(){
+			$("#new_course_dialog").modal("hide");
+		});
+		$("select.type").bind("change",function(){
+			var type=$(this).val();
+			$("select > option").each(function(index,e){
+				$(".btn.submit").removeClass($(e).val());
+			});
+			$(".btn.submit").addClass(type);
+			if(type=="user"){
+				var d=new Date();
+			 	$("#content2").find("div.setAssignOption").load("AssignUser.html?num="+d.getTime(),function(){});
+			 	//$("select.method").append($("<option>").html("直接分配模式"));
+			}else if(type=="group"){
+				d=new Date();
+				$("#content2").find("div.setAssignOption").load("AssignGroup.html?num="+d.getTime(),function(){});
+				//$("select.method").append($("<option>").html("基于组分配模式"))；
+			}else if(type=="role"){
+				d=new Date();
+				$("#content2").find("div.setAssignOption").load("AssignRole.html?num="+d.getTime(),function(){});
+			}else if(type=="area"){
+				d=new Date();
+				$("#content2").find("div.setAssignOption").load("AssignArea.html?num="+d.getTime(),function(){});
+			}
+		});
+  	});
+</script>

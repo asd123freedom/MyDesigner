@@ -1,7 +1,7 @@
 10
 
 dir
-8808
+9336
 https://221.210.83.2/svn/saas/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib
 https://221.210.83.2/svn/saas
 
@@ -28,154 +28,354 @@ liucf
 
 c3p0-0.9.1.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2013-05-20T07:29:10.443000Z
+9a4a5af606dadf98a958a8dc22a903fb
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+608376
 
 struts2-json-plugin-2.3.12.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2013-03-19T02:32:39.270000Z
+bc79a55279c1b5b43894d34f84b24295
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+71054
 
 freemarker-2.3.19.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-10-31T14:29:14.000000Z
+03358fb59a2260a0c37f063e2ba58436
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+931168
 
 javassist-3.11.0.GA.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-11-01T07:41:32.000000Z
+cb8f91e65864b85c8c6f87164e3252a5
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+614203
 
 jta-1.1.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2013-05-20T06:30:48.515000Z
+ffc9ca23acc1665c90dbbe715645564f
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10899
 
 commons-lang3-3.1.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-11-01T07:41:12.000000Z
+71b48e6b3e1b1dc73fe705604b9c7584
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+315805
 
 commons-io-2.0.1.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-11-01T07:41:12.000000Z
+edb9481c6eee07f4feaa61502af855da
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+159509
 
 javassist-3.12.0.GA.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2013-05-20T06:30:48.501000Z
+2e91edd16d604d64b33f94300215a1e1
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+633312
 
 slf4j-nop-1.6.1.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2013-05-23T12:19:38.625000Z
+996f5ae2eb2f3d2218ffbae50e22a9ff
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4812
 
 struts2-core-2.3.4.1.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-10-31T14:31:58.000000Z
+3ad9d7d1c954e487570cfce4e16ce6cf
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+783539
 
 dom4j-1.6.1.jar
 file
+9339
 
 
 
-delete
 2013-05-20T06:30:48.466000Z
 4d8f51d3fe3900efc6e395be48030d6d
-2013-10-22T06:35:35.414750Z
-8808
+2014-07-08T09:45:47.273250Z
+9339
 liucf
 has-props
 
@@ -202,225 +402,545 @@ has-props
 
 ezmorph-1.0.3.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-11-22T06:57:13.508000Z
+cf8e41b76b926150f838c4e14d3243c8
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+77826
 
 hibernate3.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2013-05-20T06:30:35.663000Z
+734b8a155ae4c5724b61133f3d0f8955
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4089101
 
 ojdbc14.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-11-22T06:57:13.461000Z
+795860ea5bcff863684221b216015807
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1536979
 
 commons-collections-3.1.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-11-01T07:40:32.000000Z
+d1dcb0fbee884bb855bb327b8190af36
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+559366
 
 ant-1.6.5.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2013-06-14T02:51:06.316000Z
+c5c499f1eef9367c657e89bb881c69aa
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1034049
 
 antlr-2.7.6.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2013-05-20T06:30:48.438000Z
+97c6bb68108a3d68094eab0f67157962
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+443432
 
 json-lib-2.4-jdk15.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-11-22T06:57:13.321000Z
+f5db294d05b3d5a5bfb873455b0a8626
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+159123
 
 commons-lang-2.3.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-11-22T06:57:13.523000Z
+dcdcbb47176603907c9f79a1349193eb
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+245274
 
 slf4j-api-1.6.1.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2013-05-20T06:30:48.528000Z
+bff6016da57e19fb736d0f5742ce60ac
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+25496
 
 commons-fileupload-1.2.2.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-11-01T07:40:52.000000Z
+a0ad9550a7062ddb6528d8725c8230dd
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+59590
 
 commons-logging-1.1.1.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-10-31T14:29:14.000000Z
+ed448347fc0104034aa14c8189bf37de
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+60686
 
 commons-logging-1.0.4.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-11-22T06:57:13.539000Z
+8a507817b28077e0478add944c64586a
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+38015
 
 hibernate-jpa-2.0-api-1.0.0.Final.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2013-05-23T12:22:21.281000Z
+7b6fc7c9958ddb7f47c37f89cc0872d8
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+100884
 
 commons-beanutils-1.7.0.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-11-22T06:57:13.539000Z
+0f18acf5fa857f9959675e14d901a7ce
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+188671
 
 ognl-3.0.5.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-10-31T14:31:58.000000Z
+3a2a1357277814fa148477b6bcbbc328
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+227807
 
 xwork-core-2.3.4.1.jar
 file
-0
-
-
-add
+9338
 
 
 
-
-
+2012-10-31T14:31:58.000000Z
+932f04ed6c4f2000454561729c7a40af
+2014-07-08T09:41:57.726375Z
+9338
+liucf
 has-props
-has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+628714
 

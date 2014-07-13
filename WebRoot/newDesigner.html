@@ -64,6 +64,7 @@
 	<div class="hide showXML" style="margin-top:0px;margin-left:200px;width:1000px;height:900px;border-top: 0px solid #06C;">
 		<input type="text" class="span3 finder" style="margin-bottom:5px">
 		<button type="button" class="btn btn-warning finder" style="margin-bottom:5px">查找</button>
+		<button type="button" class="btn btn-primary translate" style="margin-bottom:5px">翻译</button>
 		<textarea style="width:900px;min-height:600px">
 		</textarea>
 	</div>
@@ -477,10 +478,11 @@ jsPlumb.bind("ready", function(){
 		}else{
 			var arr=$("#container").data("w").activities ||[];
 			for(var i=0;i<arr.length;i++){
-				if(arr[i].name=name){
+				if(arr[i].name==name){
 					var test=$("<test>");
 					test.children().remove();
 					arr[i].parent=test;
+					console.log(arr[i]);
 					arr[i].getXml();
 					jsonstr=test.html();
 					//标签首字母大写
@@ -653,6 +655,75 @@ jsPlumb.bind("ready", function(){
 			$(".showXML").slideDown();
 		}
 	});
+	$(".btn.translate").bind("click",function(){
+		var str=$(".showXML textarea").val();
+		var obj=$.parseXML(str);
+		$(obj).find("Activity").each(function(index,e){
+			var app_id=$(e).find("TaskApplication").attr("Id");
+			//转换业务活动
+			if(/Get|Send|Edit|Save/.test(app_id)){
+				var num=$("#container").data("businessactivity") || 0;
+				num++;
+				$("#container").data("businessactivity",num);
+				var replace_id="businessactivity"+num;
+				//console.log(replace_id);
+				var origin_id=$(e).attr("Id");
+				//console.log(origin_id);
+				var reg=new RegExp("([,|=|\'|\"])"+origin_id+"([,|\'|\"])","g");
+				//console.log("\""+replace_id+"\"");
+				//str=str.replace(reg,"\""+replace_id+"\"");
+				str=str.replace(reg,function(s,a,b){
+					return a+replace_id+b;
+				});
+				return;
+			}
+			if($(e).find("Automatic").length==1){
+				console.log($(e).find("Automatic").length);
+				var num=$("#container").data("humantaskactivity") || 0;
+				num++;
+				$("#container").data("humantaskactivity",num);
+				var replace_id="humantaskactivity"+num;
+				var origin_id=$(e).attr("Id");
+				//console.log(origin_id);
+				var reg=new RegExp("([,|=|\'|\"])"+origin_id+"([,|\'|\"])","g");
+				//console.log("\""+replace_id+"\"");
+				//str=str.replace(reg,"\""+replace_id+"\"");
+				str=str.replace(reg,function(s,a,b){
+					return a+replace_id+b;
+				});
+				return;
+			}
+			if($(e).find("Split").length==1){
+				var num=$("#container").data("routesplitactivity") || 0;
+				num++;
+				$("#container").data("routesplitactivity",num);
+				var replace_id="routesplitactivity"+num;
+				var origin_id=$(e).attr("Id");
+				//console.log(origin_id);
+				var reg=new RegExp("([,|=|\'|\"]"+")"+origin_id+"("+"[,|\'|\"])","g");
+				//console.log("\""+replace_id+"\"");
+				str=str.replace(reg,function(s,a,b){
+					return a+replace_id+b;
+				});
+				return;
+			}
+			if($(e).find("Join").length==1){
+				var num=$("#container").data("routesplitactivity") || 0;
+				num++;
+				$("#container").data("routejoinactivity",num);
+				var replace_id="routesplitactivity"+num;
+				var origin_id=$(e).attr("Id");
+				//console.log(origin_id);
+				var reg=new RegExp("([,|=|\'|\"]"+")"+origin_id+"("+"[,|\'|\"])","g");
+				//console.log("\""+replace_id+"\"");
+				str=str.replace(reg,function(s,a,b){
+					return a+replace_id+b;
+				});
+				return;
+			}
+		});
+		$(".showXML textarea").val(str);
+	});
 	//查找相应的字符，并高亮显示
 	$(".btn.finder").bind("click",function(){
 		//估算的每一行所占的大小约为20px
@@ -663,19 +734,29 @@ jsPlumb.bind("ready", function(){
 			var index = $(".showXML textarea").data("index") || 0;
 			index=str.indexOf(search,index);
 			//console.log(index);
-			$(".showXML textarea")[0].selectionStart=index;
-			$(".showXML textarea")[0].selectionEnd=index+search.length;
-			$(".showXML textarea").data("index",index+search.length);
-			$(".showXML textarea").data("keyword",search);
+			if(index>=0){
+				$(".showXML textarea")[0].selectionStart=index;
+				$(".showXML textarea")[0].selectionEnd=index+search.length;
+				$(".showXML textarea").data("index",index+search.length);
+				$(".showXML textarea").data("keyword",search);
+			}else{
+				$(".showXML textarea").data("index",0);
+				$(".showXML textarea").data("keyword",search);
+			}			
 		}else{
 			$(".showXML textarea").data("index",0);
 			var index = $(".showXML textarea").data("index");
 			index=str.indexOf(search,index);
 			//console.log(index);
-			$(".showXML textarea")[0].selectionStart=index;
-			$(".showXML textarea")[0].selectionEnd=index+search.length;
-			$(".showXML textarea").data("index",index+search.length);
-			$(".showXML textarea").data("keyword",search);
+			if(index>=0){
+				$(".showXML textarea")[0].selectionStart=index;
+				$(".showXML textarea")[0].selectionEnd=index+search.length;
+				$(".showXML textarea").data("index",index+search.length);
+				$(".showXML textarea").data("keyword",search);
+			}else{
+				$(".showXML textarea").data("index",0);
+				$(".showXML textarea").data("keyword",search);
+			}
 		}
 		var sub_str=str.substring(0,$(".showXML textarea")[0].selectionStart);
 		var counter=0;
@@ -687,8 +768,9 @@ jsPlumb.bind("ready", function(){
 		console.log((counter+1)*20);
 		//counter++;
 		var need_scroll=(counter*20-$(".showXML textarea")[0].scrollTop);
+		console.log(need_scroll);
 		//这里的600是指textarea的高度
-		if(need_scroll>=600){
+		if(Math.abs(need_scroll)>=600){
 			$(".showXML textarea")[0].scrollTop+=(need_scroll-20);
 			//console.log("需要滚动");
 		}

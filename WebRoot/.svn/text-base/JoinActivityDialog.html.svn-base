@@ -1,0 +1,193 @@
+<style>
+    .selectSplitType li{
+    	font-size: 100%;
+    }
+</style>
+<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>聚合路由</h3>
+		</div>
+		<div class="modal-body">
+			<ul class="nav nav-tabs">
+  			<li class="temple app active">
+    			<a href="#">基本信息</a>
+  			</li>
+  			<li class="temple childModule">
+    			<a href="#">类型</a>
+  			</li>
+  			<li class="temple formal">
+    			<a href="#">扩展属性</a>
+  			</li>
+			</ul>
+      <div id="content1" class="content">
+        <form class="form-horizontal">
+            <div class="control-group">
+              <label class="control-label">名称</label>
+              <div class="controls">
+                  <input type="text" id="name" placeholder="name">
+              </div>
+          </div>
+            <div class="control-group">
+              <label class="control-label">参与者</label>
+              <div class="controls">
+                  <input type="text" class="participant_name">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">描述</label>
+              <div class="controls">
+                  <textarea rows="5" class="basic_info">...
+                  </textarea>
+              </div>
+            </div>
+        </form>
+      </div>
+			<div id="content2" class="hide content">
+				<form class="form-horizontal">
+          <div class="btn-group">
+                <button class="btn dropdown-toggle join_type" data-toggle="dropdown">
+                  <span>分支类型</span>
+                  <span class="caret"></span></button>
+                <ul class="dropdown-menu selectJoinType">
+                  <li class=""><a href="#">AND</a></li>
+                  <li class=""><a href="#">OR</a></li>
+                  <li class=""><a href="#">XOR</a></li>
+                   <li class=""><a href="#">COMPLEX</a></li>
+                </ul>
+          </div>
+				</form>
+        <div class="span6 manual">
+          <p class="hide or">
+            当所有的活动分支都完成后，才能继续执行，且后继节点被激活的次数与活动分支的次数相同。
+          </p>
+          <p class="hide and">
+           当所有的活动分支都完成后，才能继续执行，且后继节点仅被激活一次。
+          </p>
+          <p class="hide xor">
+            仅有一个分支的完成就使得后继节点执行下去，且任何一个分支的完成都会使得后继节点被激活一次
+          </p>
+          <div class="hide complex">
+            <input type="text" class="NM" style="width:90px;margin-bottom:0px;vertical-align:middle" value="" placeholder="M中选N" autocomplete="off"/>
+            <span style="display:inline-block;width:300px;vertical-align:middle">
+              M个分支合并，当其中N个分支完成后就继续执行下去，其余分支执行完成后将被忽略
+            </span>       
+          </div>
+          <div class="hide complex" style="margin-top:20px">
+            <label class="checkbox" style="display:inline-block;vertical-align:middle;margin-right:14px;">
+                <input type="checkbox"> 是否鉴别器
+            </label>
+            <span style="display:inline-block;width:300px;vertical-align:middle">
+              当其中一个分支完成后就立刻激活后续活动，其余分支完成后将被忽略
+            </span>       
+          </div>
+        </div>
+			</div>
+			<div id="content3" class="hide content">
+        暂时为空，后来人填写吧
+			</div>
+      <div style="clear:both"></div>
+      <div class="btn-group delete" style="margin-top:0px">
+        <a class="btn btn-danger pull-left" style="margin-left:10px" href="#">我要删除</a>
+        <a class="btn btn-success pull-left disabled" href="#">我不删除</a>
+      </div>
+		</div>
+		<div class="modal-footer">
+			<a href="#" data-dismiss="modal" class="btn">取消</a>
+			<a href="#" class="btn btn-primary join submit" data-loading-text="正在添加">确定</a>
+		</div>
+<script type="text/javascript">
+  	$(function(){
+      //删除和不删除的按钮
+      $(".btn-danger").bind("click",function(){
+        $(this).addClass("disabled");
+        $(".btn-success").removeClass("disabled");
+      });
+      $(".btn-success").bind("click",function(){
+        $(this).addClass("disabled");
+        $(".btn-danger").removeClass("disabled");
+      });
+      //选择路由类型的相关事件
+      $("ul.selectJoinType").find("li a").bind("click",function(){
+         var str=$(this).text();
+         $(this).parent().parent().parent().find("button.join_type").find("span:eq(0)").text(str);
+         $("div.manual p").addClass("hide");
+         $("div.manual div").addClass("hide");
+         $("div.manual").find("."+str.toLowerCase()).removeClass("hide");
+      });
+      //用于对话框的初步显示
+      $("#new_course_dialog").unbind("show_join");
+      $("#new_course_dialog").bind("show_join",function(){
+          var obj=$("#new_course_dialog").data("obj");
+          var arr=$("#container").data("w").activities || [];
+          $(arr).each(function(index,e){
+            if(obj.attr("id")==e.name){
+              $("input.participant_name").val(e.performer);
+              var arr=$("ul.selectJoinType").find("li a");
+              $(arr).each(function(index,element){
+                if($(element).text()==e.join_type){
+                  $(element).trigger("click");
+                }
+              });
+              if(e.IncomingCondition=='true'){
+                $("input[type='checkbox']").prop("checked",true);
+              }else{
+                $("input.NM").val(e.IncomingCondition);
+              }
+            }
+          });
+      });
+      //提交所有编辑结果
+      $(".join.submit").bind("click",function(){
+          var flag=false;//标记是否删除此标签
+          if($("#new_course_dialog").find(".btn-danger").hasClass("disabled")){
+            flag=true;
+          }
+          var join_type=$("button.join_type span:eq(0)").text();
+          var obj=$("#new_course_dialog").data("obj");
+          var arr=$("#container").data("w").activities || [];
+          $(arr).each(function(index,e){
+            if(obj.attr("id")==e.name){
+              if(flag){
+                arr.splice(index,1);//删除
+                $("#new_course_dialog").modal("hide");
+                return; 
+              }
+              //将设置好的参数传给相应的activity对象           
+              var condition="";
+              if(join_type=="COMPLEX"){
+                if($("input[type='checkbox']").prop("checked")){
+                  condition='true';
+                }else{
+                  condition=$("input.NM").val();
+                }
+              }
+              e.join_type=$("button.join_type").find("span:eq(0)").text();
+              e.IncomingCondition=condition;
+            }
+          });
+          $("#new_course_dialog").modal("hide");
+      });
+  		var $navs = $('#new_course_dialog .nav > li ');
+  		$navs.on('click', function(){			
+  			$navs.removeClass("active");
+  			$(this).addClass("active");
+  			//$content.html(new Date()+"");
+  			$("tr.warning").removeClass("warning");
+  			$navs.each(function(index,e){
+  				if($(e).hasClass("active")){
+  					$(".content").addClass("hide");
+  					$("#content"+(index+1)).removeClass("hide");
+            if(!$("#content2").hasClass("hide")){
+              $("div.delete").css({
+                'margin-top':70,
+              });
+            }else{
+              $("div.delete").css({
+                'margin-top':0,
+              });
+            }
+  				}
+  			});
+  		});
+  });
+</script>

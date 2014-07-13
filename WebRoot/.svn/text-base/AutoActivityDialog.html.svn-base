@@ -1,0 +1,267 @@
+<style>
+    .selectScriptAppForAutoTask li{
+    	font-size: 100%;
+    }
+    table.actualFormParam{
+      width:300px;
+      margin-left: 100px;
+    }
+</style>
+<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>自动活动</h3>
+		</div>
+		<div class="modal-body">
+			<ul class="nav nav-tabs">
+  			<li class="temple app active">
+    			<a href="#">基本信息</a>
+  			</li>
+  			<li class="temple childModule">
+    			<a href="#">形参信息</a>
+  			</li>
+			</ul>
+      <div id="content1" class="content">
+        <form class="form-horizontal">
+            <div class="control-group">
+              <label class="control-label">名称</label>
+              <div class="controls">
+                  <input type="text" id="name" placeholder="name">
+              </div>
+          </div>
+            <div class="control-group">
+              <label class="control-label">参与者</label>
+              <div class="controls">
+                  <input type="text" class="participant_name" disabled>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">描述</label>
+              <div class="controls">
+                  <textarea rows="5" class="basic_info">...
+                  </textarea>
+              </div>
+            </div>
+        </form>
+      </div>
+			<div id="content2" class="hide content">
+        <form class="form-horizontal">
+          <div class="control-group">
+              <label class="control-label"></label>
+              <div class="controls">
+                  <div class="btn-group">
+                        <button class="btn dropdown-toggle scriptAppName" data-toggle="dropdown">
+                          <span>选择应用</span>
+                          <span class="caret"></span></button>
+                        <ul class="dropdown-menu selectScriptAppForAutoTask">
+                          <li class="hide temple"><a href="#"></a></li>
+                        </ul>
+                  </div>
+              </div>
+            </div>
+          <div class="control-group">
+              <label class="control-label actual_label">实参标识</label>
+              <div class="controls">
+                  <input type="text" class="actual_label" placeholder="ID">
+              </div>
+          </div>
+          <div class="btn-group">
+                <a class="btn btn-primary actual_remove" style="margin-left:10px" href="#">删除</a>
+                <a class="btn actual_submit" href="#">添加</a>
+          </div>
+          <div class="btn-group">
+                <a class="btn up" style="margin-left:10px;" href="#"><i class="icon-arrow-up"></i></a>
+                <a class="btn down" href="#"><i class="icon-arrow-down"></i></a>
+          </div>
+        </form>
+        <table class="table table-condensed table-hover actualFormParam">
+            <thead>
+              <tr class="head">
+                <th width="50%">#</th>
+                <th width="50%">实参名</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="hide temple" title="">
+                <td class="id">0</td>
+                <td class="actualFormParamName"><span style="">Mushi</span></td>
+              </tr>
+            </tbody>
+        </table>
+			</div>
+			<div id="content3" class="hide content">
+				
+			</div>
+      <div class="btn-group" style="margin-top:20px">
+              <a class="btn btn-danger pull-left" style="margin-left:10px" href="#">我要删除</a>
+              <a class="btn btn-success pull-left disabled" href="#">我不删除</a>
+      </div>
+		</div>
+		<div class="modal-footer">
+			<a href="#" data-dismiss="modal" class="btn">取消</a>
+			<a href="#" class="btn btn-primary humantask submit" data-loading-text="正在添加">确定</a>
+		</div>
+<script type="text/javascript">
+  	$(function(){
+  		//调整表格的index
+  		var initTableIndex=function(table){
+  			var $trs=table.find("tbody tr:not(.temple)");
+  			$trs.each(function(index,e){
+  				$(e).find("td.id").text(index+1);
+  			});
+  		};
+      var bindSelectAppEvent=function(parent){
+        parent.find("a").bind("click",function(){
+          var str=$(this).text();
+          //console.log(data);
+          $(this).parent().parent().parent().find("button.scriptAppName").find("span:eq(0)").text(str);
+        });
+      }
+      //显示应用列表
+      var showAllScriptApps=function(){
+        var arr=$("#container").data("w").applications || [];
+        //console.log(arr);
+        $(".selectScriptAppForAutoTask").find("li:not(.temple)").remove();
+        for(var i=0;i<arr.length;i++){
+          //console.log(arr[i]);
+          if(arr[i].type=="script"){
+            var $li=$(".selectScriptAppForAutoTask").find("li.temple").clone();
+            $li.removeClass("hide temple");
+            $li.find("a").text(arr[i].id);
+            $li.appendTo($("ul.selectScriptAppForAutoTask"));
+            bindSelectAppEvent($li);
+          }
+        }
+      };
+      //使用事件代理减少代码量
+      $("table.actualFormParam").delegate("tbody tr","click",function(){
+        $(this).parent().find("tr").removeClass("warning");
+        $(this).addClass("warning");
+      });
+      //添加实参标识
+      $(".btn.actual_submit").bind("click",function(){
+        var str=$("input.actual_label").val();
+        if(str==""){
+          return;
+        }else{
+          var $tr=$("table.actualFormParam").find("tr.temple").clone();
+          $tr.removeClass("hide temple");
+          $tr.find("td.actualFormParamName").text(str);
+          $tr.appendTo($("table.actualFormParam"));
+          initTableIndex($("table.actualFormParam"));
+        }
+      });
+      //删除实参标识
+      $(".btn.actual_remove").bind("click",function(){
+        var $tr=$("table.actualFormParam").find("tr.warning");
+        $tr.remove();
+        initTableIndex($("table.actualFormParam"));
+      })
+  		//提交所有编辑结果
+  		$(".humantask.submit").bind("click",function(){
+        var flag=false;//标记是否删除此标签
+        if($("#new_course_dialog").find(".btn-danger").hasClass("disabled")){
+          flag=true;
+        }
+  			var name=$("button.formAppName span:eq(0)").text();
+        var obj=$("#new_course_dialog").data("obj");
+        var arr=$("#container").data("w").activities || [];
+        //console.log(obj.attr("id"));
+        $(arr).each(function(index,e){
+          if(obj.attr("id")==e.name){
+            //将设置好的参数传给相应的activity对象 
+            if(flag){
+                arr.splice(index,1);//删除
+                $("#new_course_dialog").modal("hide");
+                return; 
+            }
+            var actual=[];
+            var appName=$("#content2").find("button.scriptAppName").find("span:eq(0)").text();
+            $("table.actualFormParam").find("tbody tr:not(.temple)").each(function(index,e){
+                var a=new ActualParameter();
+                a.content=$(e).find("td.actualFormParamName").text();
+                actual.push(a);
+            });
+            e.taskApplicationId=appName;
+            e.task_type="Task";
+            e.actualParameters=actual;
+          }
+        });
+  			$("#new_course_dialog").modal("hide");
+  		});
+  		//确定对话框初始的显示
+  		$("#new_course_dialog").unbind("show_autoactivity");
+  		$("#new_course_dialog").bind("show_autoactivity",function(){
+            showAllScriptApps();
+            var obj=$("#new_course_dialog").data("obj");
+          	var arr=$("#container").data("w").activities || [];
+            $(arr).each(function(index,e){
+                if(obj.attr("id")==e.name){
+                   $("input.participant_name").val(e.performer);
+                   var actual=e.actualParameters;
+                   for(var i=0;i<actual.length;i++){
+                     var $tr=$("table.actualFormParam").find("tr.temple").clone();
+                     $tr.removeClass("hide temple");
+                     $tr.find("td.actualFormParamName").text(actual[i].content);
+                     $tr.appendTo($("table.actualFormParam"));
+                     initTableIndex($("table.actualFormParam"));
+                   }
+                   $(".selectScriptAppForAutoTask").find("a").each(function(index,element){
+                     if($(element).text()==e.taskApplicationId){
+                        $(element).trigger("click");
+                     }
+                   });
+                }
+            });
+  		});
+      //调整表格中行的位置，点击向上的箭头
+      $(".btn.up").bind("click",function(){
+          var $tr=$("table.actualFormParam").find("tr.warning");
+          var index=$("table.actualFormParam").find("tbody tr:not(.hide)").index($tr);
+          var length=$("table.actualFormParam").find("tbody tr:not(.hide)").length;
+          var $pre;
+          var $next;
+          if(index==0){
+            return;
+          }
+          $pre=$tr.prev();
+          $tr.remove();
+          $tr.insertBefore($pre);
+          initTableIndex($("table.actualFormParam"));
+      });
+      //调整表格中行的位置，点击向下的箭头
+      $(".btn.down").bind("click",function(){
+          var $tr=$("table.actualFormParam").find("tr.warning");
+          var index=$("table.actualFormParam").find("tbody tr:not(.hide)").index($tr);
+          var length=$("table.actualFormParam").find("tbody tr:not(.hide)").length;
+          var $next;
+          if(index==length-1){
+            return;
+          }
+          $next=$tr.next();
+          $tr.remove();
+          $tr.insertAfter($next);
+          initTableIndex($("table.actualFormParam"));
+      });
+      $(".btn-danger").bind("click",function(){
+        $(this).addClass("disabled");
+        $(".btn-success").removeClass("disabled");
+      });
+      $(".btn-success").bind("click",function(){
+        $(this).addClass("disabled");
+        $(".btn-danger").removeClass("disabled");
+      });
+  		var $navs = $('#new_course_dialog .nav > li ');
+  		$navs.on('click', function(){			
+  			$navs.removeClass("active");
+  			$(this).addClass("active");
+  			//$content.html(new Date()+"");
+  			$("tr.warning").removeClass("warning");
+  			$navs.each(function(index,e){
+  				if($(e).hasClass("active")){
+  					$(".content").addClass("hide");
+  					$("#content"+(index+1)).removeClass("hide");
+  				}
+  			});
+  		});
+  });
+</script>

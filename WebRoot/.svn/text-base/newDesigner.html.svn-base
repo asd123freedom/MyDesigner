@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>WorkFlow Designer</title>
+    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/main.css" rel="stylesheet" media="screen">
+ </head>
+    <body>
+	<div id="toolBar" class="section_header" style="margin-top:50px;margin-left:200px;width:1000px;height:50px;">
+		 <div class="userSelect icon"></div>
+		 <!--img id="select" class="icon unselected" src="images/select.gif" style=""></img-->
+		 <img id="participant" title="参与者" class="icon unselected" src="images/participantrole.png"></img>
+		 <img id="default_participant" title="任意参与者" class="icon unselected" src="images/freetextparticipant.png"></img>
+		 <img id="start" title="开始" class="icon unselected" src="images/start.png"></img>
+		 <img id="end" title="结束" class="icon unselected" src="images/end.png"></img>
+		 <img id="voidnode" title="空活动" class="icon unselected" src="images/genericactivity.png"></img>		 
+		 <img id="autoactivity" title="自动活动" class="icon unselected" src="images/autoactivity.png"></img>
+		 <img id="humantaskactivity" title="人工活动" class="icon unselected" src="images/humantaskactivity.png"></img>
+		 <img id="businessactivity" title="业务活动" class="icon unselected" src="images/activitytask.png"></img>
+		 <img id="blockactivity" class="icon unselected" src="images/blockactivity.png"></img>
+		 <img id="routesplitactivity" class="icon unselected" src="images/route_split_activity.png"></img>
+		 <img id="routejoinactivity" class="icon unselected" src="images/route_join_activity.png"></img>
+		 <img id="redo" class="icon unselected" src="images/redo.png"></img>		 
+		 <img id="undo" class="icon unselected" src="images/undo.png" style="left:100px"></img>
+		 <img id="unCondition_transition" class="icon unselected" src="images/transition.png" style="left:150px"></img>
+		 <!--img id="zoomout" class="icon unselected" src="images/zoomout.png" style="left:200px"></img-->
+		 <!--div class="move unselected" style="background-image:url(images/zoomout.png)"-->
+		 <button class="btn save btn-primary"  data-loading-text="正在保存">Package</button>
+		 <button class="btn hide dialog btn-primary"  data-loading-text="正在打开">绑定表单</button>
+		 <div class="btn-group menu">
+	        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">文件 <span class="caret"></span></button>
+	        <ul class="dropdown-menu">
+	          <li><a href="#" class="checkOrder">检验</a></li>
+	          <li><a href="#" class="saveOrder">保存</a></li>
+	          <li><a href="#" class="importOrder">导入</a></li>
+	          <li><a href="#" class="outputOrder">导出</a></li>
+	          <li><a href="#" class="quit">退出</a></li>
+	        </ul>
+         </div>
+         <div class="btn-group addapplication">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">绑定应用<span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="#" class="formApp">Form</a></li>
+              <li><a href="#" class="scriptApp">Script</a></li>
+            </ul>
+          </div>
+	</div>
+	<ul class="nav nav-pills editOrShow" style="margin-top:-50px;float:left;margin-left:20px;height:35px;margin-bottom:0px">
+              <li class="active"><a href="#">流程图</a></li>
+              <li><a href="#">XPDL</a></li>
+    </ul>
+	<div class="sideBar" style="margin-left:10px;clear:left;float:left;width:180px;margin-top:0px;min-height:255px;border-top: 10px solid #06C;">
+ 		<ul>
+ 			<li class="activities_tree"><i class="icon-minus"></i> <span>流程定义</span>
+ 				<ul>
+ 					<li class="hide temple"><span data-val="3"></span>
+ 					</li>
+ 				</ul>
+ 			</li>
+ 		</ul>
+    </div>
+	<div class="hide showXML" style="margin-top:0px;margin-left:200px;width:1000px;height:900px;border-top: 0px solid #06C;">
+		<input type="text" class="span3 finder" style="margin-bottom:5px">
+		<button type="button" class="btn btn-warning finder" style="margin-bottom:5px">查找</button>
+		<button type="button" class="btn btn-primary translate" style="margin-bottom:5px">翻译</button>
+		<textarea style="width:900px;min-height:600px">
+		</textarea>
+	</div>
+	<div id="container" class="box" style="resize:both;overflow:auto;margin-top:0px;margin-left:200px;width:1000px;height:255px;">
+	</div>
+		<!-- 容器结束，对话框开始 -->
+		<div class="modal hide fade in" id="new_course_dialog" style="width:700px;margin-left:-350px">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>流程定义</h3>
+		  </div>
+		  <div class="modal-body">
+			<ul class="nav nav-tabs">
+  			<li class="temple active">
+    			<a href="#">活动</a>
+  			</li>
+  			<li class="temple">
+    			<a href="#">属性</a>
+  			</li>
+			</ul>
+			<div id="content"></div>
+		  </div>
+		  <div class="modal-footer">
+		  </div>
+		</div>
+		<div class="modal hide fade" id="saveWorkFlow">
+		  <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		    <h3>流程定义</h3>
+		  </div>
+		  <div class="modal-body">
+		    <form class="form-horizontal">
+			  <div class="control-group">
+			    <label class="control-label">类型</label>
+			    <div class="controls">
+			      <input type="text" class="package" placeholder="类型">
+			    </div>
+			  </div>
+			  <div class="control-group">
+			    <label class="control-label" for="inputPassword">名称</label>
+			    <div class="controls">
+			      <input type="text"  class="workflow" placeholder="名称">
+			    </div>
+			  </div>
+			  <div class="control-group">
+			    <label class="control-label" for="inputPassword">创建者</label>
+			    <div class="controls">
+			      <input type="text"  class="creator" placeholder="创建者">
+			    </div>
+			  </div>
+			  <div class="control-group">
+			    <div class="controls">
+			      <label class="checkbox">
+			        <input type="checkbox" checked> 是否绝对终止
+			      </label>
+			    </div>
+			  </div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+		    <a href="#" class="btn">关闭</a>
+		    <a href="#" class="btn btn-primary saveProcess">确定</a>
+		  </div>
+		</div>
+		<a class="hide download">点击下载</a>
+		<input class="hide import" type="file"/>
+</body>
+<script language="javascript" type="text/javascript" src="jquery/jquery-1.9.1.js"></script>
+<script src="jquery-ui/jquery-ui.js"></script>
+<script src="jsplumb/jquery.jsPlumb-1.5.5.js"></script>
+<script src="js/init.js"></script>
+<script src="js/process_xml.js"></script>
+<script src="js/constructor.js"></script>
+<script src="js/register.js"></script>
+<script src="js/ActivityDialog.js"></script>
+<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="js/Model.js"></script>
+<script src="js/controller.js"></script>
+<script src="js/setPosition.js"></script>
+<script src="js/parseProcessDefinition.js"></script>
+<script type="text/javascript">
+//这些函数都是全局的，需要改进
+function getFrom(){
+	return $("#toolBar").data("from");
+}
+function getTo(){
+	return $("#toolBar").data("to");
+}
+function setFrom(from){
+	$("#toolBar").data("from",from);
+}
+function setTo(to){
+	$("#toolBar").data("to",to);
+}
+function appendNewElement(container,ui){
+		var incoming=ui.helper.context.id;
+		var new_element=$('<img>').attr("src",ui.helper.context.src).addClass("dropped").addClass("unselected");
+		var num_y=$(container).css("height").match(/\d*/);
+		var prev=$("div[id*='container']:last");
+		//console.log(prev.offset().top+prev.height()+37);
+		//var num_y=prev.offset().top+prev.height()+37;
+		if($("div[id*='participant']").length==0){
+			var off_y=119;
+		}else{
+			var off_y=prev.offset().top+prev.height()+27;
+		}
+		var parent=null;
+		var arr=$("#container").data("w").participants || [];
+		var name="";
+		var new_container=null;
+		//var off_y=(num_y[0])*(arr.length-1)+119+10*(arr.length-1);
+		var index=0;
+		//var name_index=0;
+		var span=$("<span>").css({
+			position:'absolute',
+			display:'none',
+			'text-align':'center'
+		});
+		index=$("#container").data(incoming);
+		if(incoming!="default_participant"){
+			name=incoming+""+index;
+		}else{
+			name=incoming;
+		}
+		var left_participant=parseInt($("#container").css("margin-left").replace(/px/,""))-20;
+		//var top_participant=parseInt($("#container").css("margin-top").replace(/px/,""));
+		if(incoming!="participant" && incoming!="default_participant"){
+				parent=$('<div>').css({
+					position:'absolute',
+					left:ui.offset.left,
+					top:ui.offset.top
+				})
+				span.css({
+					left:-15,
+					top:32,
+					width:64,
+					'text-align':'center'
+				});
+		}else{	
+				parent=$('<div>').css({
+					position:'absolute',
+					left:37+left_participant,
+					//left:17,
+					top:off_y
+				});
+				
+				span.css({
+					left:-15,
+					top:32,
+					width:64,
+					'text-align':'center'
+				});
+		}
+		new_element.attr("title",name);
+		new_element.appendTo(parent);
+		span.appendTo(parent);
+		parent.attr("id",name).addClass("dropped");
+		//双击图标事件
+		parent.bind("dblclick",function(){
+			$(".dialog").trigger("click",[$(this)]);
+		});
+		if(new_container=addNewLine(container,incoming)){
+			parent.appendTo(new_container);
+		}else{		
+			parent.appendTo(container);
+		}
+		jsPlumb.draggable(parent,{revert: "invalid",
+			stop:function(e){
+				//console.log($(e.target).attr("id"));
+			},
+			drag:function(e){
+				var p=$(e.target).parent();
+				var bottom=p.offset().top+10+p.height();
+				if(($(e.target).offset().top+$(e.target).height())>=bottom){
+					var h=p.height();
+					p.height(h+30);
+					p.nextAll("div[id*='container']").children().each(function(index,e){
+						var delta=$(e).offset().top;
+						delta+=30;
+						$(e).css({'top':delta});
+					});
+				}
+			}
+		});
+		var stateMachineConnector=$("#toolBar").data("option");
+		parent.bind("click",function(){
+			if($("#unCondition_transition").hasClass("unselected")){
+				return;
+			}
+			if(!getFrom() && !getTo()){
+				setFrom($(this).attr("id"));
+			}else if(getFrom() && !getTo()){
+				setTo($(this).attr("id"));
+				createTransition(getFrom(),getTo(),stateMachineConnector);
+			}
+		});			
+};
+function createTransition(from,to,stateMachineConnector){
+	var come=from;
+	var go=to;
+	console.log(come+":"+go);
+	if(come===go){
+		setFrom(null);
+		setTo(null);
+		return;
+	}
+	var connect=null;
+	var num=$("#container").data("transition")|| 0;
+	num++;
+	$("#container").data("transition",num);
+	connect=jsPlumb.connect({
+			source:come,
+			target:go,
+	},stateMachineConnector);
+	var info=num+"";
+	if(from.indexOf("start")<0 && to.indexOf("end")<0){					
+			$("#container").trigger("transition",[from,to]);
+	}else if(from.indexOf("start")>=0){
+		$("#container").data("w").start.connecting=to;
+		info="";
+	}else if(to.indexOf("end")>=0){
+		$("#container").data("w").end.connecting=from;
+		info="";
+	}
+	connect.setLabel({ cssClass:"component label",label:info, location:0.5 });
+	//将起点和终点恢复成空值
+	setFrom(null);
+	setTo(null);
+	connect.bind("dblclick", function(conn) {
+			$('#new_course_dialog').data('tran',conn);
+			$('#new_course_dialog').modal('show');
+			//jsPlumb.detach(conn);
+	});
+	return connect;
+}
+function trigger(container,str,performer){
+	var _this=$(container);
+	var num=$("#container").data(str)|| 0;
+	num++;
+	$("#container").data(str,num);
+	if(str.indexOf("activity")>0 && str.indexOf("route")==-1){
+		_this.trigger("activity",[str,performer]);
+	}else if(str.indexOf("route")>=0 || (str=='start' || str=='end')){
+		_this.trigger(str,[str,performer]);
+	}else{
+		_this.trigger(str);
+	}
+	//刷新左面的的sidebar
+	freshsideBar();
+}
+function freshsideBar(){
+	$("div.sideBar").find("ul:eq(1) li:not(.temple)").remove();
+	var li=$("div.sideBar").find("ul:eq(1) li.temple");
+	var arr=$("#container").data("w").activities || [];
+	for(var i=0;i<arr.length;i++){
+		var new_li=li.clone().removeClass("hide temple");
+		new_li.find("span").text(arr[i].name);
+		new_li.appendTo($("div.sideBar").find("ul:eq(1)"));	
+	}
+}
+function addNewLine(current,incoming){
+	if($("#container").data("w").participants.length>1 && (incoming=="participant" || incoming=="default_participant")){
+		var line=$(current).clone();
+		line.children().remove();
+		var opt=$(current).droppable("option");
+		var index=$("#container").data(incoming);
+		line.attr("id","container"+index);
+		line.addClass("line");
+		line.droppable(opt);
+		//console.log(opt);
+		var index=$("div[id*='container']").length-1;
+		var pre=$("div[id*='container']:eq("+index+")");
+		//console.log(pre);
+		line.insertAfter(pre);
+		return line;
+	}else{
+		return null;
+	}
+}
+//想实现按delete键删除节点的功能，交给后来人实现了
+$(document).keydown(function(e){
+	if(e.which==46){
+		//console.log("删除节点");
+	}    
+});  
+jsPlumb.bind("ready", function(){
+	document.onselectstart = function () { return false; };	
+	jsPlumbDemo.init();
+	var icons=$("#toolBar").find(".icon");
+	var stateMachineConnector=$("#toolBar").data("option");
+	icons.each(function(index,el){
+		 $(el).bind("click",function(){
+		 	//$(icons).removeClass("selected");
+		 	//$(icons).addClass("unselected");
+		 	$(this).siblings(".icon").removeClass("selected");
+		 	$(this).siblings(".icon").addClass("unselected");
+		 	if($(this).hasClass("selected")){
+		 		$(this).removeClass("selected");
+		 		$(this).addClass("unselected");			
+		 	}else{
+		 		$(this).removeClass("unselected");
+		 		$(this).addClass("selected");		
+		 	}
+		 	//针对连接操作做特殊设置
+		 	if($(this).attr("id")=="unCondition_transition"){
+		 		setFrom(null);
+				setTo(null);
+				if($(this).hasClass("selected")){
+					$("div[id*='container']").find("div.dropped").draggable("disable");
+				}else{
+					$("div[id*='container']").find("div.dropped").draggable("enable");
+				}					
+		 	}					 	
+	 	 });
+	});
+	//这里的.dialog的是一个按钮，在界面上已经隐藏了
+	$(".dialog").bind("click",function(e,obj){
+		//开始节点和结束节点不显示编辑页面
+		if(obj.attr("id").indexOf("end")>=0 || obj.attr("id").indexOf("start")>=0){
+			return;
+		}
+		$('#new_course_dialog').data("obj",obj);
+		$('#new_course_dialog').modal("show");
+	});
+	$("#participant").draggable({helper:"clone"});
+	$("#default_participant").draggable({helper:"clone"});
+	$("#container").droppable({
+		drop:function(event,ui){
+			var incoming=ui.helper.context.id;
+			if(!$("#container").data("w").participants || $("#container").data("w").participants.length==0){
+				if(incoming!="participant" && incoming!="default_participant"){
+					return;
+				}else{
+					$( ".icon" ).draggable({helper:"clone"});
+				}
+			}
+			var str=ui.helper.context.className;
+			if(str.indexOf("dropped")>=0){
+				return;
+			}
+			var performer=$(this).find("div[id*='participant']").attr("id");
+			trigger($("#container"),incoming,performer);
+			appendNewElement($(this),ui);
+		},
+	});
+	$(".save").bind("click",function(){
+		$('#saveWorkFlow').modal('show');
+	});
+	$("#saveWorkFlow .btn.saveProcess").bind("click",function(){
+		var tmp=$("#container").data("w");
+		tmp.package=$('#saveWorkFlow').find("input.package").val();
+		tmp.workflow=$('#saveWorkFlow').find("input.workflow").val();
+		tmp.creator=$('#saveWorkFlow').find("input.creator").val();
+		tmp.isTerminationImplicit=$("#saveWorkFlow").find("input[type='checkbox']").prop("checked");
+		//var obj=getProcessDefinition();
+		//var data1=obj['data1'];
+		// $.ajax({
+		// 	url:"http://127.0.0.1:8080/struts2_demo/XmlString.action",
+  //    		type: "POST",
+  //    		//data: {"json":JSON.stringify(data1)},
+  //    		data:{"xml":data1.processdefinition},
+  //    		success:function(data){
+
+  //    		},
+  //       });
+		$("#saveWorkFlow").modal('hide');
+	});
+	$(".menu .outputOrder").bind("click",function(){
+		var tmp=$("#container").data("w");
+		if(!tmp.package){
+			alert("先点击Package按钮");
+			return;
+		}
+		var obj=getProcessDefinition();
+		var data1=obj['data1'];
+		$.ajax({
+			url:"http://127.0.0.1:8080/MyDesigner/XmlString.action",
+     		type: "POST",
+     		//data: {"json":JSON.stringify(data1)},
+     		data:{"xml":data1.processdefinition},
+     		success:function(data){
+     			//console.log(data.format_xml);
+     			var tmp=[];
+				tmp.push(data.format_xml);
+				var blob = new Blob(tmp, { type: "text/plain" });
+				var ObjectURL=window.URL.createObjectURL(blob);
+				//console.log(ObjectURL);
+				//location.href=ObjectURL;
+				$("a.download").attr("href",ObjectURL);
+				$("a.download").attr("download","testfordown.xml");
+				//$("a.download").trigger("click");
+				$("a.download")[0].click();
+     		},
+        });
+	});
+	$(".sideBar").bind("click",function(e){
+		var target=e.target.tagName.toLowerCase();
+        if(target!="span"){
+          return;
+        }
+		var jsonstr="";
+		var name=$(e.target).text();
+		$(".monitor").removeClass("monitor");
+		$("#"+name).addClass("monitor");
+		console.log(name);
+		if(name=="流程定义"){
+			var obj=getProcessDefinition();
+			var data1=obj['data1'];
+			jsonstr=data1.processdefinition;
+			//单个节点的情况
+		}else{
+			var arr=$("#container").data("w").activities ||[];
+			for(var i=0;i<arr.length;i++){
+				if(arr[i].name==name){
+					var test=$("<test>");
+					test.children().remove();
+					arr[i].parent=test;
+					console.log(arr[i]);
+					arr[i].getXml();
+					jsonstr=test.html();
+					//标签首字母大写
+					jsonstr = jsonstr.replace(/[ <\/]\w/g,function(s){
+						//console.log(s.toLocaleUpperCase());
+						//var c=str.match(/\w/);
+						//console.log(c[0]);
+						return s.toLocaleUpperCase();
+					});
+					//某一些不需要大写的属性保持原样
+					jsonstr =jsonstr.replace(/ _\w/g,function(s){
+						//console.log(s);
+						return s.replace(/_/g,"");
+					});
+					//恢复驼峰是命名的大小写情况
+					jsonstr =jsonstr.replace(/\w_(\w)/g,function(s,b){
+						if(b < 'a'){
+							return s;
+						}else{
+							return s.substring(0,1)+b.toUpperCase();
+						}
+					});
+					//针对默认参与者的特殊情况
+					jsonstr =jsonstr.replace(/defaultParticipant/g,function(){
+						return 'default_participant';
+					});
+					//XPDLVersion标签的特殊情况
+					jsonstr =jsonstr.replace(/Xpdlv/g,function(s){
+						return s.toUpperCase();
+					});
+						}
+					}
+		}
+		//console.log(jsonstr);
+		$.ajax({
+			url:"http://127.0.0.1:8080/MyDesigner/XmlString.action",
+     		type: "POST",
+     		data:{"xml":jsonstr},
+     		success:function(data){
+				//tmp.push(data.format_xml);
+				$(".showXML textarea").val(data.format_xml);
+     		},
+        });
+	});
+	$(".sideBar ul:eq(0)").bind("click",function(e){
+		var target=e.target.tagName.toLowerCase();
+        if(target!="i"){
+          return;
+        }
+        var ul=$(e.target).siblings("ul:eq(0)");
+        ul=ul[0];
+        //console.log(ul);
+        if(ul){
+          ul.style.display=ul.style.display=="none"?"block":"none";
+        }
+        if(ul.style.display=="none"){
+          $(e.target).removeClass("icon-minus").addClass("icon-plus");
+        }else{
+          $(e.target).removeClass("icon-plus").addClass("icon-minus");
+        }          
+	});
+	$(".menu .checkOrder").bind("click",function(){
+		var tmp=$("#container").data("w");
+		if(!tmp.package){
+			alert("先点击Package按钮");
+			return;
+		}
+		var obj=getProcessDefinition();
+		var data1=obj['data1'];
+		$.ajax({
+			url: "http://127.0.0.1:8080/HiServiceCRM/checkProcessDefinition.action",
+     		type: "POST",
+     		data: {"json":JSON.stringify(data1)},
+     		success:function(data){
+     			console.log(data);
+     		},
+         });
+	});
+	$(".menu .saveOrder").bind("click",function(){
+		var tmp=$("#container").data("w");
+		if(!tmp.package){
+			alert("先点击Package按钮");
+			return;
+		}
+		var obj=getProcessDefinition();
+		var data2=obj['data2'];
+		console.log(data2);
+		$.ajax({
+			url:"http://127.0.0.1:8080/HiServiceCRM/savePackageDefinition.action",
+     		type: "POST",
+     		data: {"json":JSON.stringify(data2)},
+     		//data:data2,
+     		success:function(data){
+     			console.log(data);
+     		},
+         });
+	});
+	$(".addapplication .formApp").bind("click",function(){
+		$("#container").data("apptype","form");
+		$('#new_course_dialog').modal("show");
+	});
+	$(".addapplication .scriptApp").bind("click",function(){
+		$("#container").data("apptype","script");
+		$('#new_course_dialog').modal("show");
+	});
+	function getProcessDefinition(){
+		setPosition();
+		var tmp=$("#container").data("w").getXml();
+		console.log(tmp[0]);
+		var pac=$("#container").data("p");
+		//对package对象进行初始化，清空已经添加的workflow对象
+		pac.find("Workflow_Process").remove();
+		var processes=$("<Workflow_Processes>");
+		tmp.appendTo(processes);
+		processes.appendTo(pac);
+		console.log(pac[0])
+		var test=$("<test>");
+		pac.appendTo(test);
+		//$("<test>").append($("#container").data("w").getXml());
+		//console.log(pac[0]);
+		var str=test.html();
+		//标签首字母大写
+		str = str.replace(/[ <\/]\w/g,function(s){
+			//console.log(s.toLocaleUpperCase());
+			//var c=str.match(/\w/);
+			//console.log(c[0]);
+			return s.toLocaleUpperCase();
+		});
+		//某一些不需要大写的属性保持原样
+		str =str.replace(/ _\w/g,function(s){
+			//console.log(s);
+			return s.replace(/_/g,"");
+		});
+		//恢复驼峰是命名的大小写情况
+		str =str.replace(/\w_(\w)/g,function(s,b){
+			if(b < 'a'){
+				return s;
+			}else{
+				return s.substring(0,1)+b.toUpperCase();
+			}
+		});
+		//针对默认参与者的特殊情况
+		str =str.replace(/defaultParticipant/g,function(){
+			return 'default_participant';
+		});
+		//XPDLVersion标签的特殊情况
+		str =str.replace(/Xpdlv/g,function(s){
+			return s.toUpperCase();
+		});
+		//console.log(str);
+		var data1={"processdefinition":str};
+		var data2={
+			'creator':$("#container").data("w").creator,
+			'typeName':$("#container").data("w").package,
+			'processDefinition':str,
+			'name':$("#container").data("w").workflow,
+			'mode':'new'
+		};
+		return {'data1':data1,'data2':data2};
+	};
+	$("ul.editOrShow li").bind("click",function(){
+		$(this).siblings().removeClass("active");
+		$(this).addClass("active");
+		if($(this).find("a").text()=="流程图"){
+			$(".showXML").slideUp();
+			$("div[id*=container]").slideDown();
+		}
+		if($(this).find("a").text()=="XPDL"){
+			$("div[id*=container]").slideUp();
+			$(".showXML").slideDown();
+		}
+	});
+	$(".btn.translate").bind("click",function(){
+		var str=$(".showXML textarea").val();
+		var obj=$.parseXML(str);
+		$(obj).find("Activity").each(function(index,e){
+			var app_id=$(e).find("TaskApplication").attr("Id");
+			if(/Get|Send|Edit|Save/.test(app_id)){
+				var num=$("#container").data("businessactivity") || 0;
+				num++;
+				$("#container").data("businessactivity",num);
+				var replace_id="businessactivity"+num;
+				//console.log(replace_id);
+				var origin_id=$(e).attr("Id");
+				//console.log(origin_id);
+				var reg=new RegExp("[\'|\"]"+origin_id+"[\'|\"]","g");
+				//console.log("\""+replace_id+"\"");
+				str=str.replace(reg,"\""+replace_id+"\"");
+
+			}
+		});
+		$(".showXML textarea").val(str);
+	});
+	//查找相应的字符，并高亮显示
+	$(".btn.finder").bind("click",function(){
+		//估算的每一行所占的大小约为20px
+		var str=$(".showXML textarea").val();
+		var search=$("input.finder").val();
+		//console.log(search);
+		if(!$(".showXML textarea").data("keyword") || $(".showXML textarea").data("keyword")==search){
+			var index = $(".showXML textarea").data("index") || 0;
+			index=str.indexOf(search,index);
+			//console.log(index);
+			if(index>=0){
+				$(".showXML textarea")[0].selectionStart=index;
+				$(".showXML textarea")[0].selectionEnd=index+search.length;
+				$(".showXML textarea").data("index",index+search.length);
+				$(".showXML textarea").data("keyword",search);
+			}else{
+				$(".showXML textarea").data("index",0);
+				$(".showXML textarea").data("keyword",search);
+			}			
+		}else{
+			$(".showXML textarea").data("index",0);
+			var index = $(".showXML textarea").data("index");
+			index=str.indexOf(search,index);
+			//console.log(index);
+			if(index>=0){
+				$(".showXML textarea")[0].selectionStart=index;
+				$(".showXML textarea")[0].selectionEnd=index+search.length;
+				$(".showXML textarea").data("index",index+search.length);
+				$(".showXML textarea").data("keyword",search);
+			}else{
+				$(".showXML textarea").data("index",0);
+				$(".showXML textarea").data("keyword",search);
+			}
+		}
+		var sub_str=str.substring(0,$(".showXML textarea")[0].selectionStart);
+		var counter=0;
+		for(var i=0;i<sub_str.length;i++){
+			if (sub_str.substr(i,1)=="\n"){
+				counter++;
+			}
+		}
+		console.log((counter+1)*20);
+		//counter++;
+		var need_scroll=(counter*20-$(".showXML textarea")[0].scrollTop);
+		console.log(need_scroll);
+		//这里的600是指textarea的高度
+		if(Math.abs(need_scroll)>=600){
+			$(".showXML textarea")[0].scrollTop+=(need_scroll-20);
+			//console.log("需要滚动");
+		}
+	});
+	// $.ajax({
+	// 	url: "http://127.0.0.1:8080/MyDesigner/MyDesigner.json",
+	// 	type: "POST",
+	// 	//dataType:"xml",
+	// 	success:function(data){
+	// 		$(".showXML textarea").val(data);
+	// 		//console.log(data);
+	// 	}
+	// });
+});
+</script>
+</html>

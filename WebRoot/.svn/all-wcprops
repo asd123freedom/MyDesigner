@@ -1,35 +1,107 @@
 K 25
 svn:wc:ra_dav:version-url
 V 144
-/svn/saas/!svn/ver/8808/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot
+/svn/saas/!svn/ver/8834/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot
 END
 ActivityDialog.html
 K 25
 svn:wc:ra_dav:version-url
 V 164
-/svn/saas/!svn/ver/8832/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/ActivityDialog.html
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/ActivityDialog.html
 END
-index.jsp
+AssignArea.html
 K 25
 svn:wc:ra_dav:version-url
-V 154
-/svn/saas/!svn/ver/8808/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/index.jsp
+V 160
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/AssignArea.html
 END
-Designer.html
+AssignUser.html
 K 25
 svn:wc:ra_dav:version-url
-V 158
-/svn/saas/!svn/ver/8832/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/Designer.html
+V 160
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/AssignUser.html
 END
 FormDialog.html
 K 25
 svn:wc:ra_dav:version-url
 V 160
-/svn/saas/!svn/ver/8834/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/FormDialog.html
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/FormDialog.html
+END
+ScriptDialog.html
+K 25
+svn:wc:ra_dav:version-url
+V 162
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/ScriptDialog.html
+END
+SplitActivityDialog.html
+K 25
+svn:wc:ra_dav:version-url
+V 169
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/SplitActivityDialog.html
 END
 Transition.html
 K 25
 svn:wc:ra_dav:version-url
 V 160
-/svn/saas/!svn/ver/8832/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/Transition.html
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/Transition.html
+END
+JoinActivityDialog.html
+K 25
+svn:wc:ra_dav:version-url
+V 168
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/JoinActivityDialog.html
+END
+ParticipantDialog.html
+K 25
+svn:wc:ra_dav:version-url
+V 167
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/ParticipantDialog.html
+END
+index.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 154
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/index.jsp
+END
+Designer.html
+K 25
+svn:wc:ra_dav:version-url
+V 158
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/Designer.html
+END
+AssignGroup.html
+K 25
+svn:wc:ra_dav:version-url
+V 161
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/AssignGroup.html
+END
+HumanActivityDialog.html
+K 25
+svn:wc:ra_dav:version-url
+V 169
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/HumanActivityDialog.html
+END
+AutoActivityDialog.html
+K 25
+svn:wc:ra_dav:version-url
+V 168
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/AutoActivityDialog.html
+END
+AssignRole.html
+K 25
+svn:wc:ra_dav:version-url
+V 160
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/AssignRole.html
+END
+newDesigner.html
+K 25
+svn:wc:ra_dav:version-url
+V 161
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/newDesigner.html
+END
+MyDesigner.json
+K 25
+svn:wc:ra_dav:version-url
+V 160
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/MyDesigner.json
 END

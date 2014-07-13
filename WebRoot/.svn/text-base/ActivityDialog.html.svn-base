@@ -17,19 +17,19 @@
 			<div id="content1" class="content">
 				<form class="form-horizontal">
   					<div class="control-group">
-    					<label class="control-label" for="inputEmail">标识</label>
+    					<label class="control-label">名称</label>
     					<div class="controls">
-      						<input type="text" id="inputEmail" placeholder="ID">
+      						<input type="text" id="name" placeholder="name">
     					</div>
  					</div>
 				  	<div class="control-group">
-				   		<label class="control-label" for="inputPassword">参与者</label>
+				   		<label class="control-label">参与者</label>
 				    	<div class="controls">
-				   	   		<input type="password" id="inputPassword">
+				   	   		<input type="text" class="participant_name">
 				    	</div>
 				  	</div>
 				  	<div class="control-group">
-				   		<label class="control-label" for="inputPassword">描述</label>
+				   		<label class="control-label">描述</label>
 				    	<div class="controls">
 				   	   		<textarea rows="5" class="basic_info">...
 				   	   		</textarea>
@@ -44,6 +44,7 @@
     					<div class="controls">
 							 <select class="app_type">
 								<option value="SendRemindMessage">发送提醒</option>
+								<option value="SendEmail">发送邮件</option>
 							  	<option value="SaveBusinessFormData">存业务数据</option>
 							  	<option value="GetBusinessFormData">取业务数据</option>
 							  	<option value="EditBusinessFormData">修改业务数据</option>
@@ -68,26 +69,17 @@
 							</select>
 				    	</div>
 				  	</div>
-				  	<div class="control-group get app">
-				  		<label class="control-label"  style="padding:0px">
-				  				<select class="span2 Module">							  
-								  <option class="hide temple"></option>
-								</select></label>
+				  	<div class="hide control-group send app">
+				   		<label class="control-label">收件人(实参)</label>
 				    	<div class="controls">
-								<select class="span2 Field">							  
-								  <option class="hide temple"></option>
-								</select>
-								<a href="#" class="btn btn-primary addActualParam" style="margin-left:20px">确定</a>
+							<input type="text" class="receive_actual" placeholder="name">
 				    	</div>
-							<!--<form class="form-inline">
-								<select class="span2 Module">							  
-								  <option class="temple">DK</option>
-								</select>
-								<select class="span2 Field">							  
-								  <option class="temple">IG</option>
-								</select>
-								<a href="#" class="btn btn-primary addActualParam">确定</a>
-							</form-->
+				  	</div>
+				  	<div class="hide control-group sendemail app">
+				   		<label class="control-label">标题</label>
+				    	<div class="controls">
+							<input type="text" class="title" placeholder="title">
+				    	</div>
 				  	</div>
 				  	<div class="hide control-group send app">
 				   		<label class="control-label" for="inputPassword">描述</label>
@@ -96,31 +88,99 @@
 				   	   		</textarea>
 				    	</div>
 				  	</div>
+				  	<div class="control-group get app">
+				  		<label class="control-label"  style="padding:0px">
+				  				<select class="span3 Module">							  
+								  <option class="hide temple"></option>
+								</select></label>
+				    	<div class="controls" style="margin-left:240px">
+								<select class="span3 Field">							  
+								  <option class="hide temple"></option>
+								</select>
+								<a href="#" class="btn btn-primary addActualParam" style="margin-left:20px">确定</a>
+				    	</div>
+				  	</div>
+				  	<div class="control-group save app">
+				  		<label class="control-label"  style="padding:0px">
+				  				<select class="span3 Module" placeholder="Module">							  
+								  <option class="hide temple"></option>
+								</select></label>
+				    	<div class="controls" style="margin-left:240px">
+								<select class="span3 Field">							  
+								  <option class="hide temple"></option>
+								</select>
+				    	</div>
+				  	</div>
+				  	<div class="control-group save app">
+				  		<label class="control-label"  style="padding:0px">
+				  				<select class="span2 ActualParamType" style="float:left">							  
+								  <option value="user">系统用户</option>
+								  <option value="param">流程变量</option>
+								  <option value="humantask">指定任务完成人</option>
+								</select></label>
+				    	<div class="controls">
+				    			<input type="text" class="hide ActualParam" placeholder="流程变量"/>
+								<select class="span2 ActualParam user">							  
+								  <option class="hide temple"></option>
+								</select>
+								<select class="span3 ActualParam participant">							  
+								  <option class="hide temple"></option>
+								</select>
+								<input type="text" class="recordID" placeholder="记录ID" style="width:106px;margin-left:40px"/>
+								<a href="#" class="btn btn-primary addActualParam" style="margin-left:20px">确定</a>
+				    	</div>
+				  	</div>
 				</form>
-			<table class="table table-condensed get app">
-	              <thead>
-	                <tr class="head hide">
-	                  <th width="10%">#</th>
-	                  <th width="16%">模块ID</th>
-	                  <th width="16%">模块名</th>
-	                  <th width="16%">字段ID</th>
-	                  <th width="16%">字段名</th>
-	                  <th width="16%">实参名</th>
-	                  <th width="10%">操作</th>
-	                </tr>
-	              </thead>
-	              <tbody>
-	                <tr class="hide temple">
-	                  <td class="id">0</td>
-	                  <td class="moduleID"><span style="">Mushi</span></td>
-	                  <td class="module"><span style="">Mushi</span></td>
-	                  <td class="fieldID">3ice</td>
-	                  <td class="field">3ice</td>
-	                  <td class="actualParam"><input type="text" class="input-small" style="margin-bottom:1px;padding:2px" title="实参"></td>
-	                  <td class="oper"><button class="btn btn-danger btn-mini">删除</button></td>
-	                </tr>
-	              </tbody>
-            </table>
+				<table class="table table-condensed get app">
+		              <thead>
+		                <tr class="head hide">
+		                  <th width="10%">#</th>
+		                  <th width="16%">模块ID</th>
+		                  <th width="16%">模块名</th>
+		                  <th width="16%">字段ID</th>
+		                  <th width="16%">字段名</th>
+		                  <th width="16%">实参名</th>
+		                  <th width="10%">操作</th>
+		                </tr>
+		              </thead>
+		              <tbody>
+		                <tr class="hide temple">
+		                  <td class="id" style="vertical-align:middle">0</td>
+		                  <td class="moduleID" style="vertical-align:middle"><span style="">Mushi</span></td>
+		                  <td class="module" style="vertical-align:middle"><span style="">Mushi</span></td>
+		                  <td class="fieldID" style="vertical-align:middle">3ice</td>
+		                  <td class="field" style="vertical-align:middle">3ice</td>
+		                  <td class="actualParam" style="vertical-align:middle"><input type="text" class="input-small" style="margin-bottom:1px;padding:2px" title="实参"></td>
+		                  <td class="oper" style="vertical-align:middle"><button class="btn btn-danger btn-mini">删除</button></td>
+		                </tr>
+		              </tbody>
+	            </table>
+	            <table class="table table-condensed save app">
+		              <thead>
+		                <tr class="head hide">
+		                  <th width="5%">#</th>
+		                  <th width="13%">模块ID</th>
+		                  <th width="13%">模块名</th>
+		                  <th width="13%">字段ID</th>
+		                  <th width="13%">字段名</th>
+		                  <th width="13%">实参名</th>
+		                  <th width="13%">记录ID</th>
+		                  <th width="13%">操作</th>
+		                </tr>
+		              </thead>
+		              <tbody>
+		                <tr class="hide temple">
+		                  <td class="id" style="vertical-align:middle">0</td>
+		                  <td class="moduleID" style="vertical-align:middle"><span style="">Mushi</span></td>
+		                  <td class="module" style="vertical-align:middle"><span style="">Mushi</span></td>
+		                  <td class="fieldID" style="vertical-align:middle">3ice</td>
+		                  <td class="field" style="vertical-align:middle">3ice</td>
+		                  <td class="actualParam" style="vertical-align:middle">LaNm</td>
+		                  <td class="recordID" style="vertical-align:middle">attend</td>
+		                  <td class="oper" style="vertical-align:middle"><button class="btn btn-danger btn-mini">删除</button></td>
+		                </tr>
+		              </tbody>
+	            </table>
 			</div>
 			<div id="content3" class="content"></div>
 			<div class="btn-group">
@@ -130,7 +190,7 @@
 		</div>
 		<div class="modal-footer">
 			<a href="#" data-dismiss="modal" class="btn">取消</a>
-			<a href="#" class="btn btn-primary submit" data-loading-text="正在添加">确定</a>
+			<a href="#" class="btn btn-primary activity submit" data-loading-text="正在添加">确定</a>
 		</div>
 <script type="text/javascript">
   	$(function(){
@@ -142,11 +202,11 @@
   			$(this).addClass("disabled");
   			$(".btn-danger").removeClass("disabled");
   		});
-  		$(".submit").bind("click",function(){
+  		$(".activity.submit").bind("click",function(){
   			$('#new_course_dialog').trigger("submit",["pojo"]);
   			$('#new_course_dialog').modal('hide');
   		});
-  		var $navs = $('.nav > li ');
+  		var $navs = $('#new_course_dialog .nav > li ');
 		//var $content = $('.modal-body').find("#content");
 		//$content.html(new Date()+"");
 		$navs.on('click', function(){			
@@ -160,192 +220,140 @@
 				}
 			});
 		});
-		//$("table").data("index",1);
-		$(".btn.addActualParam").bind("click",function(){
-			$("table").find("tr.head").removeClass("hide");
-			var line=$("table").find("tr.temple").clone();
+		//取数据业务中的添加实参到表格
+		$(".get .btn.addActualParam").bind("click",function(){
+			$("table.get").find("tr.head").removeClass("hide");
+			var line=$("table.get").find("tr.temple").clone();
+			line.removeClass("hide temple");
+			line.addClass("actual");
+			var n=$("table.get tr:last-child:eq(1)").find("td.id").text();
+			n++;
+			line.find("td.id").text(n);
+			line.find("td.moduleID").text($(".get select.Module").find("option:selected").data("id"));
+			line.find("td.module").text($(".get select.Module").find("option:selected").val());
+			line.find("td.fieldID").text($(".get select.Field").find("option:selected").data("id"));
+			line.find("td.field").text($(".get select.Field").find("option:selected").val());
+			line.find(".btn-danger").bind("click",function(){
+				$(this).parents("tr:eq(0)").remove();
+				if($("table.get tr:not(.temple)").length==1){
+					$("table.get").find("tr.head").addClass("hide");
+				}
+			});
+			line.appendTo($("table.get"));
+		});
+		//存数据业务中添加实参到表格
+		$(".save .btn.addActualParam").bind("click",function(){
+			$("table.save").find("tr.head").removeClass("hide");
+			var line=$("table.save").find("tr.temple").clone();
 			line.removeClass("hide temple");
 			line.addClass("actual");
 			var n=$("tr:last-child:eq(1)").find("td.id").text();
 			n++;
 			line.find("td.id").text(n);
-			line.find("td.moduleID").text($("select.Module").find("option:selected").data("id"));
-			line.find("td.module").text($("select.Module").find("option:selected").val());
-			line.find("td.fieldID").text($("select.Field").find("option:selected").data("id"));
-			line.find("td.field").text($("select.Field").find("option:selected").val());
+			line.find("td.moduleID").text($(".save select.Module").find("option:selected").data("id"));
+			line.find("td.module").text($(".save select.Module").find("option:selected").val());
+			line.find("td.fieldID").text($(".save select.Field").find("option:selected").data("id"));
+			line.find("td.field").text($(".save select.Field").find("option:selected").val());
+			var type=$("select.ActualParamType").val();
+			if(type=='user'){
+				var str="#"+$(".save .ActualParam:not(.hide)").val();
+			}else if(type=='humantask'){
+				var str="$"+$(".save .ActualParam:not(.hide)").val();
+			}else{
+				var str=$(".save .ActualParam:not(.hide)").val();
+			}
+			if(str.indexOf(":")>=0){
+				str=str.substring(0,str.indexOf(":"));
+			}
+			line.find("td.actualParam").text(str);
+			line.find("td.recordID").text($("div.save .recordID").val());
 			line.find(".btn-danger").bind("click",function(){
 				$(this).parents("tr:eq(0)").remove();
 				if($("tr:not(.temple)").length==1){
-					$("table").find("tr.head").addClass("hide");
+					$("table.save").find("tr.head").addClass("hide");
 				}
 			});
-			line.appendTo($("table"));
+			line.appendTo($("table.save"));
 		});
-		$("select.app_type").bind("change",function(){
+		//取业务中的实参类型选择
+		$("select.ActualParamType").bind("change",function(e){
 			var s=$(this).val();
-			//console.log(s);
+			if(s=="user"){
+				$(".save .ActualParam").addClass("hide");
+				$(".save select.ActualParam.user").removeClass("hide");
+				Model.findAllUsers().done(function(data){
+					Model.fillInUsers(data,$(".save select.ActualParam.user"));
+				});
+			}else if(s=="humantask"){
+				$(".save .ActualParam").addClass("hide");
+				$(".save select.ActualParam.participant").removeClass("hide");
+				var parent=$(".save select.ActualParam.participant");
+				var participants=$("#new_course_dialog").data("obj").parent().find("div[id*='humantask']");
+				$(participants).each(function(index,e){
+					var name=$(e).attr("id");
+					$("<option>").attr("value",name).html(name).appendTo(parent);
+				});
+			}else{
+				$(".save .ActualParam").addClass("hide");
+				$(".save input.ActualParam").removeClass("hide");
+			}
+		});
+		//确定显示什么应用的界面并填写已经填写过的数据
+		$("select.app_type").bind("change",function(e,callbacks){
+			var s=$(this).val();
+			var callbacks = callbacks || $.Callbacks();
 			$(".app").addClass("hide");
 			if(s.toLocaleLowerCase().indexOf("send")>=0){
 				$(".send").removeClass("hide");
-				$.ajax({
-					url: "http://127.0.0.1:8080/HiServiceCRM/findAllUsers.action",
-	         		type: "POST",
-	         		success:function(data){
-						var parent=$("select.receive_id");
-	         			//console.log(parent);
-						for(var i=0;i<data.length;i++){
-							//alert("");
-							var opt=parent.find(".temple").clone();
-							opt.removeClass("hide temple");
-							opt.attr("value",data[i].id+":"+data[i].userName);
-							opt.html(data[i].id+":"+data[i].userName);
-							opt.appendTo(parent);
-						}
-						if($("select.receive_type").data("TypeIndex") || $("select.receive_type").data("TypeIndex") ===0){
-							var index=$("select.receive_type").data("TypeIndex");
-							$("select.receive_type").find("option:eq("+index+")")
-	  						.attr("selected",true);
-	  						//alert("");
-	  						$("select.receive_type").trigger("change");
-	  						$("select.receive_type").data("TypeIndex",null);
-						}
-	         		},
-	         	});
+				Model.findAllUsers().done(Model.fillInUsers).done(function(){
+					callbacks.fire();
+				});
+				if(s.toLocaleLowerCase().indexOf("mail")>=0){
+					$(".sendemail").removeClass("hide");
+				}
 			}
 			if(s.toLocaleLowerCase().indexOf("get")>=0){
 				$(".get").removeClass("hide");
-				//$(".get").find("option").addClass("hide");
-				$.ajax({
-					url: "http://127.0.0.1:8080/HiServiceCRM/findAllDynamicModuleMetaData.action",
-	         		type: "POST",
-	         		success:function(data){
-	         			//console.log(data);
-						var parent=$("select.Module");
-						for(var i=0;i<data.length;i++){
-							//alert("");
-							var opt=parent.find(".temple").clone();
-							opt.removeClass("hide temple");
-							opt.attr("value",data[i].modulelabel);
-							opt.html(data[i].moduleID+":"+data[i].modulelabel);
-							opt.appendTo(parent);
-							opt.data("id",data[i].moduleID);
-						}
-						if(parent.data("ModuleID")){
-							//alert();
-							//parent.val(parent.data("MoudleID"));
-							parent.trigger("change");
-							parent.data("ModuleID",null);
-							var arr=parent.data("arr");
-							console.log(arr);
-							parent.data("arr",null);
-							if(arr.length>0){
-								$("table").find("tr.head").removeClass("hide");
-							}
-							for(var i=0;i<arr.length;i++){
-								var line=$("table").find("tr.temple").clone();
-								line.removeClass("hide temple");
-								line.addClass("actual");
-								line.find("td.id").text((i+1)+"");
-								line.find("td.moduleID").text(arr[i].moduleID);
-								line.find("td.module").text(arr[i].module);
-								line.find("td.fieldID").text(arr[i].fieldID);
-								line.find("td.field").text(arr[i].field);
-								line.find("td.actualParam").text(arr[i].actualName);
-								line.find(".btn-danger").bind("click",function(){
-									$(this).parents("tr:eq(0)").remove();
-									if($("tr:not(.temple)").length==1){
-										$("table").find("tr.head").addClass("hide");
-									}
-								});
-								line.appendTo($("table"));
-							}
-						}
-	         		},
-	         	});
+				Model.findAllDynamicModuleMetaData().done(Model.fillInAllDynamicModuleMetaData).done(function(){
+					callbacks.fire();
+				});
 			}
-			
+			if(s.toLocaleLowerCase().indexOf("save")>=0 || s.toLocaleLowerCase().indexOf("edit")>=0){
+				$(".save").removeClass("hide");
+				$("select.ActualParamType").trigger("change");
+				Model.findAllDynamicModuleMetaData().done(Model.fillInAllDynamicModuleMetaData).done(function(){
+					callbacks.fire();
+				});
+			}
 		});
-		$("select.Module").bind("change",function(){
+		//获得动态表单中的字段
+		$("select.Module").bind("change",function(e,callbacks){
 			var index=$(this).find("option:selected").data("id");
 			var data1={"moduleId":index};
+			var callbacks=callbacks || $.Callbacks();
 			$("select.Field option:not(.temple)").remove();
-			$.ajax({
-					url: "http://127.0.0.1:8080/HiServiceCRM/findFieldbyDynamicModule.action",
-	         		type: "POST",
-	         		data: {"json":JSON.stringify(data1)},
-	         		success:function(data){
-	         			//console.log(data);
-						var parent=$("select.Field");
-						for(var i=0;i<data.length;i++){
-							//alert("");
-							var opt=parent.find(".temple").clone();
-							opt.removeClass("hide temple");
-							opt.attr("value",data[i].fieldLable);
-							opt.html(data[i].fieldId+":"+data[i].fieldLable);
-							opt.appendTo(parent);
-							opt.data("id",data[i].fieldId);
-						}
-						if(parent.data("Field")){						
-							parent.val(parent.data("Field"));
-							parent.data("Field",null);
-						}
-						/*var val=$("select.receive_id").data("ReceiverId_val");
-						if(val){
-							$("select.receive_id").val(val);
-							$("select.receive_id").data("ReceiverId_val",null);
-						}*/
-	         		},
-	         	});
-			
+			Model.findFieldbyDynamicModule(data1).done(Model.fillInFieldbyDynamicModule).done(function(){
+				callbacks.fire();
+			});	
 		});
-		$("select.receive_type").bind("change",function(){
+		//获得接收对象的二级菜单
+		$("select.receive_type").bind("change",function(e,callbacks){
+			var callbacks = callbacks || $.Callbacks();
 			var s=$(this).val();
 			//alert("");
 			console.log(s);
 			$("select.receive_id option:not(.temple)").remove();
 			if(s=="user"){
-				$.ajax({
-					url: "http://127.0.0.1:8080/HiServiceCRM/findAllUsers.action",
-	         		type: "POST",
-	         		success:function(data){
-						var parent=$("select.receive_id");
-						for(var i=0;i<data.length;i++){
-							//alert("");
-							var opt=parent.find(".temple").clone();
-							opt.removeClass("hide temple");
-							opt.attr("value",data[i].id+":"+data[i].userName);
-							opt.html(data[i].id+":"+data[i].userName);
-							opt.appendTo(parent);
-						}
-						var val=$("select.receive_id").data("IdVal");
-						if(val){
-							$("select.receive_id").val(val);
-							$("select.receive_id").data("ReceiverId_val",null);
-						}
-	         		},
-	         	});
+				Model.findAllUsers().done(Model.fillInUsers).done(function(){
+					callbacks.fire();
+				});				
 			}
 			else if(s=="role"){
-				$.ajax({
-					url: "http://127.0.0.1:8080/HiServiceCRM/findAllRolesList.action",
-	         		type: "POST",
-	         		success:function(data){
-						var parent=$("select.receive_id");
-						for(var i=0;i<data.length;i++){
-							//alert("");
-							var opt=parent.find(".temple").clone();
-							opt.removeClass("hide temple");
-							opt.attr("value",data[i].id+":"+data[i].name);
-							opt.html(data[i].id+":&nbsp&nbsp"+data[i].name);
-							opt.appendTo(parent);
-						}
-						var val=$("select.receive_id").data("ReceiverId_val");
-						if(val){
-							$("select.receive_id").val(val);
-							$("select.receive_id").data("ReceiverId_val",null);
-						}
-	         		},
-	         	});
+				Model.findAllRolesList().done(Model.fillInAllRolesList).done(function(){
+					callbacks.fire();
+				});
+			}else{
+				callbacks.fire();
 			}
 		});
   	});

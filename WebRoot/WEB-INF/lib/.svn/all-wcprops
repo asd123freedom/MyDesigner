@@ -3,9 +3,165 @@ svn:wc:ra_dav:version-url
 V 156
 /svn/saas/!svn/ver/8808/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib
 END
+c3p0-0.9.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 171
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/c3p0-0.9.1.jar
+END
+struts2-json-plugin-2.3.12.jar
+K 25
+svn:wc:ra_dav:version-url
+V 187
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/struts2-json-plugin-2.3.12.jar
+END
+jta-1.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 168
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/jta-1.1.jar
+END
+javassist-3.11.0.GA.jar
+K 25
+svn:wc:ra_dav:version-url
+V 180
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/javassist-3.11.0.GA.jar
+END
+freemarker-2.3.19.jar
+K 25
+svn:wc:ra_dav:version-url
+V 178
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/freemarker-2.3.19.jar
+END
+javassist-3.12.0.GA.jar
+K 25
+svn:wc:ra_dav:version-url
+V 180
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/javassist-3.12.0.GA.jar
+END
+commons-io-2.0.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 177
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/commons-io-2.0.1.jar
+END
+commons-lang3-3.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 178
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/commons-lang3-3.1.jar
+END
+struts2-core-2.3.4.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 181
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/struts2-core-2.3.4.1.jar
+END
+slf4j-nop-1.6.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 176
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/slf4j-nop-1.6.1.jar
+END
 dom4j-1.6.1.jar
 K 25
 svn:wc:ra_dav:version-url
 V 172
-/svn/saas/!svn/ver/8808/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/dom4j-1.6.1.jar
+/svn/saas/!svn/ver/9339/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/dom4j-1.6.1.jar
+END
+ezmorph-1.0.3.jar
+K 25
+svn:wc:ra_dav:version-url
+V 174
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/ezmorph-1.0.3.jar
+END
+hibernate3.jar
+K 25
+svn:wc:ra_dav:version-url
+V 171
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/hibernate3.jar
+END
+ojdbc14.jar
+K 25
+svn:wc:ra_dav:version-url
+V 168
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/ojdbc14.jar
+END
+commons-collections-3.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 184
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/commons-collections-3.1.jar
+END
+ant-1.6.5.jar
+K 25
+svn:wc:ra_dav:version-url
+V 170
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/ant-1.6.5.jar
+END
+antlr-2.7.6.jar
+K 25
+svn:wc:ra_dav:version-url
+V 172
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/antlr-2.7.6.jar
+END
+commons-lang-2.3.jar
+K 25
+svn:wc:ra_dav:version-url
+V 177
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/commons-lang-2.3.jar
+END
+json-lib-2.4-jdk15.jar
+K 25
+svn:wc:ra_dav:version-url
+V 179
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/json-lib-2.4-jdk15.jar
+END
+slf4j-api-1.6.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 176
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/slf4j-api-1.6.1.jar
+END
+commons-logging-1.1.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 182
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/commons-logging-1.1.1.jar
+END
+commons-fileupload-1.2.2.jar
+K 25
+svn:wc:ra_dav:version-url
+V 185
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/commons-fileupload-1.2.2.jar
+END
+commons-logging-1.0.4.jar
+K 25
+svn:wc:ra_dav:version-url
+V 182
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/commons-logging-1.0.4.jar
+END
+hibernate-jpa-2.0-api-1.0.0.Final.jar
+K 25
+svn:wc:ra_dav:version-url
+V 194
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/hibernate-jpa-2.0-api-1.0.0.Final.jar
+END
+commons-beanutils-1.7.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 184
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/commons-beanutils-1.7.0.jar
+END
+ognl-3.0.5.jar
+K 25
+svn:wc:ra_dav:version-url
+V 171
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/ognl-3.0.5.jar
+END
+xwork-core-2.3.4.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 179
+/svn/saas/!svn/ver/9338/1%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/servicesupport/3%E4%BB%A3%E7%A0%81/1%E6%BA%90%E4%BB%A3%E7%A0%81/MyDesigner/WebRoot/WEB-INF/lib/xwork-core-2.3.4.1.jar
 END

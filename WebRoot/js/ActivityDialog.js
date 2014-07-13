@@ -191,10 +191,17 @@
 				var count=1;
 				for(var i=0;i<arr.length;i++){
 					if(arr[i].Name && arr[i].Name.indexOf("Send")>=0){
-						count++;
+						var seq=/\d+/.exec(arr[i].Name);
+						if(!seq){
+							seq=0;
+						}
+						if(seq>max){
+							max=seq;
+						}
 					}
 				}
-				count=count+"";
+				max++;
+				count=max+"";
 				app.Name=$("select.app_type").val()+"Application"+""+count;
 				app.Type=$("select.app_type").val();
 				if($("input.title").val() && !$("input.title").parent().parent().hasClass("hide")){

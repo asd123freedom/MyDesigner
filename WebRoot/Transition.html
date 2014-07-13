@@ -72,6 +72,14 @@
           //console.log(tran.endpoints);
           if($("#new_course_dialog .btn-danger").hasClass("disabled")){
                 jsPlumb.detach(tran);
+                var start=$("#container").data("w").start;
+                var end=$("#container").data("w").end;
+                if(start && (start.connecting==tran.sourceId || start.connecting==tran.targetId)){
+                  start.connecting="";
+                }
+                if(end && (end.connecting==tran.sourceId || end.connecting==tran.targetId)){
+                  end.connecting="";
+                }
                 var arr_tran=$("#container").data("w").transitions || [];
                   $(arr_tran).each(function(index,e){
                     if(tran.sourceId==e.from && tran.targetId==e.to){

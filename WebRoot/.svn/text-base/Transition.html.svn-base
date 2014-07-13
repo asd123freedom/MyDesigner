@@ -1,44 +1,62 @@
-		<div class="modal-body">
-		<table class="table table-condensed tran">
-	              <tbody>
-	                <tr class="temple">
-	                  <td class="actual"><select class="span2 actual">							  
-								  <option class="hide temple"></option>
-								</select>
-					  </td>
-	                  <td class="condition"><input type="text" placeholder="输入等式或不等式"></td>
-	                  <td class="addcondition"><a class="btn" href="#">添加条件</a></td>
-	                </tr>
-	              </tbody>
-            </table>
-            <div class="btn-group">
-            	<a class="btn btn-danger pull-left" style="margin-left:10px" href="#">我要删除</a>
-	            <a class="btn btn-success pull-left disabled" href="#">我不删除</a>
-            </div>
-			<!--p>
-              <a class="btn btn-danger" href="#">删除</a>
-              <input type="text" placeholder="输入等式或不等式">
-              <a class="btn" href="#">添加条件</a>
-            </p-->
-		</div>
-		<div class="modal-footer">
+<div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3>边的设置</h3>
+    </div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label">名称</label>
+          <div class="controls">
+              <input type="text" id="name" placeholder="name">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">起点</label>
+          <div class="controls">
+              <input type="text" class="start">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">终点</label>
+          <div class="controls">
+              <input type="text" class="end">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">条件</label>
+          <div class="controls">
+              <input type="text" class="condition" placeholder="输入等式或不等式">
+          </div>
+        </div>
+    </form>
+      <div class="btn-group">
+      	<a class="btn btn-danger pull-left" style="margin-left:10px" href="#">我要删除</a>
+        <a class="btn btn-success pull-left disabled" href="#">我不删除</a>
+      </div>
+</div>
+<div class="modal-footer">
 			<a href="#" data-dismiss="modal" class="btn">取消</a>
-			<a href="#" class="btn btn-primary submit" data-loading-text="正在添加">确定</a>
-		</div>
+			<a href="#" class="btn btn-primary transition submit" data-loading-text="正在添加">确定</a>
+</div>
 <script type="text/javascript">
   $(function(){
-  		var arr_actual=$("#container").data("w").actualParameters || [];
-  		$("select.actual").bind("change",function(){
-  			var content=$(this).val();
-  			$("td.condition").find("input").val(content);
-  		});
-  		for(var i=0;i<arr_actual.length;i++){
-  			var opt=$("select.actual").find("option.temple").clone();
-  			opt.removeClass("hide");
-  			opt.attr("value",arr_actual[i].actualName);
-  			opt.html(arr_actual[i].actualName);
-  			opt.appendTo($("select.actual"));
-  		}
+      //用于对话框的初步显示
+      $("#new_course_dialog").unbind("show_transition");
+      $("#new_course_dialog").bind("show_transition",function(){
+        var tran=$("#new_course_dialog").data("tran");
+        if(tran){
+          var arr_tran=$("#container").data("w").transitions || [];
+          $(arr_tran).each(function(index,e){
+            if(tran.sourceId==e.from && tran.targetId==e.to){
+              $("input.start").val(e.from);
+              $("input.end").val(e.to);
+              if(e.condition){
+                $("input.condition").val(e.condition);
+              }
+            }
+          });
+        }
+      });
   		$(".btn-danger").bind("click",function(){
   			$(this).addClass("disabled");
   			$(".btn-success").removeClass("disabled");
@@ -47,27 +65,43 @@
   			$(this).addClass("disabled");
   			$(".btn-danger").removeClass("disabled");
   		});
-  		$(".submit").bind("click",function(){
-  			$("#new_course_dialog").modal('hide');
-  			if($(".btn-danger").hasClass("disabled")){
-  				var conn=$("#new_course_dialog").data("tran");
-  				jsPlumb.detach(conn);
-  			}
-  			var tran=$("#new_course_dialog").data("tran");
-			if(tran){
-				//var arr_actul=$("#container").data("w").actualParameters || [];
-				var arr_tran=$("#container").data("w").transitions || [];
-				$(arr_tran).each(function(index,e){
-					if(tran.sourceId==e.from && tran.targetId==e.to){
-						//这里添加的是显示的时候代码
-						e.condition=$("td.condition").find("input").val();
-					}
-				});
-			}
-			$("#new_course_dialog").data("tran",null);
+  		$(".transition.submit").bind("click",function(){
+          console.log(1);
+          var flag=false;//标记是否删除
+    			var tran=$("#new_course_dialog").data("tran");
+          //console.log(tran.endpoints);
+          if($("#new_course_dialog .btn-danger").hasClass("disabled")){
+                jsPlumb.detach(tran);
+                var start=$("#container").data("w").start;
+                var end=$("#container").data("w").end;
+                if(start && (start.connecting==tran.sourceId || start.connecting==tran.targetId)){
+                  start.connecting="";
+                }
+                if(end && (end.connecting==tran.sourceId || end.connecting==tran.targetId)){
+                  end.connecting="";
+                }
+                var arr_tran=$("#container").data("w").transitions || [];
+                  $(arr_tran).each(function(index,e){
+                    if(tran.sourceId==e.from && tran.targetId==e.to){
+                       arr_tran.splice(index,1);
+                       //$("#new_course_dialog").data("tran",null);
+                    }
+                });
+                $("#new_course_dialog").data("tran",null);
+                $("#new_course_dialog").modal('hide');
+                return;
+    			}
+    			if(tran){
+            //console.log(tran);
+    				var arr_tran=$("#container").data("w").transitions || [];
+    				$(arr_tran).each(function(index,e){
+    					if(tran.sourceId==e.from && tran.targetId==e.to){
+    						//这里添加的是显示的时候代码
+    						e.condition=$("input.condition").val();
+    					}
+    				});
+    			}
+         $("#new_course_dialog").modal('hide');
   		});
-  		$('#new_course_dialog').on('hidden',function(){
-			$('#new_course_dialog').data("tran",null);
-		});
   });
 </script>

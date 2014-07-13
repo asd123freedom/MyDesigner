@@ -1,0 +1,164 @@
+﻿<Package Id="package1">
+  <PackageHeader>
+    <XPDLVersion>2.1</XPDLVersion>
+    <Vendor>TSEG</Vendor>
+    <Created>Fri May 30 17:23:03 GMT+0800 2014</Created>
+  </PackageHeader>
+  <Application Id="application1">
+    <Form>
+      <Modules>
+        <Module>
+          <ModuleId>63</ModuleId>
+          <ModuleName>客户回访工单</ModuleName>
+          <FormalParameters>
+            <FormalParameter Id="345_*产品经理_1" Mode="IN" Reference="" Name="345">
+              <DataType>
+                <BasicType Type="STRING"/>
+              </DataType>
+              <ExtendedAttributes>
+                <ExtendedAttribute Name="IsReferenceChildModule" Value="false"/>
+              </ExtendedAttributes>
+            </FormalParameter>
+            <FormalParameter Id="346_产品经理意见_1" Mode="IN" Reference="" Name="346">
+              <DataType>
+                <BasicType Type="STRING"/>
+              </DataType>
+              <ExtendedAttributes>
+                <ExtendedAttribute Name="IsReferenceChildModule" Value="false"/>
+              </ExtendedAttributes>
+            </FormalParameter>
+          </FormalParameters>
+        </Module>
+      </Modules>
+      <ChildModules>
+        <Description/>
+      </ChildModules>
+    </Form>
+  </Application>
+  <Application Id="GetBusinessFormData2">
+    <Pojo/>
+    <ExtendedAttributes>
+      <ExtendedAttribute Name="Type" Value="Class"/>
+      <ExtendedAttribute Name="ClassPath" Value="org.tseg.tsegbpm.BusinessApplication.GetBusinessFormDataHandler"/>
+      <ExtendedAttribute Name="BusinessType" Value="GetBusinessFormData"/>
+    </ExtendedAttributes>
+  </Application>
+  <Application Id="SendRemindMessage3">
+    <Pojo/>
+    <ExtendedAttributes>
+      <ExtendedAttribute Name="Type" Value="SendRemindMessage"/>
+      <ExtendedAttribute Name="ClassPath" Value="org.tseg.tsegbpm.BusinessApplication.SendMsgPojo"/>
+      <ExtendedAttribute Name="ReceiverType" Value="user"/>
+      <ExtendedAttribute Name="ReceiverId" Value="1:cpjl"/>
+      <ExtendedAttribute Name="Content" Value="有工单需要处理"/>
+      <ExtendedAttribute Name="IsFormular" Value="false"/>
+    </ExtendedAttributes>
+  </Application>
+  <Application Id="SendRemindMessage4">
+    <Pojo/>
+    <ExtendedAttributes>
+      <ExtendedAttribute Name="Type" Value="SendRemindMessage"/>
+      <ExtendedAttribute Name="ClassPath" Value="org.tseg.tsegbpm.BusinessApplication.SendMsgPojo"/>
+      <ExtendedAttribute Name="ReceiverType" Value="user"/>
+      <ExtendedAttribute Name="ReceiverId" Value="0:22"/>
+      <ExtendedAttribute Name="Content" Value="有工单需要处理"/>
+      <ExtendedAttribute Name="IsFormular" Value="false"/>
+    </ExtendedAttributes>
+  </Application>
+  <WorkflowProcess Id="test">
+     <Participant Id="participant2" Name="participant2">
+          <ParticipantType Type="RESOURCE_SET"/>
+          <Description>
+            <Task name="humantaskactivity1" assignType="deffered" reAssign="false">
+              <Variable>user:cpjl</Variable>
+            </Task>
+          </Description>
+     </Participant>
+    <Activity Id="businessactivity1" Name="">
+      <Implementation>
+        <Task>
+          <TaskApplication Id="GetBusinessFormData2">
+            <ActualParameters>
+              <ActualParameter>63;RECORDID;239;cjr</ActualParameter>
+              <ActualParameter>63;RECORDID;345;cpjl</ActualParameter>
+            </ActualParameters>
+          </TaskApplication>
+        </Task>
+      </Implementation>
+      <StartMode>
+        <Automatic/>
+      </StartMode>
+      <ExtendedAttributes>
+        <ExtendedAttribute Name="TSEGBPM_GRAPH_PATICIPANT_ID" Value="default_participant"/>
+        <ExtendedAttribute Name="TSEGBPM_GRAPH_OFFSET" Value="279,201"/>
+        <ExtendedAttribute Name="SIGNALMODE" Value="last"/>
+        <ExtendedAttribute Name="TASK_TYPE" Value="BusinessTask"/>
+      </ExtendedAttributes>
+    </Activity>
+    <Activity Id="businessactivity2" Name="">
+      <Implementation>
+        <Task>
+          <TaskApplication Id="SendRemindMessage3"/>
+        </Task>
+      </Implementation>
+      <StartMode>
+        <Automatic/>
+      </StartMode>
+      <ExtendedAttributes>
+        <ExtendedAttribute Name="TSEGBPM_GRAPH_PATICIPANT_ID" Value="default_participant"/>
+        <ExtendedAttribute Name="TSEGBPM_GRAPH_OFFSET" Value="384,199"/>
+        <ExtendedAttribute Name="SIGNALMODE" Value="last"/>
+        <ExtendedAttribute Name="TASK_TYPE" Value="BusinessTask"/>
+      </ExtendedAttributes>
+    </Activity>
+    <Activity Id="businessactivity3" Name="">
+      <Implementation>
+        <Task>
+          <TaskApplication Id="SendRemindMessage4"/>
+        </Task>
+      </Implementation>
+      <StartMode>
+        <Automatic/>
+      </StartMode>
+      <ExtendedAttributes>
+        <ExtendedAttribute Name="TSEGBPM_GRAPH_PATICIPANT_ID" Value="default_participant"/>
+        <ExtendedAttribute Name="TSEGBPM_GRAPH_OFFSET" Value="517,203"/>
+        <ExtendedAttribute Name="SIGNALMODE" Value="last"/>
+        <ExtendedAttribute Name="TASK_TYPE" Value="BusinessTask"/>
+      </ExtendedAttributes>
+    </Activity>
+    <Activity Id="humantaskactivity1" Name="">
+      <Implementation>
+        <Task>
+          <TaskApplication Id="application1">
+            <ActualParameters>
+              <ActualParameter>cpjl</ActualParameter>
+              <ActualParameter>cpjlyj</ActualParameter>
+            </ActualParameters>
+          </TaskApplication>
+        </Task>
+      </Implementation>
+      <Description/>
+      <Performer>participant2</Performer>
+      <StartMode>
+        <Manual/>
+      </StartMode>
+      <ExtendedAttributes>
+        <ExtendedAttribute Name="TSEGBPM_GRAPH_OFFSET" Value="377,414"/>
+        <ExtendedAttribute Name="SIGNALMODE" Value="last"/>
+        <ExtendedAttribute Name="TSEGBPM_GRAPH_PATICIPANT_ID" Value="participant2"/>
+        <ExtendedAttribute Name="TASK_TYPE" Value="Task"/>
+        <ExtendedAttribute Name="RECOVERY_PRIVILEGE" Value="false"/>
+      </ExtendedAttributes>
+    </Activity>
+    <Transition Id="transition2" Name="2" From="businessactivity1" To="businessactivity2"/>
+    <Transition Id="transition3" Name="3" From="businessactivity2" To="humantaskactivity1"/>
+    <Transition Id="transition4" Name="4" From="humantaskactivity1" To="businessactivity3"/>
+    <ExtendedAttributes>
+      <ExtendedAttribute Name="TSEGBPM_GRAPH_PARTICIPANT_ORDER" Value="default_participant,participant2"/>
+      <ExtendedAttribute Name="TSEGBPM_GRAPH_START_ACTIVITY" Value="TSEGBPM_GRAPH_PATICIPANT_ID=default_participant,TSEGBPM_GRAPH_CONNECTING_ACTIVITY=businessactivity1,TSEGBPM_GRAPH_OFFSET_X=149,TSEGBPM_GRAPH_OFFSET_Y=193"/>
+      <ExtendedAttribute Name="TSEGBPM_GRAPH_END_ACTIVITY" Value="TSEGBPM_GRAPH_PATICIPANT_ID=participant2,TSEGBPM_GRAPH_CONNECTING_ACTIVITY=businessactivity3,TSEGBPM_GRAPH_OFFSET_X=510,TSEGBPM_GRAPH_OFFSET_Y=419"/>
+      <ExtendedAttribute Name="IsReferenceRecordList" Value="true"/>
+    </ExtendedAttributes>
+  </WorkflowProcess>
+</Package>
